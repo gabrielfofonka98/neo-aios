@@ -92,11 +92,21 @@ ehthumbs.db
 Thumbs.db
 
 # ============================================
-# AIOS Runtime
+# AIOS Runtime (created at runtime, not system)
 # ============================================
-.aios/session-state.json
+.aios/
 outputs/
 CLAUDE.local.md
+
+# ============================================
+# User project data (not part of the system)
+# ============================================
+docs/projects/*
+!docs/projects/.gitkeep
+docs/sessions/*
+!docs/sessions/.gitkeep
+docs/architecture/*
+!docs/architecture/.gitkeep
 
 # ============================================
 # Logs
