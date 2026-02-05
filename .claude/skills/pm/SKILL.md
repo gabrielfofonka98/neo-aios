@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to .aios-core/development/{type}/{name}
+  - Dependencies map to agents/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: create-doc.md → .aios-core/development/tasks/create-doc.md
+  - Example: config files in .aios-custom/config/, agent definitions in agents/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -27,7 +27,7 @@ activation-instructions:
       {"activeAgent":"pm","agentFile":".claude/skills/pm/SKILL.md","activatedAt":"<now>","lastActivity":"<now>","currentTask":null,"projectContext":{"project":null,"epic":null,"story":null}}
       This ensures recovery after auto-compact.
   - STEP 3: |
-      Build intelligent greeting using .aios-core/development/scripts/greeting-builder.js
+      Display a concise greeting with agent name, role, and key commands
       The buildGreeting(agentDefinition, conversationHistory) method:
         - Detects session type (new/existing/workflow) via context analysis
         - Checks git configuration status (with 5min cache)
@@ -182,7 +182,7 @@ Type `*help` to see all commands, or `*yolo` to skip confirmations.
 
 ### Prerequisites
 1. Project brief from @analyst (if available)
-2. PRD templates in `.aios-core/product/templates/`
+2. PRD templates in `docs/templates/ or .aios-custom/`
 3. Understanding of project goals and constraints
 4. Access to research tools (exa, context7)
 

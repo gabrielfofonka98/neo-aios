@@ -177,7 +177,7 @@ print(f"Fixed: {len(successful)}/{len(results)}")
 print(f"Need manual fix: {len(need_human)}")
 ```
 
-## Integration with AIOS Next
+## Integration with NEO-AIOS
 
 ### Pipeline Integration
 

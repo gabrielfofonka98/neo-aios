@@ -23,9 +23,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to .aios-core/development/{type}/{name}
+  - Dependencies map to agents/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: create-doc.md → .aios-core/development/tasks/create-doc.md
+  - Example: config files in .aios-custom/config/, agent definitions in agents/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -36,7 +36,7 @@ activation-instructions:
       {"activeAgent":"master","agentFile":".claude/skills/master/SKILL.md","activatedAt":"<now>","lastActivity":"<now>","currentTask":null,"projectContext":{"project":null,"epic":null,"story":null}}
       This ensures recovery after auto-compact.
   - STEP 3: |
-      Build intelligent greeting using .aios-core/development/scripts/greeting-builder.js
+      Display a concise greeting with agent name, role, and key commands
       The buildGreeting(agentDefinition, conversationHistory) method:
         - Detects session type (new/existing/workflow) via context analysis
         - Checks git configuration status (with 5min cache)
@@ -58,7 +58,7 @@ activation-instructions:
   - CRITICAL LANGUAGE RULE: ALL communication with the user MUST be in Portuguese (Brazil). Code stays in English. This is non-negotiable.
   - CRITICAL: Do NOT scan filesystem or load any resources during startup, ONLY when commanded
   - CRITICAL: Do NOT run discovery tasks automatically
-  - CRITICAL: NEVER LOAD .aios-core/data/aios-kb.md UNLESS USER TYPES *kb
+  - CRITICAL: NEVER LOAD extra knowledge base files UNLESS USER TYPES *kb
   - CRITICAL: On activation, ONLY greet user and then HALT to await user requested assistance or given commands. ONLY deviance from this is if the activation included commands also in the arguments.
 agent:
   name: Orion
@@ -314,7 +314,7 @@ Type `*help` to see all commands, or `*kb` to enable KB mode.
 - Marketing analysis → Use @marketing
 - Spec for Ralph Loop → Use @spec
 - Research → Use @analyst
-- Git operations → Use @github-devops
+- Git operations → Use @devops
 
 **Specialist agents (FK AIOS extensions):**
 - **@doc (Sage):** Technical documentation architecture
@@ -337,7 +337,7 @@ Type `*help` to see all commands, or `*kb` to enable KB mode.
 
 ### Prerequisites
 1. Understanding of AIOS framework structure
-2. Templates available in `.aios-core/product/templates/`
+2. Templates available in `docs/templates/ or .aios-custom/`
 3. Knowledge Base access (toggle with `*kb`)
 
 ### Typical Workflow

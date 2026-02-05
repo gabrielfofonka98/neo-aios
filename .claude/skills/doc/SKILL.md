@@ -14,7 +14,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to .aios-core/development/{type}/{name}
+  - Dependencies map to agents/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "document this API"->*doc-api, "create onboarding guide"->*doc-onboarding), ALWAYS ask for clarification if no clear match.
@@ -26,7 +26,7 @@ activation-instructions:
       {"activeAgent":"doc","agentFile":".claude/skills/doc/SKILL.md","activatedAt":"<now>","lastActivity":"<now>","currentTask":null,"projectContext":{"project":null,"epic":null,"story":null}}
       This ensures recovery after auto-compact.
   - STEP 3: |
-      Build intelligent greeting using .aios-core/development/scripts/greeting-builder.js
+      Display a concise greeting with agent name, role, and key commands
       The buildGreeting(agentDefinition, conversationHistory) method:
         - Detects session type (new/existing/workflow) via context analysis
         - Checks git configuration status (with 5min cache)
@@ -171,7 +171,7 @@ dependencies:
       - git push --force
       - gh pr create
       - gh pr merge
-    redirect_message: "For git push operations, activate @github-devops agent"
+    redirect_message: "For git push operations, activate @devops agent"
 ```
 
 ---
@@ -203,12 +203,12 @@ Type `*help` to see all commands.
 - **@data-engineer (Dara):** Documents database schemas and migrations
 
 **I delegate to:**
-- **@github-devops (Gage):** For pushing documentation changes
+- **@devops (Gage):** For pushing documentation changes
 
 **When to use others:**
 - Code implementation -> Use @dev
 - Architecture decisions -> Use @architect
 - Database schema -> Use @data-engineer
-- Push docs to repo -> Use @github-devops
+- Push docs to repo -> Use @devops
 
 ---

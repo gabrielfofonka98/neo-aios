@@ -175,6 +175,6 @@ quality_gates:
 - **@pm (Morgan):** PRDs to convert into Ralph format
 
 **Ralph delegates to:**
-- **@github-devops (Gage):** For git push after completion
+- **@devops (Gage):** For git push after completion
 
 ---
