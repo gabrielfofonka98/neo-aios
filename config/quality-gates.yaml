@@ -1,0 +1,121 @@
+# Quality Gates Configuration
+# This file configures the 3-layer quality gate system for NEO-AIOS.
+# All settings have sensible defaults - only override what you need.
+
+quality_gates:
+  # ============================================================================
+  # LAYER 1: Pre-Commit Gate (Local)
+  # Runs before every commit to catch issues early.
+  # ============================================================================
+  precommit:
+    enabled: true
+
+    # Blocking rules - when true, failure blocks commit
+    block_on_ruff_error: true
+    block_on_mypy_error: true
+    block_on_test_failure: true
+    block_on_critical_security: true
+
+    # Warning rules - shows warning but doesn't block
+    warn_on_high_security: true
+
+    # Performance settings
+    timeout_seconds: 120
+    run_fast_tests_only: true
+    max_parallel_checks: 4
+
+  # ============================================================================
+  # LAYER 2: PR Automation Gate (CI)
+  # Runs on every PR to enforce quality standards.
+  # ============================================================================
+  pr_automation:
+    enabled: true
+
+    # Severities that block PR merge
+    block_severities:
+      - CRITICAL
+      - HIGH
+
+    # Severities that show warnings but allow merge
+    warn_severities:
+      - MEDIUM
+
+    # Timeout for full security audit (in seconds)
+    audit_timeout_seconds: 300
+
+    # Auto-approve PRs with no findings
+    auto_approve_clean: false
+
+  # ============================================================================
+  # LAYER 3: Human Review Gate
+  # Enforces human approval requirements.
+  # ============================================================================
+  human_review:
+    enabled: true
+
+    # Paths that require manager approval
+    sensitive_paths:
+      - config/
+      - src/aios/security/
+      - .env
+      - .env.*
+      - credentials
+      - pyproject.toml
+      - setup.py
+      - setup.cfg
+      - requirements.txt
+      - poetry.lock
+      - uv.lock
+
+    # Paths that require architect review
+    architecture_paths:
+      - src/aios/agents/
+      - src/aios/core/
+      - .aios-core/
+      - agents/
+
+    # Paths that require security lead review
+    security_paths:
+      - src/aios/security/
+      - security/
+      - auth/
+      - authentication/
+      - authorization/
+
+    # PRs with more lines than this require 2 approvers
+    large_pr_threshold: 500
+
+    # Require tech lead approval for all PRs
+    require_tech_lead: true
+
+  # ============================================================================
+  # Exclusions
+  # Paths and validators to exclude from checks.
+  # ============================================================================
+  exclusions:
+    # Paths to exclude from all quality checks
+    paths:
+      - tests/fixtures/
+      - docs/
+      - __pycache__/
+      - .git/
+      - .venv/
+      - node_modules/
+      - "*.pyc"
+      - .mypy_cache/
+      - .ruff_cache/
+      - .pytest_cache/
+
+    # Validators to disable (by ID)
+    # Uncomment items below to disable specific validators
+    validators: []
+      # - sec-rate-limit-tester  # Too noisy
+
+    # File patterns to exclude (glob patterns)
+    file_patterns:
+      - "*.min.js"
+      - "*.bundle.js"
+      - "*.generated.*"
+
+# Version tracking for config schema compatibility
+version: "1.0"

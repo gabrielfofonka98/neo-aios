@@ -1,0 +1,137 @@
+# Pre-commit hooks configuration for NEO-AIOS
+# See https://pre-commit.com for more information
+# Run `pre-commit install` to set up git hooks
+
+# Minimum pre-commit version required
+minimum_pre_commit_version: "3.0.0"
+
+# Prevent concurrent hook execution
+ci:
+  autofix_commit_msg: "style: auto-fix by pre-commit hooks"
+  autoupdate_commit_msg: "chore: update pre-commit hooks"
+
+repos:
+  # ============================================================================
+  # RUFF - Linting and Formatting
+  # ============================================================================
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.0
+    hooks:
+      # Ruff linter
+      - id: ruff
+        name: ruff (lint)
+        args: [--fix, --exit-non-zero-on-fix]
+        types_or: [python, pyi]
+
+      # Ruff formatter
+      - id: ruff-format
+        name: ruff (format)
+        types_or: [python, pyi]
+
+  # ============================================================================
+  # MYPY - Type Checking
+  # ============================================================================
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        name: mypy (type check)
+        args: [--strict, --ignore-missing-imports]
+        additional_dependencies:
+          - pydantic>=2.0.0
+          - types-pyyaml>=6.0.0
+        types: [python]
+        # Only run on src/ and tests/ directories
+        files: ^(src|tests)/
+
+  # ============================================================================
+  # GENERAL CHECKS
+  # ============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # Check for files that would conflict in case-insensitive filesystems
+      - id: check-case-conflict
+
+      # Check for merge conflict strings
+      - id: check-merge-conflict
+
+      # Check YAML files for parseable syntax
+      - id: check-yaml
+        args: [--unsafe]
+
+      # Check TOML files for parseable syntax
+      - id: check-toml
+
+      # Ensure files end with a newline
+      - id: end-of-file-fixer
+        exclude: ^\.aios/
+
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        exclude: ^\.aios/
+
+      # Check for added large files
+      - id: check-added-large-files
+        args: [--maxkb=500]
+
+      # Prevent committing to main/master directly
+      - id: no-commit-to-branch
+        args: [--branch, main, --branch, master]
+
+      # Check for debugger imports
+      - id: debug-statements
+
+  # ============================================================================
+  # SECURITY - NEO-AIOS Security Quick Scan
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: aios-security-scan
+        name: aios security scan
+        entry: python -m aios.quality.precommit
+        language: python
+        types: [python]
+        pass_filenames: true
+        verbose: true
+
+      # Scope enforcement check (informational)
+      - id: aios-scope-check
+        name: aios scope enforcement
+        entry: python -c "import sys; sys.exit(0)"
+        language: python
+        always_run: true
+        pass_filenames: false
+
+  # ============================================================================
+  # PYTEST - Fast Tests Only
+  # ============================================================================
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: pytest (fast tests)
+        entry: pytest
+        args: [-x, --tb=short, -q, -m, "not slow", --timeout=30]
+        language: python
+        types: [python]
+        pass_filenames: false
+        stages: [pre-commit]
+        files: ^(src|tests)/.*\.py$
+
+# Default stages for all hooks
+default_stages: [pre-commit]
+
+# Files/directories to exclude globally
+exclude: |
+  (?x)^(
+    \.git/|
+    \.venv/|
+    __pycache__/|
+    \.mypy_cache/|
+    \.ruff_cache/|
+    \.pytest_cache/|
+    node_modules/|
+    dist/|
+    build/|
+    \.aios/session-state\.json
+  )

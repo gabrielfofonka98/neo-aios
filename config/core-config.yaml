@@ -1,0 +1,367 @@
+# NEO-AIOS Core Configuration
+# Version: 1.0.0
+
+version: "1.0.0"
+project:
+  name: neo-aios
+  type: framework
+  description: "Agent Intelligence Operating System with Big Tech hierarchy"
+
+# =============================================================================
+# AGENT SYSTEM
+# =============================================================================
+agents:
+  registry_path: "agents/"
+  skill_path: ".claude/skills/"
+
+  # Agent tiers (in hierarchy order)
+  tiers:
+    - id: c-level
+      name: "C-Level"
+      can_code: false
+      can_approve: [vp]
+
+    - id: vp
+      name: "VP Level"
+      can_code: false
+      can_approve: [director]
+
+    - id: director
+      name: "Director Level"
+      can_code: false
+      can_approve: [manager]
+
+    - id: manager
+      name: "Manager/Lead Level"
+      can_code: false
+      can_approve: [ic]
+
+    - id: ic
+      name: "Individual Contributor"
+      can_code: true
+      can_approve: []
+
+  # Agent levels (within tiers)
+  levels:
+    - core       # Essential agents (Dex, Gage, Dara, etc.)
+    - security   # Security sub-agents (18 total)
+    - specialist # Specialist ICs
+    - content    # Content/docs agents
+    - automation # Automation agents (Ralph, Wrench)
+
+# =============================================================================
+# HIERARCHY CONFIGURATION
+# =============================================================================
+hierarchy:
+  enabled: true
+  strict_mode: true  # Block violations (not just warn)
+
+  delegation:
+    max_depth: 5
+    direction: down_only  # Can only delegate to lower tiers
+
+    # Actions that require higher-level approval
+    require_approval:
+      - database_ddl
+      - production_deploy
+      - architecture_change
+      - security_exception
+
+  # Scope enforcement rules
+  scope_enforcement:
+    # Only Gage (DevOps) can push
+    git_push:
+      allowed_agents: [devops]
+      error_message: "Only DevOps (Gage) can push to remote"
+
+    # Only Data Engineer can run DDL
+    database_ddl:
+      allowed_agents: [data-engineer]
+      requires_approval: true
+      approval_level: director
+
+    # C-Level and VP cannot write code
+    write_code:
+      forbidden_tiers: [c-level, vp, director]
+      error_message: "This tier cannot write code directly"
+
+# =============================================================================
+# SECURITY VALIDATORS
+# =============================================================================
+security:
+  validators:
+    enabled: true
+    path: "src/aios/validators/"
+
+    # AST-based validators (zero false positives)
+    ast_validators:
+      - id: sec-xss-hunter
+        enabled: true
+        parser: tree-sitter-typescript
+
+      - id: sec-rls-guardian
+        enabled: true
+        parser: sqlglot
+
+      - id: sec-injection-detector
+        enabled: true
+        parser: sqlglot
+
+      - id: sec-validation-enforcer
+        enabled: true
+        parser: tree-sitter-typescript
+
+      - id: sec-redirect-checker
+        enabled: true
+        parser: tree-sitter-typescript
+
+      - id: sec-api-access-tester
+        enabled: true
+        parser: tree-sitter-typescript
+
+    # Regex-based validators
+    regex_validators:
+      - id: sec-secret-scanner
+        enabled: true
+
+      - id: sec-cors-csrf-checker
+        enabled: true
+
+      - id: sec-header-inspector
+        enabled: true
+
+      - id: sec-supply-chain-monitor
+        enabled: true
+
+      - id: sec-upload-validator
+        enabled: true
+
+      - id: sec-rate-limit-tester
+        enabled: true
+
+      - id: sec-error-leak-detector
+        enabled: true
+
+      - id: sec-deploy-auditor
+        enabled: true
+
+      - id: sec-framework-scanner
+        enabled: true
+
+      - id: sec-client-exposure-scanner
+        enabled: true
+
+      - id: sec-jwt-auditor
+        enabled: true
+
+      - id: sec-ai-code-reviewer
+        enabled: true
+
+  # Compound vulnerability detection
+  compound_detection:
+    enabled: true
+    rules_path: "config/compound-matrix.yaml"
+
+# =============================================================================
+# AUTO-FIX ENGINE
+# =============================================================================
+fixers:
+  enabled: true
+
+  # Bounded reflexion settings
+  reflexion:
+    max_attempts: 3
+    strategy_rotation: true
+
+  # Fix strategies (in order of preference)
+  strategies:
+    - template      # Use fix template
+    - llm_fallback  # Ask LLM for fix
+    - escalate      # Mark needs_human
+
+  # Escalation settings
+  escalation:
+    after_attempts: 3
+    notify_level: manager
+    create_issue: true
+
+# =============================================================================
+# QUALITY GATES
+# =============================================================================
+quality:
+  gates:
+    # Layer 1: Pre-commit (local)
+    layer_1:
+      enabled: true
+      blocking: true
+      checks:
+        - name: ruff
+          command: "uv run ruff check src/"
+          timeout: 60
+
+        - name: mypy
+          command: "uv run mypy --strict src/"
+          timeout: 120
+
+        - name: pytest
+          command: "uv run pytest tests/ -x -q"
+          timeout: 300
+
+        - name: security_quick
+          command: "uv run aios security --quick"
+          timeout: 60
+
+    # Layer 2: PR automation (CI)
+    layer_2:
+      enabled: true
+      blocking: true
+      checks:
+        - name: coderabbit
+          type: external_service
+
+        - name: qa_agent
+          type: agent_dispatch
+          agent: qa-code
+
+        - name: security_full
+          type: agent_dispatch
+          agent: qa
+
+    # Layer 3: Human review
+    layer_3:
+      enabled: true
+      blocking: true
+      required_approvers:
+        - role: tech_lead
+          count: 1
+        - role: manager
+          count: 1
+          conditions:
+            - path_pattern: "src/aios/security/*"
+            - path_pattern: "config/*"
+
+# =============================================================================
+# HEALTH CHECK
+# =============================================================================
+healthcheck:
+  enabled: true
+
+  # Check domains
+  domains:
+    session:
+      interval_seconds: 60
+      checks:
+        - session_state_valid
+        - active_agent_exists
+
+    agents:
+      interval_seconds: 300
+      checks:
+        - all_agents_registered
+        - scope_rules_loaded
+
+    validators:
+      interval_seconds: 300
+      checks:
+        - tree_sitter_loaded
+        - all_validators_operational
+
+    quality:
+      interval_seconds: 600
+      checks:
+        - ruff_installed
+        - mypy_installed
+        - pytest_installed
+
+    infrastructure:
+      interval_seconds: 600
+      checks:
+        - git_available
+        - uv_installed
+        - python_version_valid
+
+  # Self-healing settings
+  healing:
+    enabled: true
+    max_attempts: 1
+    auto_heal:
+      - session_state_invalid
+      - agent_not_registered
+
+# =============================================================================
+# SESSION PERSISTENCE
+# =============================================================================
+session:
+  state_file: ".aios/session-state.json"
+
+  # What to persist
+  persist:
+    - active_agent
+    - last_activity
+    - current_task
+    - project_context
+
+  # Recovery settings
+  recovery:
+    enabled: true
+    on_startup: true
+    on_error: true
+
+# =============================================================================
+# DEVELOPMENT
+# =============================================================================
+development:
+  story_driven: true
+  stories_path: "docs/projects/{project}/epics/{epic}/"
+
+  # Handoff settings
+  handoff:
+    enabled: true
+    path: "docs/sessions/YYYY-MM/"
+    auto_create: true
+
+# =============================================================================
+# DEPLOYMENT
+# =============================================================================
+deployment:
+  strategy: staging-first
+
+  environments:
+    - name: local
+      type: development
+
+    - name: staging
+      type: preview
+      auto_deploy: true
+
+    - name: production
+      type: production
+      requires_approval: true
+
+  # Branch strategy
+  git:
+    main_branch: main
+    staging_branch: staging
+    protected_branches:
+      - main
+      - staging
+    conventional_commits: true
+
+# =============================================================================
+# LANGUAGE
+# =============================================================================
+language:
+  communication: pt-BR
+  code: en
+  commits: en
+  file_names: en
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: ".aios/logs/aios.log"
+  rotation: daily
+  retention_days: 30

@@ -1,0 +1,196 @@
+# NEO-AIOS Release Pipeline
+# Triggered on version tags (v*)
+#
+# Steps:
+# 1. Build and verify package
+# 2. Create GitHub Release with artifacts
+# 3. Publish to PyPI (when configured)
+#
+# Security Note: This workflow uses only trusted inputs:
+# - GITHUB_REF (tag name, controlled by repo maintainers)
+# - Outputs from previous jobs (validated version strings)
+# No user-controllable content is used in run commands.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  validate:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        env:
+          REF_NAME: ${{ github.ref }}
+        run: |
+          VERSION=${REF_NAME#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Verify version in pyproject.toml
+        env:
+          TAG_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          PYPROJECT_VERSION=$(grep -oP 'version = "\K[^"]+' pyproject.toml)
+          if [ "$PYPROJECT_VERSION" != "$TAG_VERSION" ]; then
+            echo "ERROR: Version mismatch!"
+            echo "  pyproject.toml: $PYPROJECT_VERSION"
+            echo "  Git tag: $TAG_VERSION"
+            exit 1
+          fi
+          echo "Version verified: $TAG_VERSION"
+
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Run quality checks
+        run: |
+          uv run ruff check src/ tests/
+          uv run mypy --strict src/
+
+      - name: Run tests
+        run: uv run pytest tests/ --cov=src/aios --cov-fail-under=80
+
+      - name: Build package
+        run: uv build
+
+      - name: Verify package installation
+        run: |
+          uv pip install dist/*.whl
+          python -c "import aios; print(f'NEO-AIOS version: {aios.__version__}')"
+          neo-aios --version
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 30
+
+  github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Extract release notes from CHANGELOG
+        id: changelog
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          # Extract the section for this version from CHANGELOG.md
+          NOTES=$(awk -v ver="## [$RELEASE_VERSION]" '
+            $0 ~ ver {found=1; next}
+            found && /^## \[/ {exit}
+            found {print}
+          ' CHANGELOG.md)
+
+          if [ -z "$NOTES" ]; then
+            NOTES="Release v$RELEASE_VERSION"
+          fi
+
+          # Write to file to preserve formatting
+          echo "$NOTES" > release_notes.md
+          echo "Release notes extracted"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: NEO-AIOS v${{ needs.validate.outputs.version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(needs.validate.outputs.version, '-') }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+          generate_release_notes: true
+
+  publish-pypi:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: [validate, build, github-release]
+    environment:
+      name: pypi
+      url: https://pypi.org/project/neo-aios/
+    # Only publish stable releases (no pre-release tags)
+    if: ${{ !contains(needs.validate.outputs.version, '-') }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # Uses OIDC trusted publishing
+          # Configure at: https://pypi.org/manage/project/neo-aios/settings/publishing/
+          print-hash: true
+          skip-existing: true
+
+  publish-testpypi:
+    name: Publish to TestPyPI
+    runs-on: ubuntu-latest
+    needs: [validate, build]
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/neo-aios/
+    # Publish pre-releases to TestPyPI
+    if: ${{ contains(needs.validate.outputs.version, '-') }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          print-hash: true
+          skip-existing: true
