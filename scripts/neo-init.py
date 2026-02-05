@@ -496,6 +496,68 @@ def create_claude_local_md(project_root: Path) -> bool:
     return True
 
 
+def create_env_files(project_root: Path) -> list[str]:
+    """Create .env and .env.example from template."""
+    created = []
+
+    env_content = """# NEO-AIOS Environment Variables
+# Fill in your values below
+
+# ============================================
+# API Keys
+# ============================================
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+
+# ============================================
+# GitHub
+# ============================================
+GITHUB_TOKEN=
+GITHUB_OWNER=
+GITHUB_REPO=
+
+# ============================================
+# Supabase
+# ============================================
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# ============================================
+# Vercel
+# ============================================
+VERCEL_TOKEN=
+VERCEL_ORG_ID=
+VERCEL_PROJECT_ID=
+
+# ============================================
+# Database (Local Development)
+# ============================================
+DATABASE_URL=postgresql://localhost:5432/neo_aios
+
+# ============================================
+# Environment
+# ============================================
+ENVIRONMENT=development
+DEBUG=false
+"""
+
+    # .env (actual secrets, gitignored)
+    env_file = project_root / ".env"
+    if not env_file.exists():
+        env_file.write_text(env_content)
+        created.append(".env")
+
+    # .env.example (template, committed to git)
+    env_example = project_root / ".env.example"
+    if not env_example.exists():
+        env_example.write_text(env_content.replace("Fill in your values below",
+            "Copy this file to .env and fill in your values"))
+        created.append(".env.example")
+
+    return created
+
+
 def suggest_agent_teams_setup() -> None:
     """Show instructions for enabling Agent Teams in user settings."""
     settings_path = Path.home() / ".claude" / "settings.json"
@@ -526,6 +588,8 @@ def update_gitignore(project_root: Path) -> str | None:
     aios_entries = """
 # NEO-AIOS (runtime state)
 .aios/
+.env
+.env.local
 config/credentials.yaml
 CLAUDE.local.md
 """
@@ -712,6 +776,12 @@ def main() -> None:
         print(f"  {c.GREEN}Updated:{c.RESET} .gitignore {c.DIM}(added .aios/ entries){c.RESET}")
     elif gitignore_result == "created":
         print(f"  {c.GREEN}Created:{c.RESET} .gitignore")
+
+    # Create .env and .env.example
+    env_created = create_env_files(project_root)
+    for env_file in env_created:
+        label = "(gitignored)" if env_file == ".env" else "(template, committed)"
+        print(f"  {c.GREEN}Created:{c.RESET} {env_file} {c.DIM}{label}{c.RESET}")
 
     # Create CLAUDE.local.md template
     if create_claude_local_md(project_root):
