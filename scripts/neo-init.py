@@ -304,15 +304,37 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
     """Copy framework files to project directory."""
     results = []
 
+    # Copy EVERYTHING from the framework, just like aios-evo does.
+    # The project directory should be a complete copy, not a partial one.
     copy_targets = [
+        # Claude Code integration
         (".claude/hooks", ".claude/hooks", ".claude/hooks/"),
         (".claude/rules", ".claude/rules", ".claude/rules/"),
         (".claude/skills", ".claude/skills", ".claude/skills/"),
         (".claude/setup", ".claude/setup", ".claude/setup/"),
         (".claude/CLAUDE.md", ".claude/CLAUDE.md", ".claude/CLAUDE.md"),
-        (".aios-custom/config", ".aios-custom/config", ".aios-custom/config/"),
-        (".aios-custom/STANDARDS.md", ".aios-custom/STANDARDS.md", ".aios-custom/STANDARDS.md"),
+        # Custom config overlay
+        (".aios-custom", ".aios-custom", ".aios-custom/"),
+        # Agent definitions
         ("agents", "agents", "agents/"),
+        # Documentation (architecture, agents, templates)
+        ("docs", "docs", "docs/"),
+        # Tools (squad-creator, etc.)
+        ("tools", "tools", "tools/"),
+        # Source code (validators, fixers, pipeline)
+        ("src", "src", "src/"),
+        # Tests
+        ("tests", "tests", "tests/"),
+        # GitHub config (workflows, PR templates)
+        (".github", ".github", ".github/"),
+        # Project config files
+        ("pyproject.toml", "pyproject.toml", "pyproject.toml"),
+        (".pre-commit-config.yaml", ".pre-commit-config.yaml", ".pre-commit-config.yaml"),
+        (".gitignore", ".gitignore", ".gitignore"),
+        (".env.example", ".env.example", ".env.example"),
+        ("README.md", "README.md", "README.md"),
+        ("CHANGELOG.md", "CHANGELOG.md", "CHANGELOG.md"),
+        ("LICENSE", "LICENSE", "LICENSE"),
     ]
 
     for src_rel, dest_rel, label in copy_targets:
