@@ -1,0 +1,55 @@
+# Repository Registry
+# Used by devops agent for multi-repo push operations
+#
+# Usage: *push <repo-name> or *push (interactive selection)
+
+repos:
+  mmos:
+    path: /Users/alan/Code/mmos
+    remote: origin
+    branch: main
+    description: Main development repository
+    url: https://github.com/oalanicolas/mmos.git
+    force_push: false
+    pre_push_checks: true
+
+  lendaria:
+    path: /Users/alan/Code/mmos/app
+    remote: origin
+    branch: main
+    description: Vercel deployment (nested repo)
+    url: https://github.com/oalanicolas/lendarIA.git
+    force_push: true
+    pre_push_checks: false
+    notes: |
+      - Push-only remote, never pull
+      - Triggers Vercel auto-deploy
+      - Nested git repo inside /app
+
+  outputs:
+    path: /Users/alan/Code/mmos/outputs
+    remote: origin
+    branch: main
+    description: Outputs lendários (minds, books, courses, perfis)
+    url: https://github.com/oalanicolas/outputs-lendarios.git
+    force_push: false
+    pre_push_checks: false
+    status: active
+    notes: |
+      - Repositório separado para artefatos gerados
+      - 1.4GB+ de conteúdo (books, minds, courses)
+      - Sincronização manual via *push outputs
+
+# Default behaviors
+defaults:
+  confirm_before_push: true
+  show_diff_summary: true
+  max_files_without_warning: 50
+
+# Aliases for convenience
+aliases:
+  vercel: lendaria
+  app: lendaria
+  main: mmos
+  artifacts: outputs
+  lendarios: outputs

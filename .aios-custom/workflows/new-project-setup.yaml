@@ -1,0 +1,106 @@
+# New Project Setup Workflow
+# Guides DevOps agent through setting up a new project with proper environments
+# Version: 1.0.0
+#
+# Triggered by: PM/Architect agent when starting a new project
+# Executor: DevOps agent (Gage/Prometheus)
+
+name: new-project-setup
+description: "Set up a new project with environments, CI/CD, and quality gates"
+version: "1.0.0"
+triggeredBy:
+  - pm
+  - architect
+  - human
+executor: devops
+
+# ============================================================
+# STEPS
+# ============================================================
+steps:
+  - id: detect-phase
+    name: "Detect project phase"
+    description: "Determine if this is MVP/PoC or validated product"
+    action: ask
+    question: "Is this a new MVP/PoC or a validated product that needs staging?"
+    options:
+      mvp:
+        description: "New project, deploy directly to production"
+        next: setup-mvp
+      validated:
+        description: "Validated product, needs staging-first workflow"
+        next: setup-validated
+
+  - id: setup-mvp
+    name: "MVP Setup"
+    description: "Minimal setup for rapid iteration"
+    substeps:
+      - "Create GitHub repository"
+      - "Connect to Vercel (auto-deploy on push to main)"
+      - "Create Supabase project (single instance)"
+      - "Set enforceStaging: false in core-config"
+      - "Configure quality gates Layer 1 only (lint + typecheck)"
+      - "Add project to repos.yaml"
+    next: finalize
+
+  - id: setup-validated
+    name: "Validated Product Setup"
+    description: "Full environment strategy with staging"
+    substeps:
+      - "Create GitHub repository with branch protection"
+      - "Create 'staging' branch"
+      - "Connect to Vercel:"
+      - "  - Production: deploys from main"
+      - "  - Preview: deploys from staging + PR previews"
+      - "Create 2 Supabase projects (staging + production)"
+      - "Set enforceStaging: true in core-config"
+      - "Configure ALL quality gates (Layer 1 + 2 + 3)"
+      - "Install CodeRabbit on repository"
+      - "Apply branch protection via GitHub API"
+      - "Add project to repos.yaml with both environments"
+    next: finalize
+
+  - id: finalize
+    name: "Finalize Setup"
+    description: "Verify everything works"
+    substeps:
+      - "Run health check on all environments"
+      - "Test deploy pipeline (push → deploy → verify)"
+      - "Update deployment-strategy.yaml with project assignment"
+      - "Create initial handoff document"
+      - "Report setup summary to human"
+
+# ============================================================
+# GITHUB BRANCH PROTECTION (for validated projects)
+# Applied via: gh api repos/{owner}/{repo}/branches/{branch}/protection
+# ============================================================
+branchProtection:
+  main:
+    required_status_checks:
+      strict: true
+      contexts:
+        - "lint"
+        - "typecheck"
+        - "test"
+        - "build"
+    enforce_admins: false
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+    restrictions: null
+    allow_force_pushes: false
+    allow_deletions: false
+
+  staging:
+    required_status_checks:
+      strict: true
+      contexts:
+        - "lint"
+        - "typecheck"
+        - "build"
+    enforce_admins: false
+    required_pull_request_reviews:
+      required_approving_review_count: 0
+    restrictions: null
+    allow_force_pushes: false
+    allow_deletions: false

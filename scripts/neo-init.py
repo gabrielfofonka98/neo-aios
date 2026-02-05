@@ -313,6 +313,8 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
         (".claude/skills", ".claude/skills", ".claude/skills/"),
         (".claude/setup", ".claude/setup", ".claude/setup/"),
         (".claude/CLAUDE.md", ".claude/CLAUDE.md", ".claude/CLAUDE.md"),
+        # Framework core (tasks, workflows, templates, quality gates — READ-ONLY)
+        (".aios-core", ".aios-core", ".aios-core/"),
         # Custom config overlay
         (".aios-custom", ".aios-custom", ".aios-custom/"),
         # Agent definitions

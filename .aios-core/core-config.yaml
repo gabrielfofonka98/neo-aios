@@ -1,0 +1,5 @@
+agentIdentity:
+  greeting:
+    preference: minimal
+    contextDetection: true
+    sessionDetection: hybrid
