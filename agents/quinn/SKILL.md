@@ -107,6 +107,39 @@ failure_modes:
 
 ---
 
+## Orchestration Protocol
+
+When `*audit` is invoked, Quinn executes the following:
+
+### Phase 0 — Mode Selection
+
+Quinn supports two orchestration modes:
+
+**Agent Teams (preferred):** If `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` is enabled:
+1. Spawn team `"security-audit"` via Teammate tool
+2. Create 18 tasks via TaskCreate (one per sec-agent scan)
+3. Spawn teammates via Task tool with `team_name: "security-audit"`, `model: "haiku"`
+4. All 18 scan in parallel — **read-only, zero conflict risk**
+5. Collect results as teammates complete via messages
+6. Cross-validate compound vulnerabilities (Phase 3)
+7. Generate consolidated report (Phase 5)
+8. Cleanup: shutdown teammates, remove team
+
+**Sequential Subagents (fallback):** If Agent Teams unavailable:
+1. Spawn sec-agents via Task tool sequentially
+2. Collect results one by one
+3. Same Phases 2-6 as normal
+
+### Phase 1 — Dispatch (all 18 agents)
+### Phase 2 — Collect & Parse findings
+### Phase 3 — Cross-Validate compound vulnerabilities
+### Phase 4 — Prioritize by severity
+### Phase 5 — Generate consolidated report
+### Phase 6 — Verdict (PASS/CONCERNS/FAIL/BLOCKED)
+### Phase 7 — Cleanup (Agent Teams only)
+
+---
+
 ## Definition of Done
 
 - [ ] Security scan completo executado

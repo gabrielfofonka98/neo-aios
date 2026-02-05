@@ -528,5 +528,39 @@ staging validated → merge to main → production
 
 ---
 
-*NEO-AIOS Technical Standards v1.0.0*
+---
+
+## 11. Claude Opus 4.6 — Breaking Changes & Migration
+
+> Updated: 2026-02-05
+
+### API Changes
+
+| Change | Status | Impact |
+|--------|--------|--------|
+| `thinking: {type: "adaptive"}` | **New default** | Replaces `{type: "enabled", budget_tokens: N}` |
+| `budget_tokens` | **Deprecated** | Will be removed in future release |
+| Prefill (assistant message prefills) | **Removed** | Returns 400 error on Opus 4.6 |
+| `output_format` → `output_config.format` | **Deprecated** | Old param still works but will be removed |
+| `effort` in `output_config` | **New (GA)** | low, medium, high (default), max (Opus 4.6 only) |
+| Context 1M tokens | **Beta** | Premium pricing above 200K |
+| Output 128K tokens | **New** | Requires streaming for large requests |
+| `inference_geo` | **New** | US-only inference at 1.1x pricing |
+
+### Anti-Patterns
+
+```
+NEVER: Use budget_tokens on Opus 4.6
+NEVER: Prefill assistant messages
+NEVER: Use max effort on simple tasks
+NEVER: Give two Agent Teams teammates the same file
+ALWAYS: Use adaptive thinking
+ALWAYS: Match effort to task complexity
+ALWAYS: Stream for output > 64K tokens
+```
+
+---
+
+*NEO-AIOS Technical Standards v1.1.0*
+*Updated for Claude Opus 4.6 (2026-02-05)*
 *"Never take the lazy path. Do the hard work now."*

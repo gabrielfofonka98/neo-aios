@@ -25,6 +25,21 @@ Shortcuts today = debugging tomorrow. No exceptions.
 
 ---
 
+## Model & Thinking (Opus 4.6)
+
+See `.claude/rules/` for detailed configuration:
+- `model-config.md` — Adaptive thinking, context window, output limits
+- `effort-levels.md` — Effort mapping per agent type (max/high/medium/low)
+- `agent-teams.md` — Multi-agent coordination, anti-conflict rules
+
+**Quick Reference:**
+- Thinking: **Adaptive** (model auto-decides depth)
+- Effort: **max** for QA/Architect/Spec, **high** for Dev/Data, **medium** for PM/Doc, **low** for sec-agents/utilities
+- Agent Teams: Enable with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude/settings.json`
+- Context: Up to **1M tokens** (beta), output up to **128K tokens**
+
+---
+
 ## Session Persistence (Survives Auto-Compact)
 
 **FIRST THING ON EVERY SINGLE TURN, BEFORE ANYTHING ELSE:**
@@ -318,6 +333,7 @@ Verify before assuming. Reuse before creating. Simplify before complicating. Ask
 
 ---
 
-*NEO-AIOS Configuration v1.0*
-*Last Updated: 2026-02-04*
+*NEO-AIOS Configuration v1.1*
+*Last Updated: 2026-02-05*
+*Updated for Claude Opus 4.6*
 *Stack: Python 3.12+ / uv / ruff / mypy / pytest / Click / Pydantic*

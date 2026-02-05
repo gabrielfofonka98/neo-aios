@@ -96,6 +96,7 @@ Thumbs.db
 # ============================================
 .aios/session-state.json
 outputs/
+CLAUDE.local.md
 
 # ============================================
 # Logs

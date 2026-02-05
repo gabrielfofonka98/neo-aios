@@ -280,6 +280,7 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
 
     copy_targets = [
         (".claude/hooks", ".claude/hooks", ".claude/hooks/"),
+        (".claude/rules", ".claude/rules", ".claude/rules/"),
         (".claude/CLAUDE.md", ".claude/CLAUDE.md", ".claude/CLAUDE.md"),
         ("agents", "agents", "agents/"),
     ]
@@ -416,6 +417,55 @@ scope:
     config_file.write_text(yaml_content)
     return True
 
+def create_claude_local_md(project_root: Path) -> bool:
+    """Create CLAUDE.local.md template for personal project preferences."""
+    local_md = project_root / "CLAUDE.local.md"
+    if local_md.exists():
+        return False
+
+    local_md.write_text("""# Personal Project Preferences (CLAUDE.local.md)
+# This file is gitignored - your personal preferences for this project.
+# Add anything specific to YOUR development environment.
+
+# Examples:
+# - Your preferred test data
+# - Your sandbox/staging URLs
+# - Personal workflow shortcuts
+# - Notes from past sessions
+
+## My Environment
+# STAGING_URL=https://...
+# TEST_USER=...
+
+## Session Notes
+# (Claude Code's /remember command can add patterns here automatically)
+""")
+    return True
+
+
+def suggest_agent_teams_setup() -> None:
+    """Show instructions for enabling Agent Teams in user settings."""
+    settings_path = Path.home() / ".claude" / "settings.json"
+    already_enabled = False
+
+    if settings_path.exists():
+        try:
+            settings = json.loads(settings_path.read_text())
+            env = settings.get("env", {})
+            if env.get("CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS") == "1":
+                already_enabled = True
+        except Exception:
+            pass
+
+    if already_enabled:
+        ok("Agent Teams already enabled in ~/.claude/settings.json")
+    else:
+        info("Agent Teams (experimental) not enabled yet.")
+        info("To enable parallel security scans with Quinn:")
+        info(f'  Add to ~/.claude/settings.json under "env":')
+        info(f'    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"')
+
+
 def update_gitignore(project_root: Path) -> str | None:
     """Update .gitignore with AIOS entries."""
     gitignore_path = project_root / ".gitignore"
@@ -424,6 +474,7 @@ def update_gitignore(project_root: Path) -> str | None:
 # NEO-AIOS (runtime state)
 .aios/
 config/credentials.yaml
+CLAUDE.local.md
 """
 
     marker = "# NEO-AIOS (runtime state)"
@@ -608,6 +659,14 @@ def main() -> None:
         print(f"  {c.GREEN}Updated:{c.RESET} .gitignore {c.DIM}(added .aios/ entries){c.RESET}")
     elif gitignore_result == "created":
         print(f"  {c.GREEN}Created:{c.RESET} .gitignore")
+
+    # Create CLAUDE.local.md template
+    if create_claude_local_md(project_root):
+        print(f"  {c.GREEN}Created:{c.RESET} CLAUDE.local.md {c.DIM}(personal preferences, gitignored){c.RESET}")
+
+    # Agent Teams setup hint
+    print()
+    suggest_agent_teams_setup()
 
     # Make hooks executable
     hooks_dir = project_root / ".claude" / "hooks"
