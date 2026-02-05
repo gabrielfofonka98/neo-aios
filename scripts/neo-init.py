@@ -59,6 +59,10 @@ def header(step: int, total: int, msg: str) -> None:
 # ASCII logo
 # ---------------------------------------------------------------------------
 def print_logo() -> None:
+    """Print the NEO-AIOS logo. Skipped if called from install.sh."""
+    if os.environ.get("NEO_AIOS_FROM_INSTALLER"):
+        return
+
     version = "0.1.0"
     try:
         import tomllib
@@ -71,15 +75,16 @@ def print_logo() -> None:
         pass
 
     print()
-    print(f"{c.BOLD_WHITE}    _   _ ______ ____            ___  _____ ____   _____ {c.RESET}")
-    print(f"{c.BOLD_WHITE}   | \\ | |  ____/ __ \\   ___    / _ \\|_   _/ __ \\ / ____|{c.RESET}")
-    print(f"{c.BOLD_WHITE}   |  \\| | |__ | |  | | |___|  / /_\\ \\ | || |  | | (___  {c.RESET}")
-    print(f"{c.BOLD_WHITE}   | . ` |  __|| |  | |       |  _  | | || |  | |\\___ \\ {c.RESET}")
-    print(f"{c.BOLD_WHITE}   | |\\  | |___| |__| |       | | | |_| || |__| |____) |{c.RESET}")
-    print(f"{c.BOLD_WHITE}   |_| \\_|______\\____/        |_| |_|_____\\____/|_____/ {c.RESET}")
-    print()
-    print(f"    {c.DIM}Agent Intelligence Operating System{c.RESET}")
-    print(f"    {c.DIM}v{version}{c.RESET}")
+    print(f"{c.BOLD_CYAN}")
+    print(f"    ███╗   ██╗███████╗ ██████╗        █████╗ ██╗ ██████╗ ███████╗")
+    print(f"    ████╗  ██║██╔════╝██╔═══██╗      ██╔══██╗██║██╔═══██╗██╔════╝")
+    print(f"    ██╔██╗ ██║█████╗  ██║   ██║█████╗███████║██║██║   ██║███████╗")
+    print(f"    ██║╚██╗██║██╔══╝  ██║   ██║╚════╝██╔══██║██║██║   ██║╚════██║")
+    print(f"    ██║ ╚████║███████╗╚██████╔╝      ██║  ██║██║╚██████╔╝███████║")
+    print(f"    ╚═╝  ╚═══╝╚══════╝ ╚═════╝       ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚══════╝")
+    print(f"{c.RESET}")
+    print(f"    {c.DIM}Agent Intelligence Operating System v{version}{c.RESET}")
+    print(f"    {c.DIM}Big Tech Hierarchy · 36 Agents · 18 Security Sub-Agents{c.RESET}")
     print()
 
 # ---------------------------------------------------------------------------

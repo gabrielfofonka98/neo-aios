@@ -5,6 +5,9 @@
 # ===========================================================================
 set -e
 
+# CRITICAL: Save original directory BEFORE any cd
+ORIGINAL_DIR="$(pwd)"
+
 # ANSI colors
 CYAN='\033[36m'
 GREEN='\033[32m'
@@ -12,6 +15,7 @@ YELLOW='\033[33m'
 RED='\033[31m'
 BOLD='\033[1m'
 DIM='\033[2m'
+WHITE='\033[37m'
 RESET='\033[0m'
 
 REPO_URL="https://github.com/gabrielfofonka98/neo-aios.git"
@@ -25,26 +29,25 @@ info() { echo -e "  ${DIM}$1${RESET}"; }
 echo ""
 echo -e "${CYAN}${BOLD}"
 cat << 'EOF'
-     ╔═══════════════════════════════════════════════════════╗
-     ║                                                       ║
-     ║     _   _ ______ ____            ___  _____ ____      ║
-     ║    | \ | |  ____/ __ \   ___    / _ \|_   _/ __ \     ║
-     ║    |  \| | |__ | |  | | |___|  / /_\ \ | || |  | |    ║
-     ║    | . ` |  __|| |  | |       |  _  | | || |  | |     ║
-     ║    | |\  | |___| |__| |       | | | |_| || |__| |     ║
-     ║    |_| \_|______\____/        |_| |_|_____\____/      ║
-     ║                                                       ║
-     ║     Agent Intelligence Operating System               ║
-     ║     Big Tech Hierarchy Edition                        ║
-     ║                                                       ║
-     ╚═══════════════════════════════════════════════════════╝
+
+    ███╗   ██╗███████╗ ██████╗        █████╗ ██╗ ██████╗ ███████╗
+    ████╗  ██║██╔════╝██╔═══██╗      ██╔══██╗██║██╔═══██╗██╔════╝
+    ██╔██╗ ██║█████╗  ██║   ██║█████╗███████║██║██║   ██║███████╗
+    ██║╚██╗██║██╔══╝  ██║   ██║╚════╝██╔══██║██║██║   ██║╚════██║
+    ██║ ╚████║███████╗╚██████╔╝      ██║  ██║██║╚██████╔╝███████║
+    ╚═╝  ╚═══╝╚══════╝ ╚═════╝       ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚══════╝
+
 EOF
 echo -e "${RESET}"
+echo -e "    ${DIM}Agent Intelligence Operating System${RESET}"
+echo -e "    ${DIM}Big Tech Hierarchy · 36 Agents · 18 Security Sub-Agents${RESET}"
+echo -e "    ${DIM}Powered by Claude Opus 4.6${RESET}"
+echo ""
 
 # ---------------------------------------------------------------------------
 # Step 1: Check prerequisites
 # ---------------------------------------------------------------------------
-echo -e "\n${CYAN}${BOLD}[1/5]${RESET} ${BOLD}Checking prerequisites...${RESET}"
+echo -e "\n${CYAN}${BOLD}[1/6]${RESET} ${BOLD}Checking prerequisites...${RESET}"
 
 # Git
 if ! command -v git &>/dev/null; then
@@ -86,7 +89,7 @@ fi
 # ---------------------------------------------------------------------------
 # Step 2: Clone or update repository
 # ---------------------------------------------------------------------------
-echo -e "\n${CYAN}${BOLD}[2/5]${RESET} ${BOLD}Downloading NEO-AIOS...${RESET}"
+echo -e "\n${CYAN}${BOLD}[2/6]${RESET} ${BOLD}Downloading NEO-AIOS...${RESET}"
 
 if [ -d "$INSTALL_DIR/.git" ]; then
     info "Existing installation found at $INSTALL_DIR"
@@ -114,7 +117,7 @@ fi
 # ---------------------------------------------------------------------------
 # Step 3: Install Python dependencies
 # ---------------------------------------------------------------------------
-echo -e "\n${CYAN}${BOLD}[3/5]${RESET} ${BOLD}Installing dependencies...${RESET}"
+echo -e "\n${CYAN}${BOLD}[3/6]${RESET} ${BOLD}Installing dependencies...${RESET}"
 
 cd "$INSTALL_DIR"
 uv sync --quiet --extra dev 2>/dev/null && ok "Python dependencies installed" || {
@@ -123,9 +126,9 @@ uv sync --quiet --extra dev 2>/dev/null && ok "Python dependencies installed" ||
 }
 
 # ---------------------------------------------------------------------------
-# Step 4: Create CLI wrapper
+# Step 4: Create CLI wrappers
 # ---------------------------------------------------------------------------
-echo -e "\n${CYAN}${BOLD}[4/5]${RESET} ${BOLD}Setting up CLI...${RESET}"
+echo -e "\n${CYAN}${BOLD}[4/6]${RESET} ${BOLD}Setting up CLI...${RESET}"
 
 BIN_DIR="$HOME/.local/bin"
 mkdir -p "$BIN_DIR"
@@ -160,9 +163,9 @@ if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
 fi
 
 # ---------------------------------------------------------------------------
-# Step 5: Verify installation
+# Step 5: Verify global installation
 # ---------------------------------------------------------------------------
-echo -e "\n${CYAN}${BOLD}[5/5]${RESET} ${BOLD}Verifying installation...${RESET}"
+echo -e "\n${CYAN}${BOLD}[5/6]${RESET} ${BOLD}Verifying global installation...${RESET}"
 
 if [ -x "$BIN_DIR/neo-aios" ]; then
     ok "neo-aios CLI installed"
@@ -180,29 +183,20 @@ fi
 AGENT_COUNT=$(find "$INSTALL_DIR/agents" -maxdepth 1 -type d 2>/dev/null | tail -n +2 | wc -l | tr -d ' ')
 SEC_COUNT=$(find "$INSTALL_DIR/agents" -maxdepth 1 -type d -name "sec-*" 2>/dev/null | wc -l | tr -d ' ')
 HOOK_COUNT=$(find "$INSTALL_DIR/.claude/hooks" -name "*.sh" 2>/dev/null | wc -l | tr -d ' ')
-TEST_COUNT=$(find "$INSTALL_DIR/tests" -name "test_*.py" 2>/dev/null | wc -l | tr -d ' ')
+
+ok "Global install: ${AGENT_COUNT} agents, ${SEC_COUNT} security sub-agents, ${HOOK_COUNT} hooks"
 
 # ---------------------------------------------------------------------------
-# Summary
+# Step 6: Initialize project (interactive wizard)
 # ---------------------------------------------------------------------------
+echo -e "\n${CYAN}${BOLD}[6/6]${RESET} ${BOLD}Initializing project in ${WHITE}${ORIGINAL_DIR}${RESET}${BOLD}...${RESET}"
 echo ""
-echo -e "${CYAN}  ┌───────────────────────────────────────────────────────┐${RESET}"
-echo -e "${CYAN}  │${RESET}  ${GREEN}${BOLD}NEO-AIOS installed successfully!${RESET}                     ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}                                                       ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}  ${BOLD}${AGENT_COUNT} agents${RESET} ${DIM}│${RESET} ${BOLD}${SEC_COUNT} security sub-agents${RESET}             ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}  ${BOLD}${HOOK_COUNT} hooks${RESET}  ${DIM}│${RESET} ${BOLD}${TEST_COUNT}+ tests${RESET}                          ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}                                                       ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}  ${DIM}Installed to:${RESET} ${BOLD}~/.neo-aios/${RESET}                          ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}                                                       ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}  ${DIM}Next steps:${RESET}                                            ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}    ${GREEN}cd your-project/${RESET}                                    ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}    ${GREEN}neo-init${RESET}             ${DIM}# Initialize in project${RESET}     ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}                                                       ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}  ${DIM}Agents (in Claude Code):${RESET}                               ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}    ${GREEN}/dev${RESET}                 ${DIM}# Developer (Dex)${RESET}           ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}    ${GREEN}/architect${RESET}           ${DIM}# Architect (Aria)${RESET}          ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}    ${GREEN}/devops${RESET}              ${DIM}# DevOps (Gage)${RESET}             ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}    ${GREEN}/qa${RESET}                  ${DIM}# Security QA (Quinn)${RESET}       ${CYAN}│${RESET}"
-echo -e "${CYAN}  │${RESET}                                                       ${CYAN}│${RESET}"
-echo -e "${CYAN}  └───────────────────────────────────────────────────────┘${RESET}"
-echo ""
+
+# Run neo-init.py with the ORIGINAL directory (where the user ran install from)
+# NEO_AIOS_FROM_INSTALLER=1 tells neo-init.py to skip its own logo (already shown)
+cd "$INSTALL_DIR"
+if [ -f "scripts/neo-init.py" ]; then
+    NEO_AIOS_FROM_INSTALLER=1 uv run python scripts/neo-init.py "$ORIGINAL_DIR"
+else
+    fail "neo-init.py not found at $INSTALL_DIR/scripts/neo-init.py"
+fi
