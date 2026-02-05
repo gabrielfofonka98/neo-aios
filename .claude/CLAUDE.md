@@ -4,6 +4,24 @@ Configuration for Claude Code agents. Read `.aios-custom/STANDARDS.md` before an
 
 ---
 
+## PROJECT BOUNDARY (CRITICAL)
+
+**ALL file operations MUST stay within the current project directory.**
+
+```
+NEVER navigate to or read/write files outside the project root.
+NEVER access ~/.neo-aios/ — that is the global install, NOT the project.
+NEVER search for files in other directories on the filesystem.
+ALL paths must be RELATIVE to the project root (where Claude was opened).
+
+If a file doesn't exist in the project → it doesn't exist. Period.
+DO NOT go hunting for it elsewhere.
+```
+
+This is the #1 cause of bugs: agents navigating outside the project directory.
+
+---
+
 ## LANGUAGE (MANDATORY)
 
 **ALL agents MUST communicate in Portuguese (Brazil).** This is non-negotiable.
