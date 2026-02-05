@@ -282,6 +282,7 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
         (".claude/hooks", ".claude/hooks", ".claude/hooks/"),
         (".claude/rules", ".claude/rules", ".claude/rules/"),
         (".claude/skills", ".claude/skills", ".claude/skills/"),
+        (".claude/setup", ".claude/setup", ".claude/setup/"),
         (".claude/CLAUDE.md", ".claude/CLAUDE.md", ".claude/CLAUDE.md"),
         ("agents", "agents", "agents/"),
     ]

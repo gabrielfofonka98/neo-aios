@@ -1,5 +1,33 @@
 {
   "$schema": "https://claude.ai/code/settings-schema.json",
+  "permissions": {
+    "allow": [
+      "Read(**/*)",
+      "Write(**/*)",
+      "Edit(**/*)",
+      "Bash",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "Glob",
+      "Grep",
+      "NotebookEdit",
+      "Skill(*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Bash(sudo rm -rf:*)",
+      "Bash(mkfs:*)",
+      "Bash(dd if=/dev/zero:*)",
+      "Bash(chmod -R 777 /)"
+    ]
+  },
+  "language": "Português",
+  "sandbox": {
+    "enabled": false
+  },
   "hooks": {
     "SessionStart": [
       {
