@@ -144,7 +144,8 @@ cat > "$BIN_DIR/neo-init" << 'WRAPPER'
 #!/usr/bin/env bash
 # NEO-AIOS Project Initializer
 INSTALL_DIR="$HOME/.neo-aios"
-cd "$INSTALL_DIR" && uv run python scripts/neo-init.py "$@"
+PROJECT_DIR="${1:-$(pwd)}"
+(cd "$INSTALL_DIR" && uv run python scripts/neo-init.py "$PROJECT_DIR")
 WRAPPER
 chmod +x "$BIN_DIR/neo-init"
 
