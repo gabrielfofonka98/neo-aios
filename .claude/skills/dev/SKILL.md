@@ -28,14 +28,14 @@ activation-instructions:
       This ensures recovery after auto-compact.
   - STEP 3: |
       Display a concise greeting with agent name, role, and key commands
-      The buildGreeting(agentDefinition, conversationHistory) method:
-        - Detects session type (new/existing/workflow) via context analysis
-        - Checks git configuration status (with 5min cache)
-        - Loads project status automatically
-        - Filters commands by visibility metadata (full/quick/key)
-        - Suggests workflow next steps if in recurring pattern
-        - Formats adaptive greeting automatically
-  - STEP 4: Display the greeting returned by GreetingBuilder
+      Greeting should:
+        - Show agent name, icon, and role
+        - List key commands (visibility: quick or key)
+        - Show project context if available from .aios/session-state.json
+        - Be concise - no walls of text
+        - Suggest next action if resuming work
+        - 
+  - STEP 4: Display the greeting
   - STEP 5: HALT and await user input
   - IMPORTANT: Do NOT improvise or add explanatory text beyond what is specified in greeting_levels and Quick Commands section
   - DO NOT: Load any other agent files during activation
@@ -193,11 +193,7 @@ dependencies:
 
   coderabbit_integration:
     enabled: true
-    installation_mode: wsl
-    wsl_config:
-      distribution: Ubuntu
-      installation_path: ~/.local/bin/coderabbit
-      working_directory: /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core
+    installation_mode: native
     usage:
       - Pre-commit quality check - run before marking story complete
       - Catch issues early - find bugs, security issues, code smells during development
@@ -226,7 +222,7 @@ dependencies:
       max_iterations = 2
 
       WHILE iteration < max_iterations:
-        1. Run: wsl bash -c 'cd /mnt/c/.../@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only -t uncommitted'
+        1. Run: coderabbit --prompt-only -t uncommitted'
         2. Parse output for CRITICAL issues
 
         IF no CRITICAL issues:
@@ -245,13 +241,13 @@ dependencies:
         - DO NOT mark story complete
 
     commands:
-      dev_pre_commit_uncommitted: "wsl bash -c 'cd /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only -t uncommitted'"
+      dev_pre_commit_uncommitted: "coderabbit --prompt-only -t uncommitted'"
     execution_guidelines: |
-      CRITICAL: CodeRabbit CLI is installed in WSL, not Windows.
+      CRITICAL: CodeRabbit CLI must be installed locally.
 
       **How to Execute:**
-      1. Use 'wsl bash -c' wrapper for all commands
-      2. Navigate to project directory in WSL path format (/mnt/c/...)
+      1. Run coderabbit commands directly in terminal
+      2. Navigate to project root directory
       3. Use full path to coderabbit binary (~/.local/bin/coderabbit)
 
       **Timeout:** 15 minutes (900000ms) - CodeRabbit reviews take 7-30 min
@@ -259,9 +255,9 @@ dependencies:
       **Self-Healing:** Max 2 iterations for CRITICAL issues only
 
       **Error Handling:**
-      - If "coderabbit: command not found" → verify wsl_config.installation_path
+      - If "coderabbit: command not found" → verify coderabbit is in PATH
       - If timeout → increase timeout, review is still processing
-      - If "not authenticated" → user needs to run: wsl bash -c '~/.local/bin/coderabbit auth status'
+      - If "not authenticated" → user needs to run: coderabbit auth status
     report_location: docs/qa/coderabbit-reports/
     integration_point: "Part of story completion workflow in develop-story.md"
 

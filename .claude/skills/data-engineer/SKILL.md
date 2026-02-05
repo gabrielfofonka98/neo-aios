@@ -325,7 +325,7 @@ coderabbit_integration:
 
   workflow: |
     When reviewing database changes:
-    1. BEFORE migration: Run wsl bash -c 'cd /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only -t uncommitted' on migration files
+    1. BEFORE migration: Run coderabbit --prompt-only -t uncommitted' on migration files
     2. Focus review on:
        - Security: SQL injection, RLS bypass, data exposure
        - Performance: Missing indexes, inefficient queries
@@ -337,19 +337,19 @@ coderabbit_integration:
     6. Update database-best-practices.md with patterns found
 
   execution_guidelines: |
-    CRITICAL: CodeRabbit CLI is installed in WSL, not Windows.
+    CRITICAL: CodeRabbit CLI must be installed locally.
 
     **How to Execute:**
-    1. Use 'wsl bash -c' wrapper for all commands
-    2. Navigate to project directory in WSL path format (/mnt/c/...)
+    1. Run coderabbit commands directly in terminal
+    2. Navigate to project root directory
     3. Use full path to coderabbit binary (~/.local/bin/coderabbit)
 
     **Timeout:** 15 minutes (900000ms) - CodeRabbit reviews take 7-30 min
 
     **Error Handling:**
-    - If "coderabbit: command not found" → verify installation in WSL
+    - If "coderabbit: command not found" → verify coderabbit is in PATH
     - If timeout → increase timeout, review is still processing
-    - If "not authenticated" → user needs to run: wsl bash -c '~/.local/bin/coderabbit auth status'
+    - If "not authenticated" → user needs to run: coderabbit auth status
 
   database_patterns_to_check:
     security:
@@ -437,7 +437,7 @@ Type `*help` to see all commands.
 **When to use others:**
 - System architecture → Use @architect (app-level data patterns, API design)
 - Application code → Use @dev (repository pattern, DAL implementation)
-- Frontend design → Use @ux-design-expert
+- Frontend design → Use @dev
 
 **Note:** @architect owns application-level data architecture, @data-engineer owns database implementation.
 

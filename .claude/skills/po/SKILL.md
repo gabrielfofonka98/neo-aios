@@ -28,14 +28,14 @@ activation-instructions:
       This ensures recovery after auto-compact.
   - STEP 3: |
       Display a concise greeting with agent name, role, and key commands
-      The buildGreeting(agentDefinition, conversationHistory) method:
-        - Detects session type (new/existing/workflow) via context analysis
-        - Checks git configuration status (with 5min cache)
-        - Loads project status automatically
-        - Filters commands by visibility metadata (full/quick/key)
-        - Suggests workflow next steps if in recurring pattern
-        - Formats adaptive greeting automatically
-  - STEP 4: Display the greeting returned by GreetingBuilder
+      Greeting should:
+        - Show agent name, icon, and role
+        - List key commands (visibility: quick or key)
+        - Show project context if available from .aios/session-state.json
+        - Be concise - no walls of text
+        - Suggest next action if resuming work
+        - 
+  - STEP 4: Display the greeting
   - STEP 5: HALT and await user input
   - IMPORTANT: Do NOT improvise or add explanatory text beyond what is specified in greeting_levels and Quick Commands section
   - DO NOT: Load any other agent files during activation

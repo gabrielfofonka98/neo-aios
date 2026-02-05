@@ -217,7 +217,7 @@ dependencies:
     - release-checklist.md
   utils:
     - branch-manager            # Manages git branch operations and workflows
-    - repository-detector       # Detect repository context dynamically
+    - git                       # Detect repository context via git remote
     - gitignore-manager         # Manage gitignore rules per mode
     - version-tracker           # Track version history and semantic versioning
     - git-wrapper               # Abstracts git command execution for consistency
@@ -229,11 +229,7 @@ dependencies:
 
   coderabbit_integration:
     enabled: true
-    installation_mode: wsl
-    wsl_config:
-      distribution: Ubuntu
-      installation_path: ~/.local/bin/coderabbit
-      working_directory: /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core
+    installation_mode: native
     usage:
       - Pre-PR quality gate - run before creating pull requests
       - Pre-push validation - verify code quality before push
@@ -245,23 +241,23 @@ dependencies:
       MEDIUM: Document in PR description, create follow-up issue
       LOW: Optional improvements, note in comments
     commands:
-      pre_push_uncommitted: "wsl bash -c 'cd /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only -t uncommitted'"
-      pre_pr_against_main: "wsl bash -c 'cd /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only --base main'"
-      pre_commit_committed: "wsl bash -c 'cd /mnt/c/Users/AllFluence-User/Workspaces/AIOS/AIOS-V4/@synkra/aios-core && ~/.local/bin/coderabbit --prompt-only -t committed'"
+      pre_push_uncommitted: "coderabbit --prompt-only -t uncommitted'"
+      pre_pr_against_main: "coderabbit --prompt-only --base main'"
+      pre_commit_committed: "coderabbit --prompt-only -t committed'"
     execution_guidelines: |
-      CRITICAL: CodeRabbit CLI is installed in WSL, not Windows.
+      CRITICAL: CodeRabbit CLI must be installed locally.
 
       **How to Execute:**
-      1. Use 'wsl bash -c' wrapper for all commands
-      2. Navigate to project directory in WSL path format (/mnt/c/...)
+      1. Run coderabbit commands directly in terminal
+      2. Navigate to project root directory
       3. Use full path to coderabbit binary (~/.local/bin/coderabbit)
 
       **Timeout:** 15 minutes (900000ms) - CodeRabbit reviews take 7-30 min
 
       **Error Handling:**
-      - If "coderabbit: command not found" → verify wsl_config.installation_path
+      - If "coderabbit: command not found" → verify coderabbit is in PATH
       - If timeout → increase timeout, review is still processing
-      - If "not authenticated" → user needs to run: wsl bash -c '~/.local/bin/coderabbit auth status'
+      - If "not authenticated" → user needs to run: coderabbit auth status
     report_location: docs/qa/coderabbit-reports/
     integration_point: "Runs automatically in *pre-push and *create-pr workflows"
 
@@ -286,12 +282,12 @@ dependencies:
 
   repository_agnostic_design:
     principle: "NEVER assume a specific repository - detect dynamically on activation"
-    detection_method: "Use repository-detector.js to identify repository URL and installation mode"
+    detection_method: "Use git remote -v to identify repository URL and installation mode"
     installation_modes:
       framework-development: "agents/ and .claude/skills/ are SOURCE CODE (committed to git)"
       project-development: "NEO-AIOS installed via neo-init (framework in ~/.neo-aios)"
     detection_priority:
-      - ".aios-installation-config.yaml (explicit user choice)"
+      - "config/neo-aios.yaml (project configuration)"
       - "package.json name field check"
       - "git remote URL pattern matching"
       - "Interactive prompt if ambiguous"
@@ -323,7 +319,7 @@ dependencies:
     repository_detection: |
       User activates: "@devops"
       @devops:
-        1. Call repository-detector.js
+        1. Call git remote -v
         2. Detect git remote URL, package.json, config file
         3. Determine mode (framework-dev or project-dev)
         4. Store context for session

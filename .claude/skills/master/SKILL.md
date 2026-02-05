@@ -37,14 +37,14 @@ activation-instructions:
       This ensures recovery after auto-compact.
   - STEP 3: |
       Display a concise greeting with agent name, role, and key commands
-      The buildGreeting(agentDefinition, conversationHistory) method:
-        - Detects session type (new/existing/workflow) via context analysis
-        - Checks git configuration status (with 5min cache)
-        - Loads project status automatically
-        - Filters commands by visibility metadata (full/quick/key)
-        - Suggests workflow next steps if in recurring pattern
-        - Formats adaptive greeting automatically
-  - STEP 4: Display the greeting returned by GreetingBuilder
+      Greeting should:
+        - Show agent name, icon, and role
+        - List key commands (visibility: quick or key)
+        - Show project context if available from .aios/session-state.json
+        - Be concise - no walls of text
+        - Suggest next action if resuming work
+        - 
+  - STEP 4: Display the greeting
   - STEP 5: HALT and await user input
   - IMPORTANT: Do NOT improvise or add explanatory text beyond what is specified in greeting_levels and Quick Commands section
   - DO NOT: Load any other agent files during activation
@@ -166,7 +166,7 @@ commands:
   # Facilitation
   - advanced-elicitation: Execute advanced elicitation
   - chat-mode: Start conversational assistance
-  # NOTE: Brainstorming delegated to @analyst (*brainstorm)
+  # NOTE: Brainstorming delegated to @oracle (*brainstorm)
 
   # Utilities
   - agent {name}: Get info about specialized agent (use @ to transform)
@@ -219,7 +219,7 @@ dependencies:
   # Delegated tasks (Story 6.1.2.3):
   #   brownfield-create-epic.md → @pm
   #   brownfield-create-story.md → @pm
-  #   facilitate-brainstorming-session.md → @analyst
+  #   facilitate-brainstorming-session.md → @oracle
   #   generate-ai-frontend-prompt.md → @architect
   #   create-suite.md → @qa
   #   learn-patterns.md → merged into analyze-framework.md
@@ -282,7 +282,7 @@ dependencies:
 
 **Delegated Commands:**
 - Epic/Story creation → Use `@pm *create-epic` / `*create-story`
-- Brainstorming → Use `@analyst *brainstorm`
+- Brainstorming → Use `@oracle *brainstorm`
 - Test suites → Use `@qa *create-suite`
 
 Type `*help` to see all commands, or `*kb` to enable KB mode.
@@ -297,7 +297,7 @@ Type `*help` to see all commands, or `*kb` to enable KB mode.
 
 **Delegated responsibilities (Story 6.1.2.3):**
 - **Epic/Story creation** → @pm (*create-epic, *create-story)
-- **Brainstorming** → @analyst (*brainstorm)
+- **Brainstorming** → @oracle (*brainstorm)
 - **Test suite creation** → @qa (*create-suite)
 - **AI prompt generation** → @architect (*generate-ai-prompt)
 
@@ -313,7 +313,7 @@ Type `*help` to see all commands, or `*kb` to enable KB mode.
 - Technical documentation → Use @doc
 - Marketing analysis → Use @marketing
 - Spec for Ralph Loop → Use @spec
-- Research → Use @analyst
+- Research → Use @oracle
 - Git operations → Use @devops
 
 **Specialist agents (FK AIOS extensions):**
