@@ -70,7 +70,7 @@ ok "Python $PYTHON_VER"
 # uv (required for NEO-AIOS)
 if ! command -v uv &>/dev/null; then
     warn "uv not found. Installing..."
-    curl -LsSf https://astral.sh/uv/install.sh | sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh < /dev/null
     export PATH="$HOME/.local/bin:$PATH"
     if ! command -v uv &>/dev/null; then
         fail "Failed to install uv. Install manually: https://docs.astral.sh/uv/"
@@ -95,14 +95,14 @@ if [ -d "$INSTALL_DIR/.git" ]; then
     info "Existing installation found at $INSTALL_DIR"
     info "Updating..."
     cd "$INSTALL_DIR"
-    git pull --quiet origin main 2>/dev/null || true
+    git pull --quiet origin main < /dev/null 2>/dev/null || true
     ok "Updated to latest version"
 else
     if [ -d "$INSTALL_DIR" ]; then
         info "Removing incomplete installation..."
         rm -rf "$INSTALL_DIR"
     fi
-    git clone --quiet "$REPO_URL" "$INSTALL_DIR"
+    git clone --quiet "$REPO_URL" "$INSTALL_DIR" < /dev/null
     ok "Cloned to $INSTALL_DIR"
 fi
 
@@ -120,9 +120,9 @@ fi
 echo -e "\n${CYAN}${BOLD}[3/6]${RESET} ${BOLD}Installing dependencies...${RESET}"
 
 cd "$INSTALL_DIR"
-uv sync --quiet --extra dev 2>/dev/null && ok "Python dependencies installed" || {
+uv sync --quiet --extra dev < /dev/null 2>/dev/null && ok "Python dependencies installed" || {
     warn "uv sync failed. Trying pip..."
-    pip3 install -e ".[dev]" --quiet 2>/dev/null && ok "Installed with pip" || warn "Dependency installation failed (non-critical)"
+    pip3 install -e ".[dev]" --quiet < /dev/null 2>/dev/null && ok "Installed with pip" || warn "Dependency installation failed (non-critical)"
 }
 
 # ---------------------------------------------------------------------------

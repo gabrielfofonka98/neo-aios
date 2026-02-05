@@ -90,9 +90,30 @@ def print_logo() -> None:
 # ---------------------------------------------------------------------------
 # Utilities
 # ---------------------------------------------------------------------------
+
+# Use /dev/tty for interactive input when stdin might be consumed (e.g. piped install)
+_tty = None
+def _get_tty():
+    global _tty
+    if _tty is None:
+        try:
+            _tty = open("/dev/tty", "r")
+        except OSError:
+            _tty = sys.stdin
+    return _tty
+
+def tty_input(prompt: str) -> str:
+    """Read input from /dev/tty (works even when stdin is consumed)."""
+    sys.stdout.write(prompt)
+    sys.stdout.flush()
+    line = _get_tty().readline()
+    if not line:
+        raise EOFError("EOF when reading a line")
+    return line.rstrip("\n")
+
 def ask(question: str) -> str:
     """Ask a simple question."""
-    return input(f"  {c.CYAN}{question}{c.RESET} ").strip()
+    return tty_input(f"  {c.CYAN}{question}{c.RESET} ").strip()
 
 def ask_choice(question: str, options: list[dict]) -> dict:
     """Ask user to choose from numbered options."""
@@ -104,7 +125,7 @@ def ask_choice(question: str, options: list[dict]) -> dict:
         desc = f"{c.DIM} — {opt.get('desc', '')}{c.RESET}" if opt.get("desc") else ""
         print(f"  {c.BOLD_CYAN}{i}{c.RESET}. {label}{desc}")
     print()
-    answer = input(f"  {c.CYAN}Choose [1-{len(options)}]: {c.RESET}").strip()
+    answer = tty_input(f"  {c.CYAN}Choose [1-{len(options)}]: {c.RESET}").strip()
     try:
         idx = int(answer) - 1
         if 0 <= idx < len(options):
