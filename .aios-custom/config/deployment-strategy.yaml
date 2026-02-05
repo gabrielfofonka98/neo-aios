@@ -1,0 +1,107 @@
+# Deployment Strategy Configuration
+# Defines when to use MVP (direct deploy) vs Feature (staging-first) workflow
+# Version: 1.0.0
+
+strategies:
+  mvp:
+    name: "MVP / PoC Strategy"
+    description: |
+      Deploy directly to production. No staging required.
+      Use for: new projects, proof-of-concept, rapid validation.
+    workflow:
+      - develop on main or feature branch
+      - PR to main (optional, can push direct)
+      - auto-deploy to production
+    rules:
+      enforceStaging: false
+      allowDirectMain: true
+      requirePR: false
+      requireReview: false
+      qualityGates:
+        lint: true
+        typecheck: true
+        test: false
+        build: true
+    exitCriteria:
+      - "Product validated with real users"
+      - "Revenue or traction confirmed"
+      - "Team size > 1 developer"
+      - "Data loss would cause business impact"
+
+  feature:
+    name: "Feature / Staging-First Strategy"
+    description: |
+      All changes go through staging before production.
+      Use for: validated products, production apps, team projects.
+    workflow:
+      - develop on feature branch
+      - PR to staging branch
+      - auto-deploy to preview
+      - QA validation on staging
+      - merge staging to main
+      - auto-deploy to production
+    rules:
+      enforceStaging: true
+      allowDirectMain: false
+      requirePR: true
+      requireReview: true
+      qualityGates:
+        lint: true
+        typecheck: true
+        test: true
+        build: true
+        coderabbit: true
+        quinnReview: true
+    branchProtection:
+      main:
+        requirePR: true
+        requireApprovals: 1
+        requireStatusChecks: true
+        noPushDirect: true
+      staging:
+        requirePR: true
+        requireApprovals: 0
+        requireStatusChecks: true
+        noPushDirect: false
+
+  hotfix:
+    name: "Hotfix Strategy"
+    description: |
+      Emergency fix that bypasses staging.
+      Use for: critical bugs in production ONLY.
+    workflow:
+      - create hotfix branch from main
+      - fix + test locally
+      - PR directly to main (skip staging)
+      - deploy immediately
+      - cherry-pick fix back to staging
+    rules:
+      enforceStaging: false
+      allowDirectMain: true
+      requirePR: true
+      requireReview: false
+      qualityGates:
+        lint: true
+        typecheck: true
+        test: true
+        build: true
+    triggerConditions:
+      - "Production is down"
+      - "Data corruption active"
+      - "Security vulnerability exploited"
+      - "Revenue-blocking bug"
+
+projectStrategies:
+  default: mvp
+
+graduation:
+  proposedBy:
+    - devops
+    - pm
+    - architect
+  approvedBy: human
+  checklist:
+    - "Staging environment configured"
+    - "Branch protection rules applied"
+    - "CI/CD pipeline configured"
+    - "At least 1 successful staging to production deploy cycle tested"

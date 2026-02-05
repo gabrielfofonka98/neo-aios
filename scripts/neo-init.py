@@ -284,6 +284,8 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
         (".claude/skills", ".claude/skills", ".claude/skills/"),
         (".claude/setup", ".claude/setup", ".claude/setup/"),
         (".claude/CLAUDE.md", ".claude/CLAUDE.md", ".claude/CLAUDE.md"),
+        (".aios-custom/config", ".aios-custom/config", ".aios-custom/config/"),
+        (".aios-custom/STANDARDS.md", ".aios-custom/STANDARDS.md", ".aios-custom/STANDARDS.md"),
         ("agents", "agents", "agents/"),
     ]
 
@@ -309,6 +311,29 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
         settings_dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(settings_src, settings_dest)
         results.append({"label": ".claude/settings.json", "files": 1, "status": "copied"})
+
+    # Install agents as Claude Code skills
+    # agents/*/SKILL.md -> .claude/skills/*/SKILL.md
+    agents_src = source / "agents"
+    if agents_src.exists():
+        skill_count = 0
+        for agent_dir in agents_src.iterdir():
+            if not agent_dir.is_dir() or agent_dir.name == ".DS_Store":
+                continue
+            skill_md = agent_dir / "SKILL.md"
+            if skill_md.exists():
+                dest_skill_dir = dest / ".claude" / "skills" / agent_dir.name
+                dest_skill_dir.mkdir(parents=True, exist_ok=True)
+                dest_skill_md = dest_skill_dir / "SKILL.md"
+                if not dest_skill_md.exists():
+                    shutil.copy2(skill_md, dest_skill_md)
+                    skill_count += 1
+        if skill_count > 0:
+            results.append({
+                "label": "agents → .claude/skills/",
+                "files": skill_count,
+                "status": "installed",
+            })
 
     return results
 

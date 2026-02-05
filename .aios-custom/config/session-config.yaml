@@ -1,0 +1,28 @@
+# Session Persistence Configuration
+# Enables agent identity recovery after auto-compact or session restart
+# Version: 1.0.0
+
+# Session state file location (relative to project root)
+stateFile: ".aios/session-state.json"
+
+# Recovery behavior
+recovery:
+  enabled: true
+  autoRecover: true
+  preserve:
+    - activeAgent
+    - agentFile
+    - currentTask
+    - projectContext
+
+# Agent activation rules
+activation:
+  persistOnActivation: true
+  clearOnDeactivation: true
+
+# Handoff integration
+handoff:
+  enabled: true
+  location: "docs/sessions"
+  format: "YYYY-MM/YYYY-MM-DD-session.md"
+  includeSessionState: true
