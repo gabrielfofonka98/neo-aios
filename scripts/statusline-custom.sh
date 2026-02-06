@@ -95,16 +95,11 @@ esac
 CTX_REMAINING=$(echo "$INPUT" | jq -r '.context_window.remaining_percentage // 100')
 CTX_SIZE=$(echo "$INPUT" | jq -r '.context_window.context_window_size // 200000')
 
-# Effective remaining: remaining_percentage doesn't account for output buffer
-# Claude Code reserves ~17% of context for model output, so auto-compact
-# triggers well before remaining_percentage reaches 0.
-# This correction scales the value to match the UI's "Context left" indicator.
-BUFFER=17
-RAW_EFFECTIVE=$((CTX_REMAINING - BUFFER))
-if [ "$RAW_EFFECTIVE" -lt 0 ]; then RAW_EFFECTIVE=0; fi
-SCALE=$((100 - BUFFER))
-EFFECTIVE_CTX=$((RAW_EFFECTIVE * 100 / SCALE))
-if [ "$EFFECTIVE_CTX" -gt 100 ]; then EFFECTIVE_CTX=100; fi
+# Effective remaining: subtract autocompact buffer (~13% of context)
+# remaining_percentage includes space reserved for autocompact buffer,
+# so we subtract it to match the "Free space" shown by /context
+EFFECTIVE_CTX=$((CTX_REMAINING - 13))
+if [ "$EFFECTIVE_CTX" -lt 0 ]; then EFFECTIVE_CTX=0; fi
 
 CTX_PERCENT=$((100 - CTX_REMAINING))
 TOKENS_USED=$((CTX_SIZE * CTX_PERCENT / 100))
