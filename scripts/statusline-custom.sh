@@ -95,14 +95,9 @@ esac
 CTX_REMAINING=$(echo "$INPUT" | jq -r '.context_window.remaining_percentage // 100')
 CTX_SIZE=$(echo "$INPUT" | jq -r '.context_window.context_window_size // 200000')
 
-# Limite máximo útil: 180k tokens
-MAX_USEFUL_TOKENS=180000
-
-# Calcula tokens usados na janela atual
-TOKENS_USED=$((CTX_SIZE * (100 - CTX_REMAINING) / 100))
-
-# Calcula porcentagem em relação a 180k
-CTX_PERCENT=$((TOKENS_USED * 100 / MAX_USEFUL_TOKENS))
+# Usa valor REAL do Claude Code (100 - remaining = used)
+CTX_PERCENT=$((100 - CTX_REMAINING))
+TOKENS_USED=$((CTX_SIZE * CTX_PERCENT / 100))
 MODEL=$(echo "$INPUT" | jq -r '.model.display_name // "unknown"')
 CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
 SESSION_COST=$(echo "$INPUT" | jq -r '.cost.total_cost_usd // 0')
@@ -156,10 +151,13 @@ else
 fi
 
 # === Formata contexto (vermelho se > 60%) ===
-if [ "$CTX_PERCENT" -gt 60 ]; then
-    CTX_DISPLAY="${RED}${CTX_PERCENT}%${RESET}"
+# Show remaining context (red when < 20% left)
+if [ "$CTX_REMAINING" -lt 20 ]; then
+    CTX_DISPLAY="${RED}${CTX_REMAINING}%left${RESET}"
+elif [ "$CTX_REMAINING" -lt 40 ]; then
+    CTX_DISPLAY="${YELLOW}${CTX_REMAINING}%left${RESET}"
 else
-    CTX_DISPLAY="${CTX_PERCENT}%"
+    CTX_DISPLAY="${GREEN}${CTX_REMAINING}%left${RESET}"
 fi
 
 # === OUTPUT ===
