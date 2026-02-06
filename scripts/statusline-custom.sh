@@ -95,7 +95,17 @@ esac
 CTX_REMAINING=$(echo "$INPUT" | jq -r '.context_window.remaining_percentage // 100')
 CTX_SIZE=$(echo "$INPUT" | jq -r '.context_window.context_window_size // 200000')
 
-# Usa valor REAL do Claude Code (100 - remaining = used)
+# Effective remaining: remaining_percentage doesn't account for output buffer
+# Claude Code reserves ~17% of context for model output, so auto-compact
+# triggers well before remaining_percentage reaches 0.
+# This correction scales the value to match the UI's "Context left" indicator.
+BUFFER=17
+RAW_EFFECTIVE=$((CTX_REMAINING - BUFFER))
+if [ "$RAW_EFFECTIVE" -lt 0 ]; then RAW_EFFECTIVE=0; fi
+SCALE=$((100 - BUFFER))
+EFFECTIVE_CTX=$((RAW_EFFECTIVE * 100 / SCALE))
+if [ "$EFFECTIVE_CTX" -gt 100 ]; then EFFECTIVE_CTX=100; fi
+
 CTX_PERCENT=$((100 - CTX_REMAINING))
 TOKENS_USED=$((CTX_SIZE * CTX_PERCENT / 100))
 MODEL=$(echo "$INPUT" | jq -r '.model.display_name // "unknown"')
@@ -150,14 +160,13 @@ else
     RAM_PERCENT="--"
 fi
 
-# === Formata contexto (vermelho se > 60%) ===
-# Show remaining context (red when < 20% left)
-if [ "$CTX_REMAINING" -lt 20 ]; then
-    CTX_DISPLAY="${RED}${CTX_REMAINING}%left${RESET}"
-elif [ "$CTX_REMAINING" -lt 40 ]; then
-    CTX_DISPLAY="${YELLOW}${CTX_REMAINING}%left${RESET}"
+# === Formata contexto (based on effective remaining) ===
+if [ "$EFFECTIVE_CTX" -lt 15 ]; then
+    CTX_DISPLAY="${RED}${EFFECTIVE_CTX}%left${RESET}"
+elif [ "$EFFECTIVE_CTX" -lt 30 ]; then
+    CTX_DISPLAY="${YELLOW}${EFFECTIVE_CTX}%left${RESET}"
 else
-    CTX_DISPLAY="${GREEN}${CTX_REMAINING}%left${RESET}"
+    CTX_DISPLAY="${GREEN}${EFFECTIVE_CTX}%left${RESET}"
 fi
 
 # === OUTPUT ===
