@@ -289,13 +289,13 @@ def find_framework_source() -> Path | None:
     """Find the NEO-AIOS framework source directory."""
     # Option 1: ~/.neo-aios (global install)
     global_install = Path.home() / ".neo-aios"
-    if (global_install / "agents").exists() and (global_install / ".claude").exists():
+    if (global_install / ".claude" / "skills").exists() and (global_install / ".claude").exists():
         return global_install
 
     # Option 2: Running from inside the repo
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
-    if (repo_root / "agents").exists() and (repo_root / ".claude").exists():
+    if (repo_root / ".claude" / "skills").exists() and (repo_root / ".claude").exists():
         return repo_root
 
     return None
@@ -317,8 +317,7 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
         (".aios-core", ".aios-core", ".aios-core/"),
         # Custom config overlay
         (".aios-custom", ".aios-custom", ".aios-custom/"),
-        # Agent definitions
-        ("agents", "agents", "agents/"),
+        # Agent definitions live in .claude/skills/ (already copied above)
         # Documentation (architecture, agents, templates)
         ("docs", "docs", "docs/"),
         # Tools (squad-creator, etc.)
@@ -361,29 +360,6 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
         settings_dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(settings_src, settings_dest)
         results.append({"label": ".claude/settings.json", "files": 1, "status": "copied"})
-
-    # Install agents as Claude Code skills
-    # agents/*/SKILL.md -> .claude/skills/*/SKILL.md
-    agents_src = source / "agents"
-    if agents_src.exists():
-        skill_count = 0
-        for agent_dir in agents_src.iterdir():
-            if not agent_dir.is_dir() or agent_dir.name == ".DS_Store":
-                continue
-            skill_md = agent_dir / "SKILL.md"
-            if skill_md.exists():
-                dest_skill_dir = dest / ".claude" / "skills" / agent_dir.name
-                dest_skill_dir.mkdir(parents=True, exist_ok=True)
-                dest_skill_md = dest_skill_dir / "SKILL.md"
-                if not dest_skill_md.exists():
-                    shutil.copy2(skill_md, dest_skill_md)
-                    skill_count += 1
-        if skill_count > 0:
-            results.append({
-                "label": "agents → .claude/skills/",
-                "files": skill_count,
-                "status": "installed",
-            })
 
     return results
 
@@ -679,7 +655,7 @@ def main() -> None:
 
     # Step 2: Check existing installation
     header(2, TOTAL_STEPS, "Checking existing installation...")
-    has_existing = (project_root / ".aios").exists() or (project_root / "agents").exists()
+    has_existing = (project_root / ".aios").exists() or (project_root / ".claude" / "skills").exists()
     if has_existing:
         warn("Existing NEO-AIOS installation detected.")
         answer = ask("Overwrite framework files? (y/N):").lower()
@@ -755,13 +731,13 @@ def main() -> None:
             print(f"  {c.GREEN}Created:{c.RESET} {result['label']:<32} {detail}")
 
         # Count installed components
-        agents_dir = project_root / "agents"
+        skills_dir = project_root / ".claude" / "skills"
         hooks_dir = project_root / ".claude" / "hooks"
 
-        if agents_dir.exists():
-            agent_dirs = [d for d in agents_dir.iterdir() if d.is_dir()]
-            agent_count = len(agent_dirs)
-            security_count = len([d for d in agent_dirs if d.name.startswith("sec-")])
+        if skills_dir.exists():
+            skill_dirs = [d for d in skills_dir.iterdir() if d.is_dir()]
+            agent_count = len(skill_dirs)
+            security_count = len([d for d in skill_dirs if d.name.startswith("sec-")])
 
         if hooks_dir.exists():
             hook_count = len([f for f in hooks_dir.iterdir() if f.suffix == ".sh"])
