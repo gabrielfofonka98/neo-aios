@@ -304,38 +304,21 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
     """Copy framework files to project directory."""
     results = []
 
-    # Copy EVERYTHING from the framework, just like aios-evo does.
-    # The project directory should be a complete copy, not a partial one.
+    # Only copy SYSTEM files — no framework internals (src/, tests/, tools/, etc.)
+    # Those stay in ~/.neo-aios/ and are never copied to user projects.
     copy_targets = [
-        # Claude Code integration
+        # Claude Code integration (hidden)
         (".claude/hooks", ".claude/hooks", ".claude/hooks/"),
         (".claude/rules", ".claude/rules", ".claude/rules/"),
         (".claude/skills", ".claude/skills", ".claude/skills/"),
         (".claude/setup", ".claude/setup", ".claude/setup/"),
         (".claude/CLAUDE.md", ".claude/CLAUDE.md", ".claude/CLAUDE.md"),
-        # Framework core (tasks, workflows, templates, quality gates — READ-ONLY)
+        # Framework core — read-only (hidden)
         (".aios-core", ".aios-core", ".aios-core/"),
-        # Custom config overlay
+        # Custom config overlay (hidden)
         (".aios-custom", ".aios-custom", ".aios-custom/"),
-        # Agent definitions live in .claude/skills/ (already copied above)
-        # Documentation (architecture, agents, templates)
-        ("docs", "docs", "docs/"),
-        # Tools (squad-creator, etc.)
-        ("tools", "tools", "tools/"),
-        # Source code (validators, fixers, pipeline)
-        ("src", "src", "src/"),
-        # Tests
-        ("tests", "tests", "tests/"),
-        # GitHub config (workflows, PR templates)
-        (".github", ".github", ".github/"),
-        # Project config files
-        ("pyproject.toml", "pyproject.toml", "pyproject.toml"),
-        (".pre-commit-config.yaml", ".pre-commit-config.yaml", ".pre-commit-config.yaml"),
+        # Gitignore (visible, essential)
         (".gitignore", ".gitignore", ".gitignore"),
-        (".env.example", ".env.example", ".env.example"),
-        ("README.md", "README.md", "README.md"),
-        ("CHANGELOG.md", "CHANGELOG.md", "CHANGELOG.md"),
-        ("LICENSE", "LICENSE", "LICENSE"),
     ]
 
     for src_rel, dest_rel, label in copy_targets:
@@ -364,21 +347,58 @@ def copy_framework_files(source: Path, dest: Path) -> list[dict]:
     return results
 
 def create_directory_structure(project_root: Path) -> list[str]:
-    """Create required directories."""
-    dirs = [
+    """Create workspace directories with .gitkeep files.
+
+    Hidden dirs = system runtime (gitignored).
+    Visible dirs = organized workspace where agents write output.
+    All folders pre-created so agents never need to mkdir.
+    """
+    # Runtime state (hidden, gitignored)
+    runtime_dirs = [
         ".aios",
         ".aios/workflow-state",
-        ".aios/qa-reports",
+        ".aios/cache",
+    ]
+
+    # User workspace (visible, committed)
+    workspace_dirs = [
+        # Configuration
         "config",
-        "docs",
-        "docs/sessions",
+        # Documentation — agents write here
+        "docs/architecture",       # Aria: ADRs, system design, tech decisions
+        "docs/product",            # Morgan: PRDs, epics, stories
+        "docs/api",                # Sage: API documentation
+        "docs/database",           # Dara: schema docs, ERDs
+        "docs/design",             # Pixel: wireframes, user flows, specs
+        "docs/runbooks",           # Ops: SLOs, incident runbooks
+        "docs/sessions",           # Handoffs (YYYY-MM/)
+        # Reports — agent-generated analysis
+        "reports/security",        # Quinn: security audit reports
+        "reports/code-quality",    # Codex: code review, lint reports
+        "reports/testing",         # Tess: test plans, regression, bugs
+        "reports/analytics",       # Oracle: data analysis, dashboards
+        # Database
+        "database/migrations",     # Dara: SQL migrations
+        "database/seeds",          # Dara: seed data
     ]
 
     created = []
-    for d in dirs:
+
+    # Create runtime dirs (no .gitkeep — they're gitignored)
+    for d in runtime_dirs:
         path = project_root / d
         if not path.exists():
             path.mkdir(parents=True, exist_ok=True)
+            created.append(f"{d}/")
+
+    # Create workspace dirs with .gitkeep
+    for d in workspace_dirs:
+        path = project_root / d
+        if not path.exists():
+            path.mkdir(parents=True, exist_ok=True)
+            gitkeep = path / ".gitkeep"
+            if not gitkeep.exists():
+                gitkeep.touch()
             created.append(f"{d}/")
 
     return created

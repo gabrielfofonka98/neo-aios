@@ -14,6 +14,12 @@ config/credentials.yaml
 secrets/
 
 # ============================================
+# AIOS Runtime (gitignored, never committed)
+# ============================================
+.aios/
+CLAUDE.local.md
+
+# ============================================
 # Python
 # ============================================
 __pycache__/
@@ -92,33 +98,10 @@ ehthumbs.db
 Thumbs.db
 
 # ============================================
-# AIOS Runtime (created at runtime, not system)
-# ============================================
-.aios/
-outputs/
-CLAUDE.local.md
-
-# ============================================
-# User project data (not part of the system)
-# ============================================
-docs/projects/*
-!docs/projects/.gitkeep
-docs/sessions/*
-!docs/sessions/.gitkeep
-docs/architecture/*
-!docs/architecture/.gitkeep
-
-# ============================================
 # Logs
 # ============================================
 *.log
 logs/
-
-# ============================================
-# Build artifacts
-# ============================================
-*.egg-info/
-.eggs/
 
 # ============================================
 # Misc

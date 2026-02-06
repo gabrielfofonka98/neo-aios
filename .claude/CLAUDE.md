@@ -306,7 +306,7 @@ DELETE -> Always confirm
 ## Pre-Action Checklist
 
 ```
-[ ] Similar exists? (src/, agents/)
+[ ] Similar exists? (.claude/skills/, docs/, reports/)
 [ ] Using real data? (not mock)
 [ ] Verified physically? (ls, curl, pytest)
 [ ] Showed options? (before implementing)
