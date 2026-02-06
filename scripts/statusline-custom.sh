@@ -14,7 +14,7 @@ RESET=$'\033[0m'
 INPUT=$(cat)
 
 # === ACTIVE AGENT (from .aios/session-state.json) ===
-# Walk up directory tree to find .aios/session-state.json (CWD may be a subdirectory)
+# Walk up directory tree to find .aios/session-state.json
 CWD_FOR_AGENT=$(echo "$INPUT" | jq -r '.cwd // ""')
 ACTIVE_AGENT=""
 SEARCH_DIR="$CWD_FOR_AGENT"
@@ -27,29 +27,68 @@ while [ -n "$SEARCH_DIR" ] && [ "$SEARCH_DIR" != "/" ]; do
 done
 
 # Map agent ID to display name with emoji
+# Complete mapping of ALL agents (skills + external)
 case "$ACTIVE_AGENT" in
-    dev)            AGENT_DISPLAY="${CYAN}${BOLD}⚡ Dex${RESET}";;
-    architect)      AGENT_DISPLAY="${CYAN}${BOLD}🏛️ Aria${RESET}";;
-    qa)             AGENT_DISPLAY="${CYAN}${BOLD}🛡️ Quinn${RESET}";;
-    devops)         AGENT_DISPLAY="${CYAN}${BOLD}🔥 Gage${RESET}";;
-    master)         AGENT_DISPLAY="${CYAN}${BOLD}🎯 Orion${RESET}";;
-    pm)             AGENT_DISPLAY="${CYAN}${BOLD}📋 Morgan${RESET}";;
-    po)             AGENT_DISPLAY="${CYAN}${BOLD}📦 PO${RESET}";;
-    sm)             AGENT_DISPLAY="${CYAN}${BOLD}🔄 SM${RESET}";;
-    data-engineer)  AGENT_DISPLAY="${CYAN}${BOLD}🗄️ Dara${RESET}";;
-    doc)            AGENT_DISPLAY="${CYAN}${BOLD}📝 Sage${RESET}";;
-    spec)           AGENT_DISPLAY="${CYAN}${BOLD}📐 Rune${RESET}";;
-    ralph)          AGENT_DISPLAY="${CYAN}${BOLD}🤖 Ralph${RESET}";;
-    ux)             AGENT_DISPLAY="${CYAN}${BOLD}🎨 Pixel${RESET}";;
-    landing)        AGENT_DISPLAY="${CYAN}${BOLD}🚀 Blaze${RESET}";;
-    marketing)      AGENT_DISPLAY="${CYAN}${BOLD}📊 Spark${RESET}";;
-    qa-code)        AGENT_DISPLAY="${CYAN}${BOLD}🔬 Codex${RESET}";;
-    sre)            AGENT_DISPLAY="${CYAN}${BOLD}⚙️ Ops${RESET}";;
-    analyst)        AGENT_DISPLAY="${CYAN}${BOLD}📈 Oracle${RESET}";;
-    qa-functional)  AGENT_DISPLAY="${CYAN}${BOLD}🧪 Tess${RESET}";;
-    professor)      AGENT_DISPLAY="${CYAN}${BOLD}👨‍🏫 Professor${RESET}";;
-    cto|fofonka)    AGENT_DISPLAY="${CYAN}${BOLD}🧠 Fofonka${RESET}";;
-    *)              AGENT_DISPLAY="";;
+    # Core agents
+    master|aios-master)   AGENT_DISPLAY="${CYAN}${BOLD}🎯 Orion${RESET}";;
+    dev)                  AGENT_DISPLAY="${CYAN}${BOLD}⚡ Dex${RESET}";;
+    architect)            AGENT_DISPLAY="${CYAN}${BOLD}🏛️ Aria${RESET}";;
+    qa)                   AGENT_DISPLAY="${CYAN}${BOLD}🛡️ Quinn${RESET}";;
+    qa-code)              AGENT_DISPLAY="${CYAN}${BOLD}🔬 Codex${RESET}";;
+    qa-functional)        AGENT_DISPLAY="${CYAN}${BOLD}🧪 Tess${RESET}";;
+    devops)               AGENT_DISPLAY="${CYAN}${BOLD}🔥 Gage${RESET}";;
+    pm)                   AGENT_DISPLAY="${CYAN}${BOLD}📋 Morgan${RESET}";;
+    po)                   AGENT_DISPLAY="${CYAN}${BOLD}📦 PO${RESET}";;
+    sm)                   AGENT_DISPLAY="${CYAN}${BOLD}🔄 SM${RESET}";;
+    data-engineer)        AGENT_DISPLAY="${CYAN}${BOLD}🗄️ Dara${RESET}";;
+    doc)                  AGENT_DISPLAY="${CYAN}${BOLD}📝 Sage${RESET}";;
+    spec)                 AGENT_DISPLAY="${CYAN}${BOLD}📐 Rune${RESET}";;
+    ralph)                AGENT_DISPLAY="${CYAN}${BOLD}🤖 Ralph${RESET}";;
+    ux)                   AGENT_DISPLAY="${CYAN}${BOLD}🎨 Pixel${RESET}";;
+    landing)              AGENT_DISPLAY="${CYAN}${BOLD}🚀 Blaze${RESET}";;
+    marketing)            AGENT_DISPLAY="${CYAN}${BOLD}📊 Spark${RESET}";;
+    analyst)              AGENT_DISPLAY="${CYAN}${BOLD}📈 Oracle${RESET}";;
+    sre)                  AGENT_DISPLAY="${CYAN}${BOLD}⚙️ Ops${RESET}";;
+    cto|fofonka)          AGENT_DISPLAY="${CYAN}${BOLD}🧠 Fofonka${RESET}";;
+
+    # Utility agents
+    fixer)                AGENT_DISPLAY="${CYAN}${BOLD}🔧 Fixer${RESET}";;
+    handoff)              AGENT_DISPLAY="${CYAN}${BOLD}📤 Handoff${RESET}";;
+    clear-agent)          AGENT_DISPLAY="${CYAN}${BOLD}🧹 Clear${RESET}";;
+    test)                 AGENT_DISPLAY="${CYAN}${BOLD}🧪 Test${RESET}";;
+    staging)              AGENT_DISPLAY="${CYAN}${BOLD}🚦 Staging${RESET}";;
+
+    # Security sub-agents (Quinn's team)
+    sec-rls-guardian)            AGENT_DISPLAY="${YELLOW}${BOLD}🔒 Sentinel${RESET}";;
+    sec-framework-scanner)       AGENT_DISPLAY="${YELLOW}${BOLD}🩹 Patch${RESET}";;
+    sec-xss-hunter)              AGENT_DISPLAY="${YELLOW}${BOLD}🐍 Viper${RESET}";;
+    sec-api-access-tester)       AGENT_DISPLAY="${YELLOW}${BOLD}🚪 Gatekeeper${RESET}";;
+    sec-jwt-auditor)             AGENT_DISPLAY="${YELLOW}${BOLD}🔑 Cipher${RESET}";;
+    sec-secret-scanner)          AGENT_DISPLAY="${YELLOW}${BOLD}👤 Shadow${RESET}";;
+    sec-cors-csrf-checker)       AGENT_DISPLAY="${YELLOW}${BOLD}🧱 Barrier${RESET}";;
+    sec-injection-detector)      AGENT_DISPLAY="${YELLOW}${BOLD}⚒️ Forge${RESET}";;
+    sec-validation-enforcer)     AGENT_DISPLAY="${YELLOW}${BOLD}💂 Warden${RESET}";;
+    sec-supply-chain-monitor)    AGENT_DISPLAY="${YELLOW}${BOLD}🐕 Watchdog${RESET}";;
+    sec-upload-validator)        AGENT_DISPLAY="${YELLOW}${BOLD}🔍 Filter${RESET}";;
+    sec-header-inspector)        AGENT_DISPLAY="${YELLOW}${BOLD}🛡️ Shield${RESET}";;
+    sec-client-exposure-scanner) AGENT_DISPLAY="${YELLOW}${BOLD}👻 Ghost${RESET}";;
+    sec-rate-limit-tester)       AGENT_DISPLAY="${YELLOW}${BOLD}⏱️ Throttle${RESET}";;
+    sec-redirect-checker)        AGENT_DISPLAY="${YELLOW}${BOLD}🧭 Compass${RESET}";;
+    sec-error-leak-detector)     AGENT_DISPLAY="${YELLOW}${BOLD}🤫 Muffle${RESET}";;
+    sec-deploy-auditor)          AGENT_DISPLAY="${YELLOW}${BOLD}⚓ Harbor${RESET}";;
+    sec-ai-code-reviewer)        AGENT_DISPLAY="${YELLOW}${BOLD}🔮 Oracle-AI${RESET}";;
+
+    # External agents (~/.claude/agents/)
+    professor)            AGENT_DISPLAY="${CYAN}${BOLD}👨‍🏫 Professor${RESET}";;
+    oalanicolas)          AGENT_DISPLAY="${CYAN}${BOLD}👤 OalaNicolas${RESET}";;
+    pedro-valerio)        AGENT_DISPLAY="${CYAN}${BOLD}👤 PedroValerio${RESET}";;
+    sop-extractor)        AGENT_DISPLAY="${CYAN}${BOLD}📋 SOP${RESET}";;
+    squad-architect)      AGENT_DISPLAY="${CYAN}${BOLD}🏗️ SquadArch${RESET}";;
+    squad-diagnostician)  AGENT_DISPLAY="${CYAN}${BOLD}🔬 SquadDiag${RESET}";;
+
+    # Fallback: show raw ID if not mapped
+    "")                   AGENT_DISPLAY="";;
+    *)                    AGENT_DISPLAY="${CYAN}${BOLD}🤖 ${ACTIVE_AGENT}${RESET}";;
 esac
 
 # Extrai dados com jq
@@ -62,7 +101,7 @@ MAX_USEFUL_TOKENS=180000
 # Calcula tokens usados na janela atual
 TOKENS_USED=$((CTX_SIZE * (100 - CTX_REMAINING) / 100))
 
-# Calcula porcentagem em relação a 180k (referência real do Claude)
+# Calcula porcentagem em relação a 180k
 CTX_PERCENT=$((TOKENS_USED * 100 / MAX_USEFUL_TOKENS))
 MODEL=$(echo "$INPUT" | jq -r '.model.display_name // "unknown"')
 CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
@@ -71,7 +110,7 @@ DURATION_MS=$(echo "$INPUT" | jq -r '.cost.total_duration_ms // 0')
 LINES_ADDED=$(echo "$INPUT" | jq -r '.cost.total_lines_added // 0')
 LINES_REMOVED=$(echo "$INPUT" | jq -r '.cost.total_lines_removed // 0')
 
-# Formata duração (ms -> Xh Xm ou Xm Xs)
+# Formata duração
 DURATION_SEC=$((DURATION_MS / 1000))
 DURATION_MIN=$((DURATION_SEC / 60))
 DURATION_HOUR=$((DURATION_MIN / 60))
@@ -104,14 +143,10 @@ fi
 # Formata custo
 SESSION_COST_FMT=$(awk "BEGIN {printf \"%.2f\", $SESSION_COST}")
 
-# === CPU e Memória ===
+# === CPU e Memória (background, com timeout) ===
 TOP_OUTPUT=$(top -l 1 -n 0 2>/dev/null)
-
-# CPU %
 CPU=$(echo "$TOP_OUTPUT" | grep "CPU usage" | awk '{print $3}' | tr -d '%')
 CPU=${CPU:-"--"}
-
-# RAM %
 MEM_USED=$(echo "$TOP_OUTPUT" | grep "PhysMem" | awk '{print $2}' | tr -d 'G')
 MEM_TOTAL=$(sysctl -n hw.memsize 2>/dev/null | awk '{printf "%.0f", $1/1024/1024/1024}')
 if [ -n "$MEM_USED" ] && [ -n "$MEM_TOTAL" ] && [ "$MEM_TOTAL" -gt 0 ]; then
