@@ -754,6 +754,44 @@ def configure_upstream(project_root: Path) -> str | None:
 
 
 # ---------------------------------------------------------------------------
+# Step 10.5: Statusline Install
+# ---------------------------------------------------------------------------
+def install_statusline(project_root: Path) -> bool:
+    """Install the statusline script to ~/.claude/statusline-custom.sh."""
+    source = project_root / "scripts" / "statusline-custom.sh"
+    target = Path.home() / ".claude" / "statusline-custom.sh"
+
+    if not source.exists():
+        return False
+
+    # Create ~/.claude/ if missing
+    target.parent.mkdir(parents=True, exist_ok=True)
+
+    # Copy script
+    shutil.copy2(source, target)
+    target.chmod(0o755)
+
+    # Inject statusLine into ~/.claude/settings.json if missing
+    settings_path = Path.home() / ".claude" / "settings.json"
+    if settings_path.exists():
+        try:
+            settings = json.loads(settings_path.read_text())
+        except (json.JSONDecodeError, OSError):
+            settings = {}
+    else:
+        settings = {}
+
+    if "statusLine" not in settings:
+        settings["statusLine"] = {
+            "type": "command",
+            "command": "bash ~/.claude/statusline-custom.sh",
+        }
+        settings_path.write_text(json.dumps(settings, indent=2) + "\n")
+
+    return True
+
+
+# ---------------------------------------------------------------------------
 # Step 10: Post-Install Validation
 # ---------------------------------------------------------------------------
 def validate_installation(project_root: Path) -> dict:
@@ -1010,6 +1048,12 @@ def main() -> None:
             hook.chmod(0o755)
         for hook in hooks_dir.glob("*.py"):
             hook.chmod(0o755)
+
+    # Statusline install
+    if install_statusline(project_root):
+        ok("Statusline installed (~/.claude/statusline-custom.sh)")
+    else:
+        info("Statusline script not found in scripts/ — skipped.")
 
     # Step 10: Post-Install Validation
     header(10, TOTAL_STEPS, "Validating installation...")
