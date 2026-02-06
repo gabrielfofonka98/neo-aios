@@ -95,11 +95,8 @@ esac
 CTX_REMAINING=$(echo "$INPUT" | jq -r '.context_window.remaining_percentage // 100')
 CTX_SIZE=$(echo "$INPUT" | jq -r '.context_window.context_window_size // 200000')
 
-# Effective remaining: subtract autocompact buffer (~13% of context)
-# remaining_percentage includes space reserved for autocompact buffer,
-# so we subtract it to match the "Free space" shown by /context
-EFFECTIVE_CTX=$((CTX_REMAINING - 13))
-if [ "$EFFECTIVE_CTX" -lt 0 ]; then EFFECTIVE_CTX=0; fi
+# Direct remaining percentage — no adjustments
+EFFECTIVE_CTX=$CTX_REMAINING
 
 CTX_PERCENT=$((100 - CTX_REMAINING))
 TOKENS_USED=$((CTX_SIZE * CTX_PERCENT / 100))
