@@ -675,7 +675,7 @@ MCP_CATALOG = {
     },
     "browser": {
         "command": "npx",
-        "args": ["-y", "@anthropic-ai/mcp-server-puppeteer"],
+        "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
         "description": "Browser — Puppeteer-based web access",
     },
 }
