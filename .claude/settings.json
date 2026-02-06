@@ -39,6 +39,16 @@
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/inject-current-date.py\"",
+            "timeout": 2
+          }
+        ]
+      },
+      {
         "matcher": "compact",
         "hooks": [
           {
