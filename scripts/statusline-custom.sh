@@ -14,11 +14,17 @@ RESET=$'\033[0m'
 INPUT=$(cat)
 
 # === ACTIVE AGENT (from .aios/session-state.json) ===
+# Walk up directory tree to find .aios/session-state.json (CWD may be a subdirectory)
 CWD_FOR_AGENT=$(echo "$INPUT" | jq -r '.cwd // ""')
 ACTIVE_AGENT=""
-if [ -n "$CWD_FOR_AGENT" ] && [ -f "$CWD_FOR_AGENT/.aios/session-state.json" ]; then
-    ACTIVE_AGENT=$(jq -r '.activeAgent // empty' "$CWD_FOR_AGENT/.aios/session-state.json" 2>/dev/null)
-fi
+SEARCH_DIR="$CWD_FOR_AGENT"
+while [ -n "$SEARCH_DIR" ] && [ "$SEARCH_DIR" != "/" ]; do
+    if [ -f "$SEARCH_DIR/.aios/session-state.json" ]; then
+        ACTIVE_AGENT=$(jq -r '.activeAgent // empty' "$SEARCH_DIR/.aios/session-state.json" 2>/dev/null)
+        break
+    fi
+    SEARCH_DIR=$(dirname "$SEARCH_DIR")
+done
 
 # Map agent ID to display name with emoji
 case "$ACTIVE_AGENT" in
