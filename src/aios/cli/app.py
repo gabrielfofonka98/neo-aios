@@ -9,9 +9,16 @@ import click
 
 import aios
 from aios.cli.commands import agent_group
+from aios.cli.commands import doctor_group
 from aios.cli.commands import gate_group
+from aios.cli.commands import glue_group
 from aios.cli.commands import health_group
+from aios.cli.commands import ids_group
+from aios.cli.commands import mcp_group
+from aios.cli.commands import memory_group
+from aios.cli.commands import route_group
 from aios.cli.commands import scan_group
+from aios.cli.commands import waves_group
 from aios.cli.output import print_version
 
 
@@ -78,9 +85,16 @@ def create_app() -> click.Group:
 
     # Register command groups
     cli_group.add_command(agent_group)
-    cli_group.add_command(scan_group)
-    cli_group.add_command(health_group)
+    cli_group.add_command(doctor_group)
     cli_group.add_command(gate_group)
+    cli_group.add_command(glue_group)
+    cli_group.add_command(health_group)
+    cli_group.add_command(ids_group)
+    cli_group.add_command(mcp_group)
+    cli_group.add_command(memory_group)
+    cli_group.add_command(route_group)
+    cli_group.add_command(scan_group)
+    cli_group.add_command(waves_group)
 
     return cli_group
 

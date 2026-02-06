@@ -16,6 +16,10 @@ Example:
     True
 """
 
+from aios.quality.ci_generator import CIConfig
+from aios.quality.ci_generator import CIGenerator
+from aios.quality.coderabbit_config import CodeRabbitConfig
+from aios.quality.coderabbit_config import CodeRabbitGenerator
 from aios.quality.config import CheckResult
 from aios.quality.config import CheckStatus
 from aios.quality.config import GateConfig
@@ -29,6 +33,10 @@ from aios.quality.human_review import ApproverRole
 from aios.quality.human_review import HumanReviewGate
 from aios.quality.human_review import HumanReviewResult
 from aios.quality.human_review import human_review_gate
+from aios.quality.ids import IDSEngine
+from aios.quality.ids_models import IDSAction
+from aios.quality.ids_models import IDSDecision
+from aios.quality.ids_models import IDSStats
 from aios.quality.loader import ConfigLoader
 from aios.quality.loader import ExclusionsConfig
 from aios.quality.loader import HumanReviewConfig
@@ -43,6 +51,9 @@ from aios.quality.loader import to_yaml
 from aios.quality.precommit import PreCommitGate
 from aios.quality.precommit import precommit_gate
 from aios.quality.precommit import run_precommit_hook
+from aios.quality.story_validator import StoryValidator
+from aios.quality.story_validator import ValidationResult
+from aios.quality.story_validator import ValidationSeverity
 
 __all__ = [
     "Approval",
@@ -50,8 +61,12 @@ __all__ = [
     "ApprovalRequirement",
     "ApprovalStatus",
     "ApproverRole",
+    "CIConfig",
+    "CIGenerator",
     "CheckResult",
     "CheckStatus",
+    "CodeRabbitConfig",
+    "CodeRabbitGenerator",
     "ConfigLoader",
     "ExclusionsConfig",
     "GateConfig",
@@ -59,10 +74,17 @@ __all__ = [
     "HumanReviewConfig",
     "HumanReviewGate",
     "HumanReviewResult",
+    "IDSAction",
+    "IDSDecision",
+    "IDSEngine",
+    "IDSStats",
     "PRAutomationConfig",
     "PreCommitConfig",
     "PreCommitGate",
     "QualityGatesConfig",
+    "StoryValidator",
+    "ValidationResult",
+    "ValidationSeverity",
     "default_gate_config",
     "get_default_config",
     "get_loader",

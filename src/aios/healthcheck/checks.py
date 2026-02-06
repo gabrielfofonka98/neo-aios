@@ -4,6 +4,7 @@ Provides specific health checks for different aspects of the NEO-AIOS system.
 Each check implements the HealthCheck protocol for consistency.
 """
 
+import os
 from pathlib import Path
 from typing import ClassVar
 from typing import Protocol
@@ -338,6 +339,237 @@ class SecurityCheck:
         )
 
 
+class GitRepoCheck:
+    """Check that git repository exists and has remote configured."""
+
+    @property
+    def name(self) -> str:
+        return "git_repo"
+
+    def check(self) -> CheckResult:
+        import subprocess
+
+        if not Path(".git").exists():
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.UNHEALTHY,
+                message="No git repository found",
+                details={"fix": "Run 'git init' or 'aios doctor run --fix'"},
+            )
+
+        try:
+            result = subprocess.run(
+                ["git", "remote", "-v"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            has_remote = bool(result.stdout.strip())
+        except FileNotFoundError:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.UNHEALTHY,
+                message="git command not found",
+            )
+
+        if not has_remote:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="Git repo exists but no remote configured",
+            )
+
+        return CheckResult(
+            name=self.name,
+            status=HealthStatus.HEALTHY,
+            message="Git repository with remote configured",
+        )
+
+
+class UpstreamCheck:
+    """Check upstream remote points to SynkraAI."""
+
+    @property
+    def name(self) -> str:
+        return "upstream"
+
+    def check(self) -> CheckResult:
+        import subprocess
+
+        try:
+            result = subprocess.run(
+                ["git", "remote", "-v"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            remotes = result.stdout.strip()
+        except FileNotFoundError:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.UNKNOWN,
+                message="git not available",
+            )
+
+        if not remotes:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="No remotes configured",
+            )
+
+        if "synkraai" in remotes.lower() or "SynkraAI" in remotes:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.HEALTHY,
+                message="Upstream remote points to SynkraAI",
+            )
+
+        return CheckResult(
+            name=self.name,
+            status=HealthStatus.DEGRADED,
+            message="No upstream remote to SynkraAI found",
+            details={"remotes": remotes},
+        )
+
+
+class MCPInstalledCheck:
+    """Check essential MCPs are installed."""
+
+    ESSENTIAL_MCPS: ClassVar[list[str]] = ["context7", "desktop-commander", "browser"]
+
+    @property
+    def name(self) -> str:
+        return "mcp_installed"
+
+    def check(self) -> CheckResult:
+        import json
+
+        mcp_config = Path(".mcp.json")
+        if not mcp_config.exists():
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="No .mcp.json found",
+                details={"missing": self.ESSENTIAL_MCPS},
+            )
+
+        try:
+            data = json.loads(mcp_config.read_text())
+            servers = data.get("mcpServers", {})
+        except (json.JSONDecodeError, OSError):
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.UNHEALTHY,
+                message="Invalid .mcp.json",
+            )
+
+        installed = [name for name in self.ESSENTIAL_MCPS if name in servers]
+        missing = [name for name in self.ESSENTIAL_MCPS if name not in servers]
+
+        if missing:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message=f"Missing MCPs: {', '.join(missing)}",
+                details={"installed": installed, "missing": missing},
+            )
+
+        return CheckResult(
+            name=self.name,
+            status=HealthStatus.HEALTHY,
+            message=f"All {len(self.ESSENTIAL_MCPS)} essential MCPs installed",
+        )
+
+
+class PythonDepsCheck:
+    """Check Python dependencies resolve correctly."""
+
+    @property
+    def name(self) -> str:
+        return "python_deps"
+
+    def check(self) -> CheckResult:
+        import subprocess
+
+        if not Path("pyproject.toml").exists():
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.UNKNOWN,
+                message="No pyproject.toml found",
+            )
+
+        try:
+            result = subprocess.run(
+                ["uv", "pip", "check"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode == 0:
+                return CheckResult(
+                    name=self.name,
+                    status=HealthStatus.HEALTHY,
+                    message="All Python dependencies resolved",
+                )
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="Dependency issues detected",
+                details={"output": result.stdout[:500]},
+            )
+        except FileNotFoundError:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="uv not found, cannot verify dependencies",
+            )
+
+
+class HooksActiveCheck:
+    """Check that hooks in .claude/hooks/ are executable."""
+
+    @property
+    def name(self) -> str:
+        return "hooks_active"
+
+    def check(self) -> CheckResult:
+        hooks_dir = Path(".claude/hooks")
+        if not hooks_dir.exists():
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="No .claude/hooks/ directory found",
+            )
+
+        hooks = list(hooks_dir.glob("*.py"))
+        if not hooks:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message="No hook files found in .claude/hooks/",
+            )
+
+        non_executable: list[str] = []
+        for hook in hooks:
+            if not os.access(hook, os.X_OK):
+                non_executable.append(hook.name)
+
+        if non_executable:
+            return CheckResult(
+                name=self.name,
+                status=HealthStatus.DEGRADED,
+                message=f"Non-executable hooks: {', '.join(non_executable)}",
+                details={"non_executable": non_executable, "total": len(hooks)},
+            )
+
+        return CheckResult(
+            name=self.name,
+            status=HealthStatus.HEALTHY,
+            message=f"All {len(hooks)} hooks are executable",
+        )
+
+
 # Default checks to run
 DEFAULT_CHECKS: list[HealthCheck] = [
     AgentRegistryCheck(),
@@ -346,4 +578,9 @@ DEFAULT_CHECKS: list[HealthCheck] = [
     AgentIdentityCheck(),
     ScopeEnforcerCheck(),
     SecurityCheck(),
+    GitRepoCheck(),
+    UpstreamCheck(),
+    MCPInstalledCheck(),
+    PythonDepsCheck(),
+    HooksActiveCheck(),
 ]

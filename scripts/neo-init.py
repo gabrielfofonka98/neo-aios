@@ -657,7 +657,187 @@ def print_summary(agent_count: int, security_count: int, hook_count: int) -> Non
 # ---------------------------------------------------------------------------
 # MAIN
 # ---------------------------------------------------------------------------
-TOTAL_STEPS = 7
+TOTAL_STEPS = 10
+
+# ---------------------------------------------------------------------------
+# Step 8: MCP Auto-Install
+# ---------------------------------------------------------------------------
+MCP_CATALOG = {
+    "context7": {
+        "command": "npx",
+        "args": ["-y", "@upstash/context7-mcp"],
+        "description": "Context7 — documentation search",
+    },
+    "desktop-commander": {
+        "command": "npx",
+        "args": ["-y", "@wonderwhy-er/desktop-commander"],
+        "description": "Desktop Commander — file/terminal access",
+    },
+    "browser": {
+        "command": "npx",
+        "args": ["-y", "@anthropic-ai/mcp-server-puppeteer"],
+        "description": "Browser — Puppeteer-based web access",
+    },
+}
+
+def install_mcps(project_root: Path) -> list[str]:
+    """Auto-install essential MCP servers and generate .mcp.json."""
+    installed = []
+
+    if not check_command("npx"):
+        warn("npx not found. Skipping MCP auto-install.")
+        info("Install Node.js to enable MCP servers.")
+        return installed
+
+    mcp_config_path = project_root / ".mcp.json"
+    existing_config: dict = {}
+
+    if mcp_config_path.exists():
+        try:
+            existing_config = json.loads(mcp_config_path.read_text())
+        except Exception:
+            pass
+
+    mcp_servers = existing_config.get("mcpServers", {})
+
+    for name, entry in MCP_CATALOG.items():
+        if name in mcp_servers:
+            info(f"{name} already configured")
+            continue
+
+        mcp_servers[name] = {
+            "command": entry["command"],
+            "args": entry["args"],
+        }
+        installed.append(name)
+        ok(f"Added {name} — {entry['description']}")
+
+    if installed or not mcp_config_path.exists():
+        config_data = {"mcpServers": mcp_servers}
+        mcp_config_path.write_text(json.dumps(config_data, indent=2) + "\n")
+
+    return installed
+
+
+# ---------------------------------------------------------------------------
+# Step 9: Upstream Config
+# ---------------------------------------------------------------------------
+def configure_upstream(project_root: Path) -> str | None:
+    """Verify git remote and configure origin if missing."""
+    git_dir = project_root / ".git"
+    if not git_dir.exists():
+        info("No .git directory. Skipping upstream config.")
+        return None
+
+    try:
+        result = subprocess.run(
+            ["git", "remote", "-v"],
+            capture_output=True, text=True, cwd=project_root, timeout=5,
+        )
+        remotes = result.stdout.strip()
+
+        if "origin" in remotes:
+            # Extract origin URL
+            for line in remotes.splitlines():
+                if line.startswith("origin") and "(fetch)" in line:
+                    url = line.split()[1]
+                    ok(f"origin remote: {url}")
+                    return url
+        else:
+            info("No origin remote configured.")
+            info("To add: git remote add origin <url>")
+            return None
+
+    except Exception:
+        info("Could not check git remotes.")
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Step 10: Post-Install Validation
+# ---------------------------------------------------------------------------
+def validate_installation(project_root: Path) -> dict:
+    """Run 4-phase validation of the installation."""
+    results = {
+        "file_structure": False,
+        "config_valid": False,
+        "agent_count": 0,
+        "hooks_executable": False,
+    }
+
+    # Phase 1: File structure
+    required_paths = [
+        ".claude/skills",
+        ".claude/hooks",
+        ".claude/rules",
+        ".claude/CLAUDE.md",
+        ".aios-core",
+        ".aios-custom",
+        ".aios/session-state.json",
+        "config/neo-aios.yaml",
+    ]
+    missing = [p for p in required_paths if not (project_root / p).exists()]
+    results["file_structure"] = len(missing) == 0
+    if missing:
+        for m in missing:
+            warn(f"Missing: {m}")
+    else:
+        ok("File structure complete")
+
+    # Phase 2: Config parse
+    config_file = project_root / "config" / "neo-aios.yaml"
+    if config_file.exists():
+        try:
+            import yaml
+            yaml.safe_load(config_file.read_text())
+            results["config_valid"] = True
+            ok("Config YAML parses correctly")
+        except ImportError:
+            # yaml not available, try basic check
+            content = config_file.read_text()
+            results["config_valid"] = "project:" in content
+            if results["config_valid"]:
+                ok("Config file basic structure valid")
+            else:
+                warn("Config file may be malformed")
+        except Exception as e:
+            warn(f"Config parse error: {e}")
+    else:
+        info("No config file to validate")
+
+    # Phase 3: Agent count
+    skills_dir = project_root / ".claude" / "skills"
+    if skills_dir.exists():
+        agent_dirs = [d for d in skills_dir.iterdir() if d.is_dir()]
+        results["agent_count"] = len(agent_dirs)
+        if results["agent_count"] >= 10:
+            ok(f"{results['agent_count']} agents installed")
+        elif results["agent_count"] > 0:
+            warn(f"Only {results['agent_count']} agents found (expected 30+)")
+        else:
+            warn("No agents found in .claude/skills/")
+    else:
+        warn(".claude/skills/ not found")
+
+    # Phase 4: Hook permissions
+    hooks_dir = project_root / ".claude" / "hooks"
+    if hooks_dir.exists():
+        hooks = list(hooks_dir.glob("*.py")) + list(hooks_dir.glob("*.sh"))
+        all_executable = all(os.access(h, os.X_OK) for h in hooks) if hooks else True
+        results["hooks_executable"] = all_executable
+        if all_executable and hooks:
+            ok(f"{len(hooks)} hooks executable")
+        elif hooks:
+            non_exec = [h.name for h in hooks if not os.access(h, os.X_OK)]
+            warn(f"Non-executable hooks: {', '.join(non_exec[:5])}")
+            info("Run: chmod +x .claude/hooks/*")
+        else:
+            info("No hooks found")
+    else:
+        info(".claude/hooks/ not found")
+
+    return results
+
 
 def main() -> None:
     project_root = Path.cwd()
@@ -807,6 +987,18 @@ def main() -> None:
     if create_claude_local_md(project_root):
         print(f"  {c.GREEN}Created:{c.RESET} CLAUDE.local.md {c.DIM}(personal preferences, gitignored){c.RESET}")
 
+    # Step 8: MCP Auto-Install
+    header(8, TOTAL_STEPS, "Installing MCP servers...")
+    print()
+    mcps_installed = install_mcps(project_root)
+    if not mcps_installed:
+        info("No new MCPs installed (already configured or npx unavailable).")
+
+    # Step 9: Upstream Config
+    header(9, TOTAL_STEPS, "Checking upstream configuration...")
+    print()
+    configure_upstream(project_root)
+
     # Agent Teams setup hint
     print()
     suggest_agent_teams_setup()
@@ -816,6 +1008,23 @@ def main() -> None:
     if hooks_dir.exists():
         for hook in hooks_dir.glob("*.sh"):
             hook.chmod(0o755)
+        for hook in hooks_dir.glob("*.py"):
+            hook.chmod(0o755)
+
+    # Step 10: Post-Install Validation
+    header(10, TOTAL_STEPS, "Validating installation...")
+    print()
+    validation = validate_installation(project_root)
+    passed = sum(1 for v in [
+        validation["file_structure"],
+        validation["config_valid"],
+        validation["agent_count"] >= 10,
+        validation["hooks_executable"],
+    ] if v)
+    if passed == 4:
+        ok("All validation checks passed!")
+    else:
+        info(f"{passed}/4 validation checks passed")
 
     # Summary
     if agent_count == 0:

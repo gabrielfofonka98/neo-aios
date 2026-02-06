@@ -31,6 +31,10 @@ from aios.core.cache import FileCache
 from aios.core.cache import cached
 from aios.core.cache import clear_default_cache
 from aios.core.cache import get_default_cache
+from aios.core.glue import GlueGenerator
+from aios.core.glue_models import GlueConfig
+from aios.core.glue_models import GlueOutput
+from aios.core.glue_models import GlueSection
 from aios.core.lazy import LazyLoader
 from aios.core.lazy import LazyModule
 from aios.core.lazy import LazyRegistry
@@ -47,18 +51,34 @@ from aios.core.profiling import get_profiler
 from aios.core.profiling import profile
 from aios.core.profiling import reset_metrics
 from aios.core.profiling import timed
+from aios.core.waves import CycleDetectedError
+from aios.core.waves import WaveAnalyzer
+from aios.core.waves_models import CriticalPath
+from aios.core.waves_models import Task
+from aios.core.waves_models import Wave
+from aios.core.waves_models import WaveAnalysis
 
 __all__ = [
     "Cache",
     "CacheEntry",
+    "CriticalPath",
+    "CycleDetectedError",
     "FileCache",
+    "GlueConfig",
+    "GlueGenerator",
+    "GlueOutput",
+    "GlueSection",
     "LazyLoader",
     "LazyModule",
     "LazyRegistry",
     "Profiler",
     "ProfilerConfig",
+    "Task",
     "Timer",
     "TimingMetrics",
+    "Wave",
+    "WaveAnalysis",
+    "WaveAnalyzer",
     "cached",
     "clear_default_cache",
     "configure_profiler",
