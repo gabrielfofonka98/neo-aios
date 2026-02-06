@@ -40,6 +40,9 @@ case "$ACTIVE_AGENT" in
     qa-code)        AGENT_DISPLAY="${CYAN}${BOLD}🔬 Codex${RESET}";;
     sre)            AGENT_DISPLAY="${CYAN}${BOLD}⚙️ Ops${RESET}";;
     analyst)        AGENT_DISPLAY="${CYAN}${BOLD}📈 Oracle${RESET}";;
+    qa-functional)  AGENT_DISPLAY="${CYAN}${BOLD}🧪 Tess${RESET}";;
+    professor)      AGENT_DISPLAY="${CYAN}${BOLD}👨‍🏫 Professor${RESET}";;
+    cto|fofonka)    AGENT_DISPLAY="${CYAN}${BOLD}🧠 Fofonka${RESET}";;
     *)              AGENT_DISPLAY="";;
 esac
 
