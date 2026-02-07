@@ -699,13 +699,22 @@ MCP_CATALOG = {
 }
 
 def install_mcps(project_root: Path) -> list[str]:
-    """Auto-install essential MCP servers and generate .mcp.json."""
+    """Auto-install essential MCP servers and generate .mcp.json.
+
+    Always generates the config file regardless of runtime availability.
+    MCP commands (npx, uvx) are needed at runtime by Claude Code, not at
+    install time.
+    """
     installed = []
 
-    if not check_command("npx"):
-        warn("npx not found. Skipping MCP auto-install.")
-        info("Install Node.js to enable MCP servers.")
-        return installed
+    # Warn about missing runtimes but do NOT skip config generation.
+    # The .mcp.json must always be written so Claude Code can use it.
+    has_npx = check_command("npx")
+    has_uvx = check_command("uvx")
+    if not has_npx:
+        warn("npx not found. MCP servers requiring npx won't start until Node.js is installed.")
+    if not has_uvx:
+        warn("uvx not found. MCP servers requiring uvx won't start until uv is installed.")
 
     mcp_config_path = project_root / ".mcp.json"
     existing_config: dict = {}
@@ -723,10 +732,13 @@ def install_mcps(project_root: Path) -> list[str]:
             info(f"{name} already configured")
             continue
 
-        mcp_servers[name] = {
+        server_config: dict[str, object] = {
             "command": entry["command"],
             "args": entry["args"],
         }
+        if "env" in entry:
+            server_config["env"] = entry["env"]
+        mcp_servers[name] = server_config
         installed.append(name)
         ok(f"Added {name} — {entry['description']}")
 
