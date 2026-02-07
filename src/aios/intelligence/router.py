@@ -108,6 +108,63 @@ class TaskRouter:
             confidence=0.5,
         )
 
+    def classify_by_step(
+        self,
+        step_id: str,
+        step_model: str | None = None,
+        agent_id: str | None = None,
+    ) -> RoutingDecision:
+        """Route based on step-level model override, with fallback chain.
+
+        Priority chain:
+        1. step_model (explicit from step-registry.yaml) — highest priority
+        2. Agent-level default (from AGENT_EFFORT_MAP) — fallback
+
+        Args:
+            step_id: Step identifier (for reason/logging).
+            step_model: Explicit model from step registry (haiku/sonnet/opus).
+            agent_id: Agent executing the step (for fallback routing).
+
+        Returns:
+            RoutingDecision with confidence=1.0 for explicit step model.
+        """
+        if step_model:
+            complexity = self._model_to_complexity(step_model)
+            return RoutingDecision(
+                complexity=complexity,
+                model=step_model,
+                agent_id=agent_id,
+                reason=f"Step '{step_id}' has explicit model '{step_model}'",
+                confidence=1.0,
+            )
+
+        if agent_id:
+            return self.classify_by_agent(agent_id)
+
+        return RoutingDecision(
+            complexity=TaskComplexity.HIGH,
+            model="opus",
+            reason=f"Step '{step_id}' has no model or agent, defaulting to HIGH",
+            confidence=0.5,
+        )
+
+    @staticmethod
+    def _model_to_complexity(model: str) -> TaskComplexity:
+        """Map model tier name to TaskComplexity.
+
+        Args:
+            model: Model tier name (haiku, sonnet, opus).
+
+        Returns:
+            Corresponding TaskComplexity.
+        """
+        model_complexity_map: dict[str, TaskComplexity] = {
+            "haiku": TaskComplexity.LOW,
+            "sonnet": TaskComplexity.MEDIUM,
+            "opus": TaskComplexity.HIGH,
+        }
+        return model_complexity_map.get(model, TaskComplexity.HIGH)
+
     def classify(
         self,
         description: str,

@@ -1,0 +1,20 @@
+# Pipeline configuration
+# Controls timeouts, locking, and state management
+
+pipeline:
+  state_file: ".aios/pipeline-state.json"
+  lock_timeout_s: 30
+  lock_retry_interval_s: 0.5
+  stale_lock_threshold_s: 60
+
+execution:
+  fail_fast: true
+  default_timeout_per_step_s: 300
+  max_parallel_stories: 3
+
+cost_tracking:
+  enabled: true
+  pricing:
+    haiku: 1.25      # USD per million tokens
+    sonnet: 7.50
+    opus: 37.50

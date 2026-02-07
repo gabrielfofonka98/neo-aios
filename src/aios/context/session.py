@@ -34,6 +34,11 @@ class SessionState(BaseModel):
     project_context: ProjectContext = Field(
         default_factory=ProjectContext, alias="projectContext"
     )
+    # Pipeline integration fields (optional, backward compatible)
+    current_step: str | None = Field(default=None, alias="currentStep")
+    steps_completed: int = Field(default=0, alias="stepsCompleted")
+    step_budget: int = Field(default=0, alias="stepBudget")
+    pipeline_story_id: str | None = Field(default=None, alias="pipelineStoryId")
 
     model_config = {
         "populate_by_name": True,
@@ -125,6 +130,10 @@ class Session:
                 "epic": self.state.project_context.epic,
                 "story": self.state.project_context.story,
             },
+            "currentStep": self.state.current_step,
+            "stepsCompleted": self.state.steps_completed,
+            "stepBudget": self.state.step_budget,
+            "pipelineStoryId": self.state.pipeline_story_id,
         }
 
         self.state_file.write_text(json.dumps(data, indent=2))

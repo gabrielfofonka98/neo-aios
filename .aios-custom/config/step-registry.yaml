@@ -1,0 +1,130 @@
+# Step Registry — defines steps per workflow
+# Each step has: id, agent_id, model, token_budget, max_turns, timeout_s
+
+workflows:
+  greenfield-fullstack:
+    steps:
+      - id: setup-project
+        agent_id: devops
+        model: haiku
+        max_turns: 5
+        token_budget: 8000
+        description: "Initialize project structure, install dependencies"
+
+      - id: analyze-story
+        agent_id: dev
+        model: sonnet
+        token_budget: 12000
+        description: "Analyze story requirements, identify files to create/modify"
+
+      - id: implement-backend
+        agent_id: dev
+        model: opus
+        token_budget: 25000
+        description: "Implement backend logic, API endpoints, data models"
+
+      - id: implement-frontend
+        agent_id: dev
+        model: opus
+        token_budget: 25000
+        description: "Implement frontend components, pages, state management"
+
+      - id: write-tests
+        agent_id: dev
+        model: sonnet
+        token_budget: 15000
+        description: "Write unit and integration tests"
+
+      - id: run-tests
+        agent_id: dev
+        model: haiku
+        token_budget: 5000
+        description: "Execute test suite, report results"
+
+      - id: security-scan
+        agent_id: qa
+        model: haiku
+        token_budget: 5000
+        description: "Run security validators on changed files"
+
+      - id: code-review
+        agent_id: qa
+        model: opus
+        token_budget: 20000
+        description: "Review code quality, patterns, edge cases"
+
+      - id: create-pr
+        agent_id: devops
+        model: haiku
+        token_budget: 5000
+        description: "Create pull request with summary"
+
+  bugfix:
+    steps:
+      - id: analyze-bug
+        agent_id: dev
+        model: sonnet
+        token_budget: 12000
+        description: "Analyze bug report, reproduce, identify root cause"
+
+      - id: implement-fix
+        agent_id: dev
+        model: opus
+        token_budget: 20000
+        description: "Implement bug fix"
+
+      - id: write-regression-test
+        agent_id: dev
+        model: sonnet
+        token_budget: 10000
+        description: "Write regression test for the bug"
+
+      - id: run-tests
+        agent_id: dev
+        model: haiku
+        token_budget: 5000
+        description: "Run full test suite"
+
+      - id: create-pr
+        agent_id: devops
+        model: haiku
+        token_budget: 5000
+        description: "Create pull request with bug fix summary"
+
+  refactor:
+    steps:
+      - id: analyze-scope
+        agent_id: dev
+        model: sonnet
+        token_budget: 15000
+        description: "Map affected files, dependencies, impact"
+
+      - id: implement-refactor
+        agent_id: dev
+        model: opus
+        token_budget: 30000
+        description: "Execute refactoring changes"
+
+      - id: update-tests
+        agent_id: dev
+        model: sonnet
+        token_budget: 12000
+        description: "Update tests for refactored code"
+
+      - id: run-tests
+        agent_id: dev
+        model: haiku
+        token_budget: 5000
+        description: "Run full test suite"
+
+      - id: code-review
+        agent_id: qa
+        model: opus
+        token_budget: 20000
+        description: "Review refactoring quality"
+
+      - id: create-pr
+        agent_id: devops
+        model: haiku
+        token_budget: 5000
+        description: "Create pull request"
