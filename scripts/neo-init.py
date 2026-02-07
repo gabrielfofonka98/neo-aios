@@ -678,6 +678,24 @@ MCP_CATALOG = {
         "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
         "description": "Browser — Puppeteer-based web access",
     },
+    "serena": {
+        "command": "uvx",
+        "args": [
+            "--from",
+            "git+https://github.com/oraios/serena",
+            "serena",
+            "start-mcp-server",
+            "--context",
+            "claude-code",
+        ],
+        "description": "Serena — semantic code navigation via LSP",
+    },
+    "ccusage": {
+        "command": "npx",
+        "args": ["@ccusage/mcp@latest"],
+        "env": {"CLAUDE_CONFIG_DIR": "~/.config/claude"},
+        "description": "ccusage — token/cost tracking and analytics",
+    },
 }
 
 def install_mcps(project_root: Path) -> list[str]:

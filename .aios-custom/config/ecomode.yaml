@@ -1,0 +1,131 @@
+# Ecomode Configuration
+# Economic mode for token reduction (30-50% savings)
+# Inspired by oh-my-claudecode's aggressive haiku routing
+#
+# This config extends the base effort-levels system in .claude/rules/effort-levels.md
+# with additional optimizations for cost-sensitive scenarios.
+#
+# Version: 1.0
+# Last Updated: 2026-02-06
+
+ecomode:
+  # ============================================================================
+  # GLOBAL TOGGLE
+  # ============================================================================
+  enabled: false  # Set to true to activate ecomode globally
+
+  # ============================================================================
+  # AGGRESSIVE MODEL ROUTING
+  # Routes tasks to lower-cost models while preserving quality gates.
+  # ============================================================================
+  model_routing:
+
+    # Tasks that ALWAYS use haiku in ecomode (no quality trade-off)
+    always_haiku:
+      - clear-agent      # Simple state reset
+      - handoff          # Documentation only
+      - test             # Test runner (not creation)
+      - sync             # File sync operations
+      - push             # Git push (DevOps only)
+      - commit           # Git commit formatting
+      - fixer            # Auto-fix simple issues
+      - sec-agents       # 18x security sub-agents (read-only scanners)
+
+    # Tasks downgraded to sonnet in ecomode (normally opus)
+    # These agents handle text/docs, not deep reasoning
+    downgrade_to_sonnet:
+      - pm               # Product Manager (Morgan) - specs & docs
+      - po               # Product Owner - backlog grooming
+      - sm               # Scrum Master - ceremony facilitation
+      - doc              # Documentation (Sage) - writing docs
+      - sre              # SRE (Ops) - runbooks & monitoring
+      - ux               # UX (Pixel) - design specs
+      - marketing        # Marketing analysis (text-heavy)
+      - landing          # Landing page content
+
+    # Tasks that NEVER downgrade (critical reasoning required)
+    # These agents MUST maintain opus for quality
+    always_opus:
+      - architect        # Aria - architecture decisions
+      - qa               # Quinn - security orchestration & cross-validation
+      - spec             # Rune - zero-ambiguity specs
+      - ralph            # Autonomous agent - complex multi-step execution
+      - dev-critical     # Dex on critical/complex implementation
+      - data-engineer    # Dara on schema design & migrations
+
+  # ============================================================================
+  # BEHAVIORAL OPTIMIZATIONS
+  # Reduce output verbosity without sacrificing correctness.
+  # ============================================================================
+  behaviors:
+    reduce_preamble: true          # Skip greetings, go straight to work
+    skip_options_simple: true       # Don't present options for trivial tasks
+    compress_output: true           # Shorter responses, same information
+    limit_tool_calls: 5            # Max tool calls per turn (vs unlimited)
+    skip_confirmation_simple: true  # Don't ask "should I continue?" on trivial
+    terse_error_messages: true      # Compact error output (preserve detail)
+
+  # ============================================================================
+  # QUALITY GATE INTEGRATION
+  # Ecomode does NOT bypass quality gates - it optimizes within them.
+  # ============================================================================
+  quality_gates:
+    maintain_layer_1: true   # Pre-commit checks still run (ruff/mypy/pytest)
+    maintain_layer_2: true   # PR automation still runs (CodeRabbit/QA)
+    maintain_layer_3: true   # Human review still required
+    # Ecomode only affects which MODEL executes, not whether gates run
+
+  # ============================================================================
+  # ACTIVATION KEYWORDS
+  # Magic keywords to toggle ecomode on/off mid-session.
+  # ============================================================================
+  keywords:
+    activate:
+      - "@eco"
+      - "ecomode"
+      - "modo econômico"
+      - "save tokens"
+
+    deactivate:
+      - "@full"
+      - "fullmode"
+      - "modo completo"
+      - "full power"
+
+  # ============================================================================
+  # CONTEXT LIMITS (BETA)
+  # Optional context window limits to prevent token bloat.
+  # ============================================================================
+  context_limits:
+    enabled: false                # Experimental - off by default
+    max_context_tokens: 200000    # Stay below premium pricing tier
+    aggressive_truncation: false   # Don't truncate aggressively (risky)
+
+  # ============================================================================
+  # USAGE TRACKING
+  # Track savings achieved in ecomode.
+  # ============================================================================
+  tracking:
+    enabled: true                 # Log token usage for comparison
+    output_path: ".aios/ecomode-stats.json"
+    metrics:
+      - token_count
+      - model_used
+      - task_type
+      - estimated_savings
+
+# ============================================================================
+# DECISION MATRIX
+# How to route tasks when ecomode is enabled.
+# ============================================================================
+#
+# Task Type          | Normal Mode  | Ecomode      | Rationale
+# -------------------|-------------|--------------|---------------------------
+# Security scan      | opus        | haiku        | Read-only, deterministic
+# Architecture       | opus        | opus         | NEVER downgrade reasoning
+# Code implementation| opus        | opus/sonnet* | *Simple tasks -> sonnet
+# Documentation      | sonnet      | sonnet       | Already optimized
+# Testing (runner)   | haiku       | haiku        | Already optimized
+# Spec creation      | opus        | opus         | Zero-ambiguity critical
+# PM tasks           | opus        | sonnet       | Text-heavy, not reasoning
+# ============================================================================

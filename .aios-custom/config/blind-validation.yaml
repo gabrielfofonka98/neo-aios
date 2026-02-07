@@ -1,0 +1,272 @@
+# Blind Validation Configuration
+# QA validates code WITHOUT seeing developer's conversation context.
+# Inspired by zeroshot's pattern for eliminating confirmation bias.
+#
+# The validator receives ONLY:
+#   - Source code to validate
+#   - Original requirements (story/task)
+#   - Quality standards (STANDARDS.md)
+#
+# The validator NEVER receives:
+#   - Developer's conversation history
+#   - Developer's reasoning/decisions
+#   - Previous attempts or refactorings
+#   - Implementation notes or comments
+#
+# This forces objective validation against requirements, not against
+# the developer's explanation of why something was done a certain way.
+#
+# Version: 1.0
+# Last Updated: 2026-02-06
+
+blind_validation:
+  # ============================================================================
+  # GLOBAL TOGGLE
+  # ============================================================================
+  enabled: true  # Enabled by default for all PR reviews
+
+  # ============================================================================
+  # VALIDATOR CONTEXT (What validator RECEIVES)
+  # ============================================================================
+  validator_context:
+    # Required context - validator needs these to validate
+    required:
+      - source_code           # The actual code to validate
+      - requirements          # Original story/task/spec
+      - quality_standards     # .aios-custom/STANDARDS.md
+      - acceptance_criteria   # From story (if present)
+      - api_contracts         # Expected interfaces/types
+
+    # Optional context - may be included if helpful
+    optional:
+      - test_results          # Pass/fail status (not implementation)
+      - lint_errors           # Ruff/mypy output
+      - security_findings     # Quinn's report (if already run)
+      - related_files         # Files that import/use this code
+
+    # Metadata - non-biasing information
+    metadata:
+      - file_paths            # What files changed
+      - line_counts           # Size of change
+      - commit_message        # High-level summary
+
+  # ============================================================================
+  # EXCLUDED CONTEXT (What validator NEVER receives)
+  # Explicitly blocked to prevent confirmation bias.
+  # ============================================================================
+  excluded_context:
+    - developer_conversation    # All chat history with dev agent
+    - intermediate_decisions    # "I chose X because Y" reasoning
+    - previous_attempts         # Failed attempts, refactorings
+    - developer_reasoning       # Why dev made specific choices
+    - implementation_notes      # Comments about process
+    - design_alternatives       # Options that were rejected
+    - subjective_explanations   # "This seemed better" type comments
+
+  # ============================================================================
+  # VALIDATION TRIGGERS
+  # When to apply blind validation.
+  # ============================================================================
+  triggers:
+    # ALWAYS blind validate these scenarios
+    always:
+      - pr_review             # Every PR review is blind
+      - security_audit        # Quinn's security validation is blind
+      - code_quality_gate     # Layer 2 quality gate is blind
+      - architecture_review   # Aria validates implementation vs design (blind)
+
+    # OPTIONAL blind validate (can be toggled)
+    optional:
+      - refactor_review       # Validate refactors didn't break contracts
+      - bug_fix_review        # Validate fix addresses root cause
+      - feature_completion    # Validate feature meets acceptance criteria
+
+    # NEVER blind validate (overhead not justified)
+    never:
+      - hotfix                # Speed > process in emergencies
+      - documentation_only    # No code to validate
+      - config_changes        # Low risk, context helps
+      - test_creation         # Tests need implementation context
+      - dependency_update     # Mechanical change
+
+  # ============================================================================
+  # VALIDATOR MAPPING
+  # Which agent performs blind validation for each category.
+  # ============================================================================
+  validators:
+    code_quality:
+      agent: "qa-code"          # Codex
+      model: "opus"             # High effort for code review
+      validates:
+        - code_style            # Follows STANDARDS.md
+        - type_safety           # mypy --strict compliance
+        - error_handling        # Proper exception usage
+        - performance           # No obvious inefficiencies
+        - maintainability       # Clear, readable code
+
+    security:
+      agent: "qa"               # Quinn
+      model: "opus"             # Max effort for security
+      validates:
+        - vulnerabilities       # SQL injection, XSS, etc.
+        - authentication        # Proper auth checks
+        - authorization         # Correct scope enforcement
+        - secrets_exposure      # No hardcoded secrets
+        - input_validation      # Sanitization present
+
+    functional:
+      agent: "qa-functional"    # Tess
+      model: "sonnet"           # Medium effort for functional
+      validates:
+        - acceptance_criteria   # Story requirements met
+        - edge_cases            # Handles boundary conditions
+        - error_cases           # Fails gracefully
+        - integration           # Works with existing code
+        - regression            # Doesn't break existing features
+
+    architecture:
+      agent: "architect"        # Aria
+      model: "opus"             # Max effort for architecture
+      validates:
+        - design_adherence      # Follows ADRs
+        - patterns_compliance   # Correct patterns used
+        - coupling              # Low coupling, high cohesion
+        - consistency           # Matches existing structure
+        - future_proofing       # Extensible design
+
+  # ============================================================================
+  # VALIDATION WORKFLOW
+  # How blind validation integrates into the development flow.
+  # ============================================================================
+  workflow:
+    # Step 1: Developer completes implementation
+    # (Dev agent conversation happens, code is written)
+
+    # Step 2: Code is committed (Layer 1 quality gate runs)
+    # (ruff, mypy, pytest, quick security scan)
+
+    # Step 3: PR is created (DevOps agent)
+    # (PR description from commit messages, NOT from dev conversation)
+
+    # Step 4: Blind validation triggered
+    blind_validation_step:
+      # Extract clean context (no dev history)
+      extract_context:
+        - source_code_diff
+        - requirements_from_story
+        - quality_standards
+        - test_results_summary
+
+      # Route to appropriate validator
+      route_to_validator:
+        - code_quality -> Codex (blind)
+        - security -> Quinn (blind)
+        - functional -> Tess (blind)
+        - architecture -> Aria (blind)
+
+      # Validator responds with OBJECTIVE findings
+      validator_response:
+        - findings_list         # Issues found (with severity)
+        - requirements_gaps     # Unmet acceptance criteria
+        - standards_violations  # STANDARDS.md deviations
+        - approval_status       # APPROVE | REQUEST_CHANGES | REJECT
+
+    # Step 5: Developer addresses findings (if any)
+    # Step 6: Re-validation (still blind)
+    # Step 7: Merge after approval
+
+  # ============================================================================
+  # REPORTING
+  # How validation results are communicated.
+  # ============================================================================
+  reporting:
+    format: "structured"        # JSON-like findings, not prose
+    location: "reports/code-quality/"
+    filename_pattern: "YYYY-MM-DD-{pr_number}-blind-validation.md"
+
+    include_in_report:
+      - findings              # All issues found
+      - severity_breakdown    # CRITICAL/HIGH/MEDIUM/LOW counts
+      - requirements_check    # Which acceptance criteria passed/failed
+      - standards_adherence   # Which STANDARDS.md rules violated
+      - approval_decision     # Final verdict
+
+    exclude_from_report:
+      - validator_reasoning   # Don't explain "why I think X"
+      - comparative_analysis  # Don't compare to "what dev intended"
+      - subjective_opinions   # Stick to objective rules
+
+  # ============================================================================
+  # EXEMPTIONS
+  # When blind validation can be skipped or relaxed.
+  # ============================================================================
+  exemptions:
+    # Auto-approve scenarios (bypass blind validation)
+    auto_approve:
+      - trivial_changes:
+          max_lines: 10
+          types: ["typo_fix", "comment_update", "formatting"]
+      - dependency_updates:
+          automated: true
+          pre_approved: true
+
+    # Relaxed validation (reduced scope)
+    relaxed:
+      - hotfix:
+          require_post_validation: true  # Validate AFTER merge
+      - emergency_fix:
+          single_validator: "security"   # Only security, skip rest
+
+    # User-requested skip (requires justification)
+    manual_skip:
+      require_manager_approval: true
+      require_justification: true
+      log_to: ".aios/validation-skips.log"
+
+  # ============================================================================
+  # INTEGRATION WITH QUALITY GATES
+  # Blind validation is part of Layer 2 (PR Automation).
+  # ============================================================================
+  quality_gate_integration:
+    layer_2_component: true     # Runs as part of PR automation
+    blocks_merge: true          # Findings block merge (if severity >= threshold)
+    severity_threshold: "HIGH"  # CRITICAL or HIGH blocks merge
+
+    # Blind validation output feeds into Layer 3 (Human Review)
+    human_review_input: true
+
+  # ============================================================================
+  # METRICS & EFFECTIVENESS
+  # Track how well blind validation catches issues.
+  # ============================================================================
+  metrics:
+    enabled: true
+    track:
+      - false_negative_rate     # Issues missed by blind validation
+      - false_positive_rate     # Issues flagged incorrectly
+      - time_to_validation      # How long validation takes
+      - rework_rate             # How often code returns for fixes
+
+    output_path: ".aios/blind-validation-metrics.json"
+
+# ============================================================================
+# COMPARISON: Blind vs Traditional Validation
+# ============================================================================
+#
+# Traditional Validation (context-aware):
+#   Validator: "The dev said they chose approach X because Y makes sense."
+#   Result: Validator is biased by dev's reasoning, may overlook issues.
+#
+# Blind Validation (context-free):
+#   Validator: "This code must meet requirement Z. Does it? (checks)"
+#   Result: Validator evaluates ONLY against objective requirements.
+#
+# Example Scenario:
+#   Requirement: "Validate user input before database query"
+#   Code: No validation present
+#
+#   Traditional: "Dev explained they're using parameterized queries,
+#                 so it's safe." -> APPROVE (bias)
+#   Blind: "No input validation found. REJECT." -> REQUEST_CHANGES
+#
+# ============================================================================
