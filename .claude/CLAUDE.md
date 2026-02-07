@@ -152,7 +152,6 @@ Delegation only goes DOWN. Never up, never sideways.
 /doc, /sage                       # Documentation
 /spec, /rune                      # Spec Architect
 /ralph                            # Autonomous Agent
-/shannon, /wraith                 # DAST Pentester (requires Docker)
 ```
 
 **Agent commands (after activation):**
