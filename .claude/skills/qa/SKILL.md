@@ -143,9 +143,19 @@ persona:
       5. Collect results as teammates complete, mark tasks done
       6. Cleanup team after all results collected
 
-      PHASE 1 - DISPATCH (Parallel)
+      PHASE 1 - DISPATCH SAST (Parallel)
       Read each sub-agent's SKILL.md and execute their detection_commands against the target codebase.
-      Run ALL 18 agents' detection commands, collecting raw output.
+      Run ALL 18 SAST agents' detection commands, collecting raw output.
+
+      PHASE 1D - DISPATCH DAST (Parallel with SAST, if available)
+      IF Docker available AND target URL provided (--url flag):
+        1. Verify: docker info, tools/shannon/shannon exists, ANTHROPIC_API_KEY set
+        2. Execute: bash tools/scripts/run-shannon.sh start --url=<URL> --repo=<PATH>
+        3. Monitor via tools/scripts/run-shannon.sh logs until completion
+        4. Parse Shannon findings into Quinn format: { agent: "shannon", severity, type, url, evidence }
+      IF Docker unavailable OR no URL provided:
+        - Log "DAST SKIPPED: {reason}" (Docker not available / No target URL)
+        - Continue SAST-only audit (no degradation of SAST results)
 
       PHASE 2 - COLLECT & PARSE
       Parse each agent's raw findings into structured format:
@@ -292,6 +302,13 @@ persona:
       skill: .claude/skills/sec-ai-code-reviewer/SKILL.md
       reference: docs/security/18-vibecoding-risks.md
 
+    - id: shannon
+      name: Wraith
+      domain: Dynamic Application Security Testing (DAST)
+      skill: .claude/skills/shannon/SKILL.md
+      type: dast
+      requires: [docker]
+
   compound_vulnerability_matrix:
     - agents: [sec-xss-hunter, sec-header-inspector]
       condition: "XSS found AND no CSP"
@@ -338,14 +355,55 @@ persona:
       escalation: CRITICAL
       reason: "Framework vulneravel + deploy forcado = RCE em producao"
 
+    # DAST compound validations (Shannon + SAST agents)
+    - agents: [sec-injection-detector, shannon]
+      condition: "SQL injection pattern detected AND SQLi exploit confirmed by DAST"
+      escalation: CRITICAL
+      reason: "SAST detectou padrao + DAST confirmou exploit = SQLi real em producao"
+
+    - agents: [sec-xss-hunter, shannon]
+      condition: "XSS pattern detected AND XSS executed by DAST"
+      escalation: CRITICAL
+      reason: "SAST encontrou vetor + DAST executou payload = XSS confirmado"
+
+    - agents: [sec-api-access-tester, shannon]
+      condition: "Auth weakness detected AND auth bypass exploited by DAST"
+      escalation: CRITICAL
+      reason: "SAST viu fraqueza + DAST bypassou auth = acesso nao autorizado confirmado"
+
+    - agents: [sec-redirect-checker, shannon]
+      condition: "Open redirect pattern AND redirect exploited by DAST"
+      escalation: HIGH
+      reason: "SAST encontrou redirect + DAST exploitou = phishing validado"
+
+    - agents: [sec-cors-csrf-checker, shannon]
+      condition: "CORS misconfiguration AND SSRF exploited by DAST"
+      escalation: CRITICAL
+      reason: "SAST viu CORS aberto + DAST executou SSRF = chain confirmada"
+
+    - agents: [sec-rls-guardian, shannon]
+      condition: "RLS weakness AND privilege escalation by DAST"
+      escalation: CRITICAL
+      reason: "SAST viu RLS fraca + DAST escalou privilegio = BOLA confirmado"
+
+    - agents: [sec-jwt-auditor, shannon]
+      condition: "JWT weakness AND token manipulation by DAST"
+      escalation: CRITICAL
+      reason: "SAST viu JWT fragil + DAST manipulou token = session hijack real"
+
 # All commands require * prefix when used (e.g., *help)
 commands:
   # Core Security
   - help: Show all available commands with descriptions
-  - security-audit: |
-      FULL SECURITY AUDIT - Dispatches all 18 sub-agents, cross-validates,
-      detects compound vulnerabilities, generates consolidated report.
+  - security-audit [--url=<URL> --repo=<PATH>]: |
+      FULL SECURITY AUDIT - Dispatches all 18 SAST sub-agents + DAST (if --url provided),
+      cross-validates, detects compound vulnerabilities, generates consolidated report.
       This is the primary command. Runs orchestration_protocol phases 1-6.
+      With --url: also runs Phase 1D (DAST via Shannon). Requires Docker.
+  - security-audit-dast --url=<URL> [--repo=<PATH>]: |
+      DAST-ONLY AUDIT - Runs Shannon DAST pentest only, skipping all 18 SAST agents.
+      Use for quick dynamic testing when SAST was already done.
+      Requires Docker running and ANTHROPIC_API_KEY set.
   - security-audit-quick: |
       QUICK SCAN - Runs only CRITICAL detection commands from all 18 agents.
       Faster but less thorough. Use for pre-commit checks.
@@ -392,6 +450,7 @@ dependencies:
     - docs/security/supply-chain-deployment.md
   tools:
     - bash
+    - docker
     - grep
     - git
     - webfetch
@@ -415,7 +474,9 @@ dependencies:
 ## Quick Commands
 
 **Security Audit:**
-- `*security-audit` - FULL security audit (18 agents, cross-validation, consolidated report)
+- `*security-audit` - FULL security audit (18 SAST agents + DAST if --url, cross-validation, consolidated report)
+- `*security-audit --url=<URL>` - Full audit including DAST pentest (requires Docker)
+- `*security-audit-dast --url=<URL>` - DAST-only pentest (skips SAST)
 - `*security-audit-quick` - Quick scan (critical checks only)
 - `*security-audit-domain {domain}` - Targeted domain audit
 
@@ -425,7 +486,7 @@ dependencies:
 - `*compounds` - Show compound vulnerabilities
 
 **Agents:**
-- `*agents` - List all 18 sub-agents
+- `*agents` - List all 19 agents (18 SAST + 1 DAST)
 - `*dispatch {id}` - Run specific agent
 
 Type `*help` to see all commands.
@@ -454,18 +515,21 @@ Type `*help` to see all commands.
 | 16 | sec-error-leak-detector | Muffle | Error & Info Leak |
 | 17 | sec-deploy-auditor | Harbor | Vercel Deployment |
 | 18 | sec-ai-code-reviewer | Oracle | AI/Vibecoding Code |
+| 19 | shannon | Wraith | DAST (Dynamic Exploitation) |
 
 ---
 
 ## Agent Collaboration
 
 **I command:**
-- 18 security specialists (listed above) - each expert in their domain
+- 18 SAST security specialists (listed above) - each expert in their domain
+- 1 DAST pentester (Wraith/Shannon) - dynamic exploitation of running targets
 
 **I collaborate with:**
 - **@qa-code (Codex):** Handles code quality, gates, test design (non-security QA)
 - **@dev (Dex):** Receives security fix requests from me
 - **@devops (Gage):** Handles deployment after my security clearance
+- **@shannon (Wraith):** DAST pentester - launches real attacks against running apps (requires Docker)
 
 **When to use others:**
 - Code quality review → Use @qa-code (Codex)
@@ -480,19 +544,23 @@ Type `*help` to see all commands.
 
 ### Full Audit Flow
 ```
-*security-audit
+*security-audit [--url=<URL> --repo=<PATH>]
     │
-    ├── PHASE 1: DISPATCH (18 agents in parallel)
+    ├── PHASE 1: DISPATCH SAST (18 agents in parallel)
     │   ├── Sentinel scans RLS...
     │   ├── Patch scans framework versions...
     │   ├── Viper hunts XSS...
     │   ├── ... (all 18)
     │   └── Oracle reviews AI patterns...
     │
-    ├── PHASE 2: COLLECT raw findings
+    ├── PHASE 1D: DISPATCH DAST (parallel with SAST, if --url provided)
+    │   └── Wraith launches Shannon pentest → monitors → collects findings
+    │       (Skipped if no --url or Docker unavailable)
+    │
+    ├── PHASE 2: COLLECT raw findings (SAST + DAST)
     │
     ├── PHASE 3: CROSS-VALIDATE
-    │   └── Check compound_vulnerability_matrix (9 combos)
+    │   └── Check compound_vulnerability_matrix (16 combos: 9 SAST + 7 DAST)
     │
     ├── PHASE 4: PRIORITIZE (adjusted severity)
     │

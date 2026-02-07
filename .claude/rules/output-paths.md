@@ -20,6 +20,7 @@ NEVER create new top-level folders. NEVER mkdir — folders already exist.
 | Path | Who Writes | Content |
 |------|-----------|---------|
 | `reports/security/` | QA Security (Quinn) | Security audit reports |
+| `reports/security/shannon/` | Shannon (Wraith) via Quinn | DAST exploitation reports |
 | `reports/code-quality/` | QA Code (Codex) | Code review, lint reports |
 | `reports/testing/` | QA Functional (Tess) | Test plans, regression, bug reports |
 | `reports/analytics/` | Analyst (Oracle) | Data analysis, dashboards, A/B tests |
@@ -37,6 +38,7 @@ NEVER create new top-level folders. NEVER mkdir — folders already exist.
 |------|-----------|---------|
 | `config/neo-aios.yaml` | neo-init (auto) | Main system config |
 | `config/credentials.yaml` | Any agent (auto-save) | Structured credentials (gitignored) |
+| `config/shannon.yaml` | Shannon (Wraith) | DAST configuration & auth templates |
 
 ## CI/CD (.github/)
 

@@ -1,0 +1,3 @@
+[submodule "tools/shannon"]
+	path = tools/shannon
+	url = https://github.com/KeygraphHQ/shannon.git

@@ -104,6 +104,12 @@ Thumbs.db
 logs/
 
 # ============================================
+# Shannon DAST (raw output, not versioned)
+# ============================================
+reports/security/shannon/raw/
+tools/shannon/audit-logs/
+
+# ============================================
 # Misc
 # ============================================
 *.bak
