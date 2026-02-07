@@ -27,9 +27,17 @@ fi
 USER_PROMPT="${CLAUDE_USER_PROMPT:-}"
 
 if [ -n "$USER_PROMPT" ]; then
-  # Extract agent name from /command or @mention at start of prompt
-  # Matches: /master, /dev, @architect, /qa-code, /clear-agent etc.
+  # Extract agent name from multiple formats:
+  # 1. Raw: /master, @dev at start of prompt
+  # 2. Skill XML: <command-message>master</command-message> (Claude Code skill system)
+  # 3. Command XML: <command-name>/master</command-name>
   DETECTED=$(echo "$USER_PROMPT" | grep -oE '^[/@]([-a-z]+)' | head -1 | sed 's|^[/@]||')
+  if [ -z "$DETECTED" ]; then
+    DETECTED=$(echo "$USER_PROMPT" | sed -n 's|.*<command-message>\([-a-z]*\)</command-message>.*|\1|p' | head -1)
+  fi
+  if [ -z "$DETECTED" ]; then
+    DETECTED=$(echo "$USER_PROMPT" | sed -n 's|.*<command-name>/\([-a-z]*\)</command-name>.*|\1|p' | head -1)
+  fi
 
   if [ -n "$DETECTED" ]; then
     # Handle clear-agent: reset state
