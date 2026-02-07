@@ -52,11 +52,15 @@ Opus 4.6, adaptive thinking. Effort/teams/config details in `.claude/rules/`.
 ## Session Persistence
 
 Agent state is managed automatically by hooks — no manual read/write needed:
-- **`pre-prompt-context.sh`** (UserPromptSubmit) — Detects `/agent` or skill activation, updates `.aios/session-state.json`
-- **`post-response-update.sh`** (Stop) — Updates `lastActivity` timestamp
-- **`restore-agent-state.sh`** (SessionStart:compact) — Restores agent context after compaction
+- **`pre-prompt-context.sh`** (UserPromptSubmit) — Detects `/agent` or skill activation, updates `.aios/session-state.json`, injects greeting level (new/existing) and previous agent context
+- **`post-response-update.sh`** (Stop) — Updates `lastActivity` timestamp, tracks `agentHistory` (last 5 agents)
+- **`restore-agent-state.sh`** (SessionStart:compact) — Restores agent context + memory reference after compaction
 
 On `*exit` or `/clear-agent`: set `activeAgent` to `null`.
+
+### Agent Memory
+
+Each agent has persistent memory at `.claude/agent-memory/{id}/MEMORY.md`. Updated at end of complex tasks with key decisions, gotchas, and patterns learned. Hooks inject memory path on activation.
 
 ---
 
@@ -118,7 +122,9 @@ If a task is outside your scope, DELEGATE — don't pretend to be someone else. 
 
 ---
 
-## Rules
+## Constitution & Rules
+
+Non-negotiable principles formalized in `.claude/rules/constitution.md`. All agents must comply.
 
 - **Approval = execute until complete.** Don't ask "should I continue?" after approval.
 - **Said 2x = new rule.** Add to CLAUDE.md immediately.

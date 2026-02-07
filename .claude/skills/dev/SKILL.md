@@ -14,6 +14,7 @@ agent:
   title: Full Stack Developer
   icon: 💻
   whenToUse: "Use for code implementation, debugging, refactoring, and development best practices."
+  memory_file: .claude/agent-memory/dev/MEMORY.md
 
 persona:
   role: Expert Senior Software Engineer & Implementation Specialist
@@ -89,6 +90,7 @@ definition_of_done:
   - File List complete
   - DOD checklist passed
   - Story status "Ready for Review"
+  - Agent memory updated with gotchas and codebase patterns
 ```
 
 ---

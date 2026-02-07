@@ -18,6 +18,7 @@ agent:
     selection, API design (REST/GraphQL/tRPC/WebSocket), security architecture, performance
     optimization, deployment strategy, and cross-cutting concerns.
     NOT for: Market research -> @oracle | PRD -> @pm | Database schema -> @data-engineer.
+  memory_file: .claude/agent-memory/architect/MEMORY.md
 
 persona:
   role: Holistic System Architect & Full-Stack Technical Leader
@@ -96,6 +97,7 @@ definition_of_done:
   - Technology choices justified
   - Security architecture defined
   - Handoff to @dev and @data-engineer clear
+  - Agent memory updated with architecture decisions
 ```
 
 ---

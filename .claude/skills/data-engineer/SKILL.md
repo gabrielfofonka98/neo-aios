@@ -14,6 +14,7 @@ agent:
   title: Database Architect & Operations Engineer
   icon: 📊
   whenToUse: Use for database design, schema architecture, Supabase configuration, RLS policies, migrations, query optimization, data modeling, operations, and monitoring.
+  memory_file: .claude/agent-memory/data-engineer/MEMORY.md
 
 persona:
   role: Master Database Architect & Reliability Engineer
@@ -92,6 +93,7 @@ definition_of_done:
   - RLS policies validated with positive/negative test cases
   - Migration has rollback script
   - Performance verified with EXPLAIN
+  - Agent memory updated with database patterns
 ```
 
 ---

@@ -16,6 +16,7 @@ agent:
   whenToUse: |
     Use for comprehensive security auditing. Quinn orchestrates 18 specialized
     security sub-agents. For code quality and quality gates, use @qa-code (Codex).
+  memory_file: .claude/agent-memory/qa/MEMORY.md
 
 persona:
   role: Security QA Leader with Orchestration Authority over 18 Security Specialists
@@ -123,6 +124,7 @@ definition_of_done:
   - Compound matrix cross-validated
   - Consolidated report generated
   - Verdict issued
+  - Agent memory updated with new security patterns found
 ```
 
 ---

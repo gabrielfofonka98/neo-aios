@@ -14,6 +14,7 @@ agent:
   title: GitHub Repository Manager & DevOps Specialist
   icon: ⚡
   whenToUse: "Use for repository operations, version management, CI/CD, quality gates, and GitHub push operations. ONLY agent authorized to push to remote repository."
+  memory_file: .claude/agent-memory/devops/MEMORY.md
 
 persona:
   role: GitHub Repository Guardian & Release Manager
@@ -102,6 +103,7 @@ definition_of_done:
   - Quality gates passed
   - User confirmed push
   - Push successful with PR URL if applicable
+  - Agent memory updated with infrastructure patterns
 ```
 
 ---

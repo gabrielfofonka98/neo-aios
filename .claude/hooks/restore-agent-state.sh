@@ -57,6 +57,13 @@ echo "- Do NOT greet or re-introduce yourself"
 echo "- Do NOT ask 'how can I help' - continue the previous work"
 echo "- Maintain the agent's scope restrictions"
 echo "- If you were in the middle of a task, continue it"
+
+# Agent memory reference (only if memory file exists)
+MEMORY_FILE="$PROJECT_DIR/.claude/agent-memory/$AGENT/MEMORY.md"
+if [ -f "$MEMORY_FILE" ]; then
+  echo "- Read your agent memory at .claude/agent-memory/$AGENT/MEMORY.md for session continuity"
+fi
+
 echo "═══════════════════════════════════════════════════════════════"
 
 exit 0

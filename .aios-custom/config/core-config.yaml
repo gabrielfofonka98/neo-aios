@@ -289,6 +289,23 @@ healthcheck:
       - agent_not_registered
 
 # =============================================================================
+# AGENT MEMORY
+# =============================================================================
+agent_memory:
+  enabled: true
+  path: ".claude/agent-memory/{id}/MEMORY.md"
+  update_on: "end of complex tasks, significant learnings, gotchas discovered"
+  modules:
+    gotchas:
+      enabled: true
+      auto_promote_threshold: 3  # occurrences before auto-promoting to rule
+      storage: ".aios/memory/gotchas.json"
+    file_evolution:
+      enabled: true
+      conflict_window_minutes: 10
+      storage: ".aios/memory/file-evolution.json"
+
+# =============================================================================
 # SESSION PERSISTENCE
 # =============================================================================
 session:
@@ -300,6 +317,7 @@ session:
     - last_activity
     - current_task
     - project_context
+    - agent_history
 
   # Recovery settings
   recovery:
@@ -313,6 +331,10 @@ session:
 development:
   story_driven: true
   stories_path: "docs/projects/{project}/epics/{epic}/"
+
+  # Files dev agent must always load on startup (beyond story file)
+  devLoadAlwaysFiles:
+    - ".aios-custom/STANDARDS.md"
 
   # Handoff settings
   handoff:

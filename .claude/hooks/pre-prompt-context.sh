@@ -24,6 +24,10 @@ fi
 # Auto-detect agent activation from user prompt (slash commands & skill calls)
 # This writes session-state.json BEFORE the LLM processes anything = zero tokens
 # ---------------------------------------------------------------------------
+# Capture previous agent BEFORE any updates (for greeting level & context handoff)
+PREV_AGENT=$(jq -r '.activeAgent // empty' "$STATE_FILE" 2>/dev/null)
+PREV_TASK=$(jq -r '.currentTask // empty' "$STATE_FILE" 2>/dev/null)
+
 USER_PROMPT="${CLAUDE_USER_PROMPT:-}"
 
 if [ -n "$USER_PROMPT" ]; then
@@ -68,8 +72,36 @@ fi
 # Get current task if any
 CURRENT_TASK=$(jq -r '.currentTask // empty' "$STATE_FILE" 2>/dev/null)
 
-# Minimal context injection (to not bloat every prompt)
-# Only inject if there's an active task to remind about
+# ---------------------------------------------------------------------------
+# Greeting Level Detection: full (new activation) vs minimal (continuing)
+# ---------------------------------------------------------------------------
+if [ -n "$PREV_AGENT" ] && [ "$PREV_AGENT" != "null" ] && [ "$PREV_AGENT" = "$AGENT" ]; then
+  GREETING="minimal"
+else
+  GREETING="full"
+fi
+
+# ---------------------------------------------------------------------------
+# Build context output
+# ---------------------------------------------------------------------------
+
+# Greeting level (always when agent is active)
+echo "[Greeting: $GREETING]"
+
+# Previous agent context (only on agent change, when previous was active)
+if [ "$GREETING" = "full" ] && [ -n "$PREV_AGENT" ] && [ "$PREV_AGENT" != "null" ] && [ "$PREV_AGENT" != "$AGENT" ]; then
+  PREV_ACTION="${PREV_TASK:-none}"
+  [ "$PREV_ACTION" = "null" ] && PREV_ACTION="none"
+  echo "[Previous: @$PREV_AGENT | Last action: $PREV_ACTION]"
+fi
+
+# Agent memory hint
+MEMORY_FILE="$PROJECT_DIR/.claude/agent-memory/$AGENT/MEMORY.md"
+if [ -f "$MEMORY_FILE" ]; then
+  echo "[Agent memory available at .claude/agent-memory/$AGENT/MEMORY.md]"
+fi
+
+# Current task reminder
 if [ -n "$CURRENT_TASK" ] && [ "$CURRENT_TASK" != "null" ]; then
   echo "[Context: @$AGENT | Task: $CURRENT_TASK]"
 fi

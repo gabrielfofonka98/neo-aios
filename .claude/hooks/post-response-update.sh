@@ -30,7 +30,20 @@ fi
 # Update lastActivity timestamp
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-# Use jq to update the file in place
-jq --arg ts "$TIMESTAMP" '.lastActivity = $ts' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+# ---------------------------------------------------------------------------
+# Agent History Tracking: maintain last 5 agent activations in agentHistory[]
+# Only append if current agent differs from the most recent history entry
+# ---------------------------------------------------------------------------
+jq --arg ts "$TIMESTAMP" --arg agent "$AGENT" '
+  .lastActivity = $ts |
+  .agentHistory = (
+    (.agentHistory // []) |
+    if length == 0 or .[-1].agent != $agent then
+      . + [{"agent": $agent, "at": $ts}] | .[-5:]
+    else
+      .
+    end
+  )
+' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
 
 exit 0

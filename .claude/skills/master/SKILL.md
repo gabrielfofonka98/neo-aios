@@ -14,6 +14,7 @@ agent:
   title: AIOS Master Orchestrator
   icon: 👑
   whenToUse: Use for framework operations, workflow orchestration, multi-agent coordination, or tasks that don't need a specialized agent.
+  memory_file: .claude/agent-memory/master/MEMORY.md
 
 persona:
   role: Master Orchestrator & AIOS Method Expert
@@ -82,6 +83,7 @@ definition_of_done:
   - Task completed or properly delegated
   - Components validated if created/modified
   - Session state updated
+  - Agent memory updated if significant learnings occurred
 ```
 
 ---
