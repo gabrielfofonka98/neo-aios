@@ -698,53 +698,103 @@ MCP_CATALOG = {
     },
 }
 
-def install_mcps(project_root: Path) -> list[str]:
-    """Auto-install essential MCP servers and generate .mcp.json.
+def _mcp_already_registered(name: str, project_root: Path) -> bool:
+    """Check if an MCP server is already registered via claude CLI."""
+    try:
+        result = subprocess.run(
+            ["claude", "mcp", "list"],
+            capture_output=True, text=True, cwd=project_root, timeout=30,
+            check=False,
+        )
+        return name in result.stdout
+    except Exception:
+        return False
 
-    Always generates the config file regardless of runtime availability.
-    MCP commands (npx, uvx) are needed at runtime by Claude Code, not at
-    install time.
+
+def _add_mcp_via_cli(
+    name: str, entry: dict, project_root: Path
+) -> bool:
+    """Register an MCP server using `claude mcp add -s project`."""
+    cmd = ["claude", "mcp", "add", "-s", "project"]
+
+    # Add env vars
+    if "env" in entry:
+        for key, value in entry["env"].items():
+            cmd.extend(["-e", f"{key}={value}"])
+
+    # Name, then -- separator, then command + args
+    cmd.append(name)
+    cmd.append("--")
+    cmd.append(entry["command"])
+    cmd.extend(entry["args"])
+
+    try:
+        result = subprocess.run(
+            cmd,
+            capture_output=True, text=True, cwd=project_root, timeout=30,
+            check=False,
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
+
+def install_mcps(project_root: Path) -> list[str]:
+    """Register MCP servers using `claude mcp add` for proper CLI integration.
+
+    Uses `claude mcp add -s project` when Claude CLI is available (preferred).
+    Falls back to manual .mcp.json generation when CLI is not available.
     """
     installed = []
+    has_claude = check_command("claude")
 
-    # Warn about missing runtimes but do NOT skip config generation.
-    # The .mcp.json must always be written so Claude Code can use it.
-    has_npx = check_command("npx")
-    has_uvx = check_command("uvx")
-    if not has_npx:
-        warn("npx not found. MCP servers requiring npx won't start until Node.js is installed.")
-    if not has_uvx:
-        warn("uvx not found. MCP servers requiring uvx won't start until uv is installed.")
+    if has_claude:
+        # Preferred: use claude CLI for proper registration
+        for name, entry in MCP_CATALOG.items():
+            if _mcp_already_registered(name, project_root):
+                info(f"{name} already configured")
+                continue
 
-    mcp_config_path = project_root / ".mcp.json"
-    existing_config: dict = {}
+            if _add_mcp_via_cli(name, entry, project_root):
+                installed.append(name)
+                ok(f"Added {name} — {entry['description']}")
+            else:
+                warn(f"Failed to add {name} via claude CLI")
+    else:
+        # Fallback: generate .mcp.json manually
+        info("Claude CLI not found. Generating .mcp.json manually.")
 
-    if mcp_config_path.exists():
-        try:
-            existing_config = json.loads(mcp_config_path.read_text())
-        except Exception:
-            pass
+        mcp_config_path = project_root / ".mcp.json"
+        existing_config: dict = {}
 
-    mcp_servers = existing_config.get("mcpServers", {})
+        if mcp_config_path.exists():
+            try:
+                existing_config = json.loads(mcp_config_path.read_text())
+            except Exception:
+                pass
 
-    for name, entry in MCP_CATALOG.items():
-        if name in mcp_servers:
-            info(f"{name} already configured")
-            continue
+        mcp_servers = existing_config.get("mcpServers", {})
 
-        server_config: dict[str, object] = {
-            "command": entry["command"],
-            "args": entry["args"],
-        }
-        if "env" in entry:
-            server_config["env"] = entry["env"]
-        mcp_servers[name] = server_config
-        installed.append(name)
-        ok(f"Added {name} — {entry['description']}")
+        for name, entry in MCP_CATALOG.items():
+            if name in mcp_servers:
+                info(f"{name} already configured")
+                continue
 
-    if installed or not mcp_config_path.exists():
-        config_data = {"mcpServers": mcp_servers}
-        mcp_config_path.write_text(json.dumps(config_data, indent=2) + "\n")
+            server_config: dict[str, object] = {
+                "command": entry["command"],
+                "args": entry["args"],
+            }
+            if "env" in entry:
+                server_config["env"] = entry["env"]
+            mcp_servers[name] = server_config
+            installed.append(name)
+            ok(f"Added {name} — {entry['description']}")
+
+        if installed or not mcp_config_path.exists():
+            config_data = {"mcpServers": mcp_servers}
+            mcp_config_path.write_text(
+                json.dumps(config_data, indent=2) + "\n"
+            )
 
     return installed
 
