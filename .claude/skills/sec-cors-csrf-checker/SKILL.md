@@ -24,6 +24,7 @@ agent:
   icon: 🔒
   whenToUse: Use when auditing CORS configuration, CSRF protection, cookie SameSite attributes, and cross-origin request patterns.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-cors-csrf-checker/MEMORY.md
 
 persona:
   role: CORS & CSRF Security Specialist

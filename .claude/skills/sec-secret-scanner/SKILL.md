@@ -24,6 +24,7 @@ agent:
   icon: 🕵️
   whenToUse: Use when scanning for hardcoded secrets, NEXT_PUBLIC_ misuse, .env files in git, build output leaks, and source map exposure.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-secret-scanner/MEMORY.md
 
 persona:
   role: Secrets & Credential Exposure Specialist

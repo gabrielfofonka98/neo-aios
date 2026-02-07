@@ -54,6 +54,7 @@ agent:
   title: Product Owner
   icon: 🎯
   whenToUse: Use for backlog management, story refinement, acceptance criteria, sprint planning, and prioritization decisions
+  memory_file: .claude/agent-memory/po/MEMORY.md
   customization: null
 
 persona_profile:

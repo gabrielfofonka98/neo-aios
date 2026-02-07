@@ -24,6 +24,7 @@ agent:
   icon: 👻
   whenToUse: Use when scanning for sensitive data exposed in client-side code including localStorage tokens, source maps, hardcoded credentials, and client-only auth.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-client-exposure-scanner/MEMORY.md
 
 persona:
   role: Client-Side Data Exposure Specialist

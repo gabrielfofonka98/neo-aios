@@ -24,6 +24,7 @@ agent:
   icon: 🤐
   whenToUse: Use when auditing error handling for verbose errors, stack traces in responses, internal paths, and database error exposure.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-error-leak-detector/MEMORY.md
 
 persona:
   role: Error Handling & Information Leak Specialist

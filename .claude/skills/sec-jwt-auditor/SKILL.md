@@ -24,6 +24,7 @@ agent:
   icon: 🔐
   whenToUse: Use when auditing JWT implementation - decode vs verify, algorithm attacks, token storage, expiration, and JWK/kid injection.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-jwt-auditor/MEMORY.md
 
 persona:
   role: JWT & Token Security Specialist

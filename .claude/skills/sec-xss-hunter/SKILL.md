@@ -24,6 +24,7 @@ agent:
   icon: 🐍
   whenToUse: Use when scanning for XSS vulnerabilities in React/Next.js applications including dangerouslySetInnerHTML, href injection, eval/Function usage, and SVG injection vectors.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-xss-hunter/MEMORY.md
 
 persona:
   role: XSS Detection & Prevention Specialist

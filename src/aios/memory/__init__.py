@@ -1,7 +1,8 @@
 """Memory module for recurring issue tracking and file evolution monitoring.
 
 Provides GotchasMemory for auto-promoting recurring issues to rules,
-and FileEvolutionTracker for detecting multi-agent file conflicts.
+FileEvolutionTracker for detecting multi-agent file conflicts,
+and hook_bridge for CLI integration with bash hooks.
 """
 
 from aios.memory.file_evolution import ConflictInfo
@@ -11,6 +12,7 @@ from aios.memory.file_evolution import FileModification
 from aios.memory.gotchas import Gotcha
 from aios.memory.gotchas import GotchasMemory
 from aios.memory.gotchas import IssueRecord
+from aios.memory.hook_bridge import cli as hook_bridge_cli
 
 __all__ = [
     "ConflictInfo",
@@ -20,4 +22,5 @@ __all__ = [
     "Gotcha",
     "GotchasMemory",
     "IssueRecord",
+    "hook_bridge_cli",
 ]

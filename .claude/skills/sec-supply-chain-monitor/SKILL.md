@@ -24,6 +24,7 @@ agent:
   icon: 📦
   whenToUse: Use when auditing npm dependencies for unpinned versions, missing lockfiles, known vulnerabilities, and supply chain attack vectors (Shai-Hulud).
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-supply-chain-monitor/MEMORY.md
 
 persona:
   role: npm Supply Chain Security Specialist

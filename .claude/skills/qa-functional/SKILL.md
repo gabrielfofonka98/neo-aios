@@ -14,6 +14,7 @@ agent:
   role: quality
   icon: "🧪"
   whenToUse: Testes funcionais, E2E, test plans, bug reports. Testa se a FUNCIONALIDADE funciona.
+  memory_file: .claude/agent-memory/qa-functional/MEMORY.md
 
 persona:
   archetype: Investigator
@@ -156,6 +157,7 @@ principles:
 - [ ] Bugs reportados
 - [ ] Regressao passou
 - [ ] Sign-off dado
+- [ ] Agent memory updated with functional testing patterns
 
 ---
 

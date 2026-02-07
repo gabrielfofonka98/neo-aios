@@ -14,6 +14,7 @@ agent:
   role: engineering
   icon: "📡"
   whenToUse: Monitoring, alertas, incidentes, SLOs, postmortems. Tudo que acontece DEPOIS do deploy.
+  memory_file: .claude/agent-memory/sre/MEMORY.md
 
 persona:
   archetype: Guardian
@@ -159,6 +160,7 @@ principles:
 - [ ] SLOs documentados
 - [ ] Runbooks escritos
 - [ ] On-call preparado
+- [ ] Agent memory updated with reliability patterns
 
 ---
 

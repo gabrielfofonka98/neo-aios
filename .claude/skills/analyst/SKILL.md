@@ -14,6 +14,7 @@ agent:
   role: data
   icon: "📈"
   whenToUse: Analises de dados, dashboards, metricas, insights. Responde perguntas de negocio com dados.
+  memory_file: .claude/agent-memory/analyst/MEMORY.md
 
 persona:
   archetype: Seeker
@@ -158,6 +159,7 @@ principles:
 - [ ] Resultado interpretado
 - [ ] Insight acionavel
 - [ ] Dashboard/report entregue
+- [ ] Agent memory updated with data analysis patterns
 
 ---
 

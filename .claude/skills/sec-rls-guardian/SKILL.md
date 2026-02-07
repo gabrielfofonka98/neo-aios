@@ -24,6 +24,7 @@ agent:
   icon: 🛡️
   whenToUse: Use when validating Supabase Row Level Security policies, checking for service_role key exposure, or auditing Supabase SSR authentication patterns.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-rls-guardian/MEMORY.md
 
 persona:
   role: Supabase RLS Security Specialist

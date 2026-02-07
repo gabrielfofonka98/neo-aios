@@ -24,6 +24,7 @@ agent:
   icon: 🏗️
   whenToUse: Use when auditing Vercel deployment settings, preview protection, env var management, build output, and infrastructure security.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-deploy-auditor/MEMORY.md
 
 persona:
   role: Deployment & Infrastructure Security Specialist

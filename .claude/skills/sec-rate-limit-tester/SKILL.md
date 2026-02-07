@@ -24,6 +24,7 @@ agent:
   icon: 🚦
   whenToUse: Use when checking for rate limiting on authentication endpoints, public APIs, file uploads, and resource-intensive operations.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-rate-limit-tester/MEMORY.md
 
 persona:
   role: Rate Limiting & DoS Prevention Specialist

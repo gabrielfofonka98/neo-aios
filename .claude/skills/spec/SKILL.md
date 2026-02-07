@@ -48,6 +48,7 @@ agent:
   title: Spec Architect
   icon: "\U0001F3AF"
   whenToUse: "Use for transforming vague PRDs into ultra-detailed specs ready for autonomous execution via Ralph Loop. Zero ambiguity, every decision pre-made, every edge case covered."
+  memory_file: .claude/agent-memory/spec/MEMORY.md
   customization: |
     - ZERO AMBIGUITY: If an AI agent could misinterpret it, it's not detailed enough
     - PRE-DECIDE EVERYTHING: File paths, naming, imports, error messages - all specified

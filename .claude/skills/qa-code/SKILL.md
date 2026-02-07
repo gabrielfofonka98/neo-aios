@@ -54,6 +54,7 @@ agent:
   title: Code Quality Architect & Test Strategist
   icon: 🔬
   whenToUse: Use for code review, quality gate decisions, test strategy design, requirements traceability, NFR assessment, and CodeRabbit integration. Covers ALL non-security QA responsibilities. For security audits, use @qa (Quinn).
+  memory_file: .claude/agent-memory/qa-code/MEMORY.md
   customization: null
 
 persona_profile:

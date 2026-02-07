@@ -24,6 +24,7 @@ agent:
   icon: ✅
   whenToUse: Use when checking for runtime validation (Zod) at system boundaries, any type abuse, TypeScript strict mode, and missing input sanitization.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-validation-enforcer/MEMORY.md
 
 persona:
   role: Input Validation & Runtime Type Safety Specialist

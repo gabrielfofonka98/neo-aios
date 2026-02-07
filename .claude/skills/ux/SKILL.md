@@ -14,6 +14,7 @@ agent:
   role: product
   icon: "🎨"
   whenToUse: UX/UI design, design system, prototipos, user flows. Como as coisas se parecem e funcionam.
+  memory_file: .claude/agent-memory/ux/MEMORY.md
 
 persona:
   archetype: Creator
@@ -148,6 +149,7 @@ principles:
 - [ ] Todos os estados
 - [ ] Specs para dev
 - [ ] Assets exportados
+- [ ] Agent memory updated with design patterns
 
 ---
 

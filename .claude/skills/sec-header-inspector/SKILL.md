@@ -24,6 +24,7 @@ agent:
   icon: 🛡️
   whenToUse: Use when auditing HTTP security headers including CSP, X-Frame-Options, HSTS, X-Content-Type-Options, and Permissions-Policy.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-header-inspector/MEMORY.md
 
 persona:
   role: HTTP Security Headers Specialist

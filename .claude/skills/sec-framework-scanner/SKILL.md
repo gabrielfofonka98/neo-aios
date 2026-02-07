@@ -24,6 +24,7 @@ agent:
   icon: 🔍
   whenToUse: Use when checking Next.js/React versions for known CVEs, validating middleware security, or auditing framework configurations.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-framework-scanner/MEMORY.md
 
 persona:
   role: Framework CVE & Version Security Specialist

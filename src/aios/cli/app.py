@@ -9,9 +9,11 @@ import click
 
 import aios
 from aios.cli.commands import agent_group
+from aios.cli.commands import conflicts_group
 from aios.cli.commands import doctor_group
 from aios.cli.commands import gate_group
 from aios.cli.commands import glue_group
+from aios.cli.commands import gotchas_group
 from aios.cli.commands import health_group
 from aios.cli.commands import ids_group
 from aios.cli.commands import mcp_group
@@ -85,9 +87,11 @@ def create_app() -> click.Group:
 
     # Register command groups
     cli_group.add_command(agent_group)
+    cli_group.add_command(conflicts_group)
     cli_group.add_command(doctor_group)
     cli_group.add_command(gate_group)
     cli_group.add_command(glue_group)
+    cli_group.add_command(gotchas_group)
     cli_group.add_command(health_group)
     cli_group.add_command(ids_group)
     cli_group.add_command(mcp_group)

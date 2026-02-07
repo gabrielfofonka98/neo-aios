@@ -24,6 +24,7 @@ agent:
   icon: 📎
   whenToUse: Use when auditing file upload implementations for magic bytes validation, filename sanitization, storage location, size limits, and content-type verification.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-upload-validator/MEMORY.md
 
 persona:
   role: File Upload Security Specialist

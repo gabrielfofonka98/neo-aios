@@ -42,6 +42,7 @@ agent:
   title: Autonomous Development Loop Orchestrator
   icon: "\U0001F504"
   whenToUse: "Use when you need autonomous development loop that persists progress across iterations until task completion"
+  memory_file: .claude/agent-memory/ralph/MEMORY.md
   customization: |
     - AUTONOMOUS LOOP: Execute iteratively until all stories pass
     - PROGRESS PERSISTENCE: Maintain state in progress.txt and prd.json

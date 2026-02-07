@@ -24,6 +24,7 @@ agent:
   icon: 💉
   whenToUse: Use when scanning for SQL injection via Prisma raw queries, operator injection, Supabase client-side trust, and parameterization issues.
   reportsTo: Quinn (@qa)
+  memory_file: .claude/agent-memory/sec-injection-detector/MEMORY.md
 
 persona:
   role: SQL & ORM Injection Specialist
