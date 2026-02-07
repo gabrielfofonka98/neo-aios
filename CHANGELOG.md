@@ -10,6 +10,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+#### Agent Intelligence System
+- **Constitution** (`.claude/rules/constitution.md`) — 7 formal articles with 3 severity levels (NON-NEGOTIABLE, MUST, SHOULD) covering agent identity isolation, authority boundaries, hierarchy, quality gates, language, and behavior
+- **Agent Memory System** — Persistent per-agent memory at `.claude/agent-memory/{id}/MEMORY.md` for all 52 agents, tracking key decisions, gotchas, and domain-specific patterns across sessions
+- **GotchasMemory** (`src/aios/memory/gotchas.py`) — Tracks recurring issues with SHA-256 keying and auto-promotes to formal rules after configurable threshold (default: 3 occurrences)
+- **FileEvolutionTracker** (`src/aios/memory/file_evolution.py`) — Detects multi-agent file conflicts with 4-level severity classification (critical/high/medium/low)
+- **Hook Bridge** (`src/aios/memory/hook_bridge.py`) — Click CLI for bash-to-Python integration with 4 subcommands: `record-file-change`, `check-conflicts`, `record-gotcha`, `get-gotchas`
+- **`memory_file` references** in 35/52 SKILL.md files (core + persona + security agents) with DOD memory update items
+- **119 new tests** for memory system (51 memory + 32 hook bridge + 36 CLI)
+
+#### CLI Memory Commands
+- **`aios memory show <id>`** — Display an agent's persistent memory
+- **`aios memory list-agents`** — List all agents with memory files and last-modified dates
+- **`aios memory clear <id>`** — Reset agent memory to template (with confirmation)
+- **`aios gotchas list`** — List recorded gotchas with optional `--agent` and `--min-count` filters
+- **`aios gotchas stats`** — Show gotcha statistics (total issues, promoted count, top categories)
+- **`aios gotchas reset`** — Clear all gotchas (with confirmation)
+- **`aios conflicts check`** — Show active file conflicts with optional `--agent` filter
+- **`aios conflicts history`** — File modification history with `--days` filter
+- **`aios conflicts cleanup`** — Remove old entries with `--days` filter
+
+#### Context Optimization (SynkraAI-inspired)
+- **2-layer SKILL/KB split** — Light SKILL.md (~120-155 lines) for activation, heavy KB.md loaded on demand via `*kb` command
+- **70% reduction** in total activation context (3,100 → 926 lines across 6 core agents + CLAUDE.md)
+- **KB.md files** for master, qa, dev, devops, data-engineer, architect
+
+#### Enhanced Hooks
+- **Greeting level detection** — `pre-prompt-context.sh` now detects new vs existing sessions, injecting appropriate greeting level hint
+- **Agent history tracking** — `post-response-update.sh` tracks `agentHistory` (last 5 agents) in session-state.json
+- **Previous agent context injection** — When switching agents, hooks inject context about the previous agent
+- **Memory reference on compact** — `restore-agent-state.sh` now includes agent memory path after context compaction
+- **Agent activation detection** — `pre-prompt-context.sh` auto-detects `/agent` commands and `<command-message>` XML tags
+
+#### Pipeline Module
 - **Pipeline module** (`src/aios/pipeline/`) with dependency-aware story execution:
   - `PipelineManager` — State persistence, file-based locking, WaveAnalyzer integration
   - `StepExecutor` — Isolated step execution with checkpoint/recovery
@@ -20,10 +54,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **105 new tests** for pipeline module (96% coverage)
 
 ### Changed
-- Nothing yet
+- **CLAUDE.md optimized** from 390 to ~145 lines (63% reduction), heavy content moved to `.claude/rules/`
+- **6 core SKILL.md files** rewritten with 2-layer split (67-75% reduction each)
+- **Agent count** expanded from 36 to 52 (additional persona, utility, and launcher agents)
+- **Test count** grew from 757 to 1171+ tests
+- **AI Partner** updated to Claude Opus 4.6
 
 ### Fixed
-- Nothing yet
+- **Hook XML tag detection** — `pre-prompt-context.sh` now correctly detects `<command-message>` tags for skill activation
+- **Agent ID normalization** — Comprehensive audit normalized agent IDs, paths, and references across 113 files
 
 ---
 
@@ -119,6 +158,7 @@ Initial release of NEO-AIOS - Agent Intelligence Operating System.
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| Unreleased | - | Agent intelligence, context optimization, pipeline, CLI expansion |
 | 0.1.0 | 2026-02-05 | Initial release with full agent hierarchy |
 
 ---

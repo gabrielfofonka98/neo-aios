@@ -12,6 +12,7 @@ Referencia completa da API Python do NEO-AIOS.
 | `aios.context` | Gerenciamento de sessao |
 | `aios.core` | Utilidades core (waves, cache, profiling) |
 | `aios.intelligence` | Roteamento de tarefas e ecomode |
+| `aios.memory` | Sistema de memoria de agentes (gotchas, file evolution, hook bridge) |
 | `aios.pipeline` | Pipeline de execucao, steps isolados, cost tracking |
 | `aios.security` | Framework de validacao de seguranca |
 | `aios.healthcheck` | Motor de health checks |
@@ -612,6 +613,87 @@ result = router.classify_by_step("unknown")
 
 ---
 
+## aios.memory
+
+### GotchasMemory
+
+Rastreia problemas recorrentes e auto-promove a regras.
+
+```python
+from pathlib import Path
+from aios.memory.gotchas import GotchasMemory
+
+# Criar instancia com diretorio de storage
+memory = GotchasMemory(storage_dir=Path(".aios/memory"))
+
+# Registrar um problema
+memory.record_issue(
+    category="macOS",
+    description="grep -P not supported on macOS",
+    context=["agent:dev", "file:hooks/pre-prompt-context.sh"]
+)
+
+# Apos 3 ocorrencias (threshold padrao), auto-promove a gotcha
+gotchas = memory.get_gotchas()
+for g in gotchas:
+    print(f"[{g.category}] {g.description} (count: {g.occurrence_count})")
+
+# Gerar texto para injecao em prompt
+prompt_text = memory.format_for_prompt(agent_id="dev")
+```
+
+### FileEvolutionTracker
+
+Detecta conflitos quando multiplos agentes modificam os mesmos arquivos.
+
+```python
+from pathlib import Path
+from aios.memory.file_evolution import FileEvolutionTracker
+
+tracker = FileEvolutionTracker(storage_dir=Path(".aios/memory/evolution"))
+
+# Registrar modificacao
+tracker.record_modification(
+    file_path="src/main.py",
+    agent_id="dev",
+    task_id="implement-auth"
+)
+
+# Verificar conflitos
+conflicts = tracker.check_conflicts(agent_id="dev")
+for c in conflicts:
+    print(f"{c.file_path}: {c.severity} — {len(c.agents)} agents")
+
+# Detectar drift (mudancas divergentes)
+drift = tracker.detect_drift(file_path="src/main.py")
+print(f"Agents: {drift.agents}, Severity: {drift.severity}")
+
+# Limpar entradas antigas
+tracker.cleanup(days=7)
+```
+
+### Hook Bridge CLI
+
+Ponte entre hooks bash e modulos Python.
+
+```bash
+# Registrar mudanca de arquivo
+uv run python -m aios.memory.hook_bridge record-file-change \
+  --agent dev --file src/main.py --action modify
+
+# Verificar conflitos
+uv run python -m aios.memory.hook_bridge check-conflicts --agent dev
+
+# Registrar gotcha
+uv run python -m aios.memory.hook_bridge record-gotcha \
+  --agent dev --category "macOS" --description "grep -P not supported"
+
+# Obter gotchas para prompt
+uv run python -m aios.memory.hook_bridge get-gotchas --agent dev --format text
+```
+
+---
+
 ## aios.cli
 
 ### Comandos Programaticos
@@ -627,8 +709,13 @@ result = runner.invoke(cli, ["agent", "list"])
 print(result.output)
 print(result.exit_code)
 
-# Com verbose
-result = runner.invoke(cli, ["-v", "scan", "quick"])
+# Comandos de memoria
+result = runner.invoke(cli, ["memory", "list-agents"])
+result = runner.invoke(cli, ["memory", "show", "dev"])
+result = runner.invoke(cli, ["gotchas", "list", "--agent", "dev"])
+result = runner.invoke(cli, ["gotchas", "stats"])
+result = runner.invoke(cli, ["conflicts", "check"])
+result = runner.invoke(cli, ["conflicts", "history", "--days", "7"])
 ```
 
 ---
@@ -700,4 +787,4 @@ if not health.is_healthy:
 
 ---
 
-*NEO-AIOS API Reference v0.1.0*
+*NEO-AIOS API Reference v0.2.0 (Unreleased)*

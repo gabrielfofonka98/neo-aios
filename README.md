@@ -16,7 +16,7 @@
 
 ![Python 3.12+](https://img.shields.io/badge/Python-3.12+-3776AB?logo=python&logoColor=white)
 ![License MIT](https://img.shields.io/badge/License-MIT-blue)
-![Tests 757+](https://img.shields.io/badge/Tests-757+-success)
+![Tests 1171+](https://img.shields.io/badge/Tests-1171+-success)
 
 ---
 
@@ -40,23 +40,26 @@ NEO-AIOS is a Python framework that transforms Claude Code from a single-agent a
 
 ### Key Features
 
-- **36 Agents** organized in 5-tier hierarchy (C-Level → VP → Director → Manager → IC)
+- **52 Agents** organized in 5-tier hierarchy (C-Level → VP → Director → Manager → IC)
 - **18 Security Sub-Agents** for comprehensive security auditing
+- **Agent Intelligence System** with persistent memory, constitution, and cross-session learning
 - **Scope Enforcement** at runtime (blocks, not suggestions)
 - **18 AST-based Validators** (zero false positives)
 - **Auto-Fix Engine** with bounded reflexion (max 3 attempts)
 - **3-Layer Quality Gates** (pre-commit, PR, human review)
 - **Session Persistence** that survives Claude Code auto-compact
-- **Hook System** for automatic agent restoration and scope enforcement
+- **Hook System** with greeting detection, agent history, and memory injection
+- **Pipeline Module** for dependency-aware story execution with cost tracking
 
 ### Core Principles
 
 ```
 1. DETERMINISTIC    → AST-based, not vibes-based
 2. ENFORCED         → Scope violations are blocked, not suggested
-3. PERSISTENT       → Session state survives context resets
+3. PERSISTENT       → Session state + agent memory survives context resets
 4. HIERARCHICAL     → Big Tech structure applied to agents
 5. BOUNDED          → Reflexion loops with limits (max 3)
+6. INTELLIGENT      → Agents learn across sessions via memory system
 ```
 
 ---
@@ -91,7 +94,7 @@ uv run ruff check src/ tests/
 uv run mypy --strict src/
 uv run pytest
 
-# Should show: 757+ tests passing
+# Should show: 1171+ tests passing
 ```
 
 ### Step 4: Configure Claude Code
@@ -224,6 +227,32 @@ Quinn (Security QA Leader) orchestrates these specialized security validators:
 
 ---
 
+## Agent Intelligence System
+
+NEO-AIOS agents have persistent intelligence that survives across sessions.
+
+### Agent Memory
+
+Each of the 52 agents has a persistent memory file at `.claude/agent-memory/{id}/MEMORY.md` that tracks key decisions, gotchas, and domain-specific patterns learned during sessions.
+
+### Constitution
+
+Formal non-negotiable principles in `.claude/rules/constitution.md` with 7 articles covering agent identity isolation, authority boundaries, hierarchy, quality gates, language, and behavior. Three severity levels: NON-NEGOTIABLE, MUST, SHOULD.
+
+### GotchasMemory
+
+Python module (`src/aios/memory/gotchas.py`) that automatically tracks recurring issues and promotes them to formal rules after a configurable threshold (default: 3 occurrences).
+
+### FileEvolutionTracker
+
+Python module (`src/aios/memory/file_evolution.py`) that detects when multiple agents modify the same files, classifying conflicts by severity (critical, high, medium, low).
+
+### Hook Bridge
+
+CLI bridge (`src/aios/memory/hook_bridge.py`) that connects bash hooks to Python memory modules with 4 subcommands: `record-file-change`, `check-conflicts`, `record-gotcha`, `get-gotchas`.
+
+---
+
 ## Security Validators
 
 NEO-AIOS includes 18 AST-based security validators with zero false positives.
@@ -262,9 +291,9 @@ NEO-AIOS uses Claude Code hooks for automatic agent management:
 
 | Hook | Event | Function |
 |------|-------|----------|
-| `restore-agent-state.sh` | SessionStart (compact) | Restores active agent after context compaction |
-| `pre-prompt-context.sh` | UserPromptSubmit | Injects minimal context before each prompt |
-| `post-response-update.sh` | Stop | Auto-updates lastActivity timestamp |
+| `restore-agent-state.sh` | SessionStart (compact) | Restores active agent + memory reference after compaction |
+| `pre-prompt-context.sh` | UserPromptSubmit | Detects agent activation, injects greeting level + previous agent context |
+| `post-response-update.sh` | Stop | Updates lastActivity + tracks agentHistory (last 5 agents) |
 | `scope-enforcer.sh` | PreToolUse (Bash) | **Blocks scope violations** |
 | `agent-delegation-tracker.sh` | SubagentStart | Logs delegation chains |
 
@@ -294,6 +323,21 @@ aios
 │   ├── deactivate             # Deactivate current
 │   ├── list                   # List all agents
 │   └── status                 # Current status
+│
+├── memory
+│   ├── show <agent-id>        # Show agent's persistent memory
+│   ├── list-agents            # List all agents with memory files
+│   └── clear <agent-id>       # Reset agent memory to template
+│
+├── gotchas
+│   ├── list [--agent] [--min-count]  # List recorded gotchas
+│   ├── stats                  # Show gotcha statistics
+│   └── reset                  # Clear all gotchas
+│
+├── conflicts
+│   ├── check [--agent]        # Show active file conflicts
+│   ├── history [--days]       # File modification history
+│   └── cleanup [--days]       # Remove old entries
 │
 ├── security
 │   ├── audit <path>           # Full security audit
@@ -325,26 +369,29 @@ neo-aios/
 ├── src/aios/                 # Python source
 │   ├── agents/               # Agent registry, models (not SKILL.md definitions)
 │   ├── autofix/              # Auto-fix engine
-│   ├── cli/                  # Click CLI
+│   ├── cli/                  # Click CLI (agent, memory, gotchas, conflicts, etc.)
 │   ├── context/              # Session persistence
 │   ├── core/                 # Core utilities (waves, cache, profiling)
 │   ├── healthcheck/          # Health monitoring
 │   ├── infrastructure/       # MCP and infrastructure
 │   ├── intelligence/         # Task routing, ecomode
+│   ├── memory/               # Agent memory (gotchas, file evolution, hook bridge)
 │   ├── pipeline/             # Pipeline state, step execution, cost tracking
 │   ├── quality/              # Quality gates
 │   ├── scope/                # Scope enforcement
 │   └── security/             # Security validators
 │
 ├── .claude/                  # Claude Code integration
-│   ├── skills/               # Agent SKILL.md definitions (53)
-│   │   ├── aria/, dev/, devops/  # Core agents
+│   ├── skills/               # Agent SKILL.md + KB.md definitions (52)
+│   │   ├── dev/, devops/     # Core agents (light SKILL.md ~120 lines)
 │   │   └── sec-*/            # Security sub-agents (18)
+│   ├── agent-memory/         # Persistent agent memory (52 agents)
 │   ├── hooks/                # Hook scripts (5)
+│   ├── rules/                # Constitution + model config + effort levels
 │   ├── settings.json         # Hook configuration
-│   └── CLAUDE.md             # Agent instructions
+│   └── CLAUDE.md             # Agent instructions (optimized, 145 lines)
 │
-├── tests/                    # Test suite (757+ tests)
+├── tests/                    # Test suite (1171+ tests)
 └── docs/                     # Documentation
 ```
 
@@ -395,7 +442,7 @@ MIT License - see [LICENSE](LICENSE)
 ## Credits
 
 - **Author:** Gabriel Fofonka
-- **AI Partner:** Claude Opus 4.5
+- **AI Partner:** Claude Opus 4.6
 - **Inspiration:** Big Tech organizational structures
 
 ---
