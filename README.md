@@ -324,13 +324,17 @@ aios
 neo-aios/
 ├── src/aios/                 # Python source
 │   ├── agents/               # Agent registry, models
-│   ├── scope/                # Scope enforcement
-│   ├── security/             # Security validators
 │   ├── autofix/              # Auto-fix engine
-│   ├── quality/              # Quality gates
-│   ├── healthcheck/          # Health monitoring
+│   ├── cli/                  # Click CLI
 │   ├── context/              # Session persistence
-│   └── cli/                  # Click CLI
+│   ├── core/                 # Core utilities (waves, cache, profiling)
+│   ├── healthcheck/          # Health monitoring
+│   ├── infrastructure/       # MCP and infrastructure
+│   ├── intelligence/         # Task routing, ecomode
+│   ├── pipeline/             # Pipeline state, step execution, cost tracking
+│   ├── quality/              # Quality gates
+│   ├── scope/                # Scope enforcement
+│   └── security/             # Security validators
 │
 ├── agents/                   # Agent SKILL.md definitions (36)
 │   ├── aria/, dex/, gage/    # Core agents
@@ -341,7 +345,7 @@ neo-aios/
 │   ├── settings.json         # Hook configuration
 │   └── CLAUDE.md             # Agent instructions
 │
-├── tests/                    # Test suite (757+ tests)
+├── tests/                    # Test suite (1050+ tests)
 └── docs/                     # Documentation
 ```
 

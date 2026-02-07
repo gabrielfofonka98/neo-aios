@@ -10,7 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Nothing yet
+- **Pipeline module** (`src/aios/pipeline/`) with dependency-aware story execution:
+  - `PipelineManager` — State persistence, file-based locking, WaveAnalyzer integration
+  - `StepExecutor` — Isolated step execution with checkpoint/recovery
+  - `StepRegistry` — YAML-based step definitions per workflow (greenfield, bugfix, refactor)
+  - `StoryCostReport` — Token cost tracking with mixed-model savings calculation
+  - Model routing per step via `TaskRouter.classify_by_step()`
+- **Session pipeline fields** — `currentStep`, `stepsCompleted`, `stepBudget`, `pipelineStoryId` (backward compatible)
+- **105 new tests** for pipeline module (96% coverage)
 
 ### Changed
 - Nothing yet

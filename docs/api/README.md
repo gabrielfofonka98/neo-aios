@@ -9,11 +9,15 @@ Referencia completa da API Python do NEO-AIOS.
 | Modulo | Descricao |
 |--------|-----------|
 | `aios.agents` | Registry e loader de agentes |
+| `aios.context` | Gerenciamento de sessao |
+| `aios.core` | Utilidades core (waves, cache, profiling) |
+| `aios.intelligence` | Roteamento de tarefas e ecomode |
+| `aios.pipeline` | Pipeline de execucao, steps isolados, cost tracking |
 | `aios.security` | Framework de validacao de seguranca |
 | `aios.healthcheck` | Motor de health checks |
-| `aios.cli` | Interface de linha de comando |
-| `aios.context` | Gerenciamento de sessao |
+| `aios.quality` | Quality gates (3 camadas) |
 | `aios.scope` | Enforcement de escopo |
+| `aios.cli` | Interface de linha de comando |
 
 ---
 
@@ -508,6 +512,102 @@ ActionType.MERGE_PR
 ActionType.DATABASE_DDL
 ActionType.PRODUCTION_DEPLOY
 ActionType.ARCHITECTURE_DECISION
+```
+
+---
+
+## aios.pipeline
+
+### PipelineManager
+
+Gerencia estado de pipeline com dependency graph e file-based locking.
+
+```python
+from aios.pipeline import PipelineManager, PipelineStory, StoryStatus
+
+# Carregar estado (cria arquivo se nao existe)
+manager = PipelineManager()
+manager.load()
+
+# Adicionar stories com dependencias
+manager.add_story(PipelineStory(id="auth", name="Authentication"))
+manager.add_story(PipelineStory(id="dashboard", name="Dashboard", dependencies=["auth"]))
+
+# Obter stories prontas (wave 1 do dependency graph)
+ready = manager.get_ready_stories()  # Retorna ["auth"]
+
+# Atualizar status (propaga dependencias automaticamente)
+manager.update_story_status("auth", StoryStatus.DONE)
+ready = manager.get_ready_stories()  # Agora retorna ["dashboard"]
+
+# Detectar ciclos
+has_cycles = manager.detect_cycles()
+
+# Analise completa de dependencias (via WaveAnalyzer)
+analysis = manager.analyze_dependencies()
+print(f"Waves: {analysis.wave_count}, Speedup: {analysis.parallelism_speedup:.1f}x")
+
+# File-based locking para sessoes paralelas
+manager.acquire_lock("session-1")
+manager.save()
+manager.release_lock("session-1")
+```
+
+### StepExecutor
+
+Orquestra execucao sequencial de steps isolados com checkpoint.
+
+```python
+from aios.pipeline import StepExecutor, StepRegistry
+
+# Carregar step definitions de YAML
+registry = StepRegistry.load()
+steps = registry.get_workflow("greenfield-fullstack")
+
+# Executar story step-by-step
+executor = StepExecutor(manager, runner, fail_fast=True)
+results = executor.execute_story("auth", steps, story_path="docs/stories/auth.md")
+
+# Retomar de onde parou (apos crash/timeout)
+results = executor.resume_story("auth", steps)
+```
+
+### StoryCostReport
+
+Tracking de custo por model tier com calculo de economia.
+
+```python
+from aios.pipeline import StoryCostReport
+
+# Construir report a partir de resultados
+steps = [("haiku", 8000), ("sonnet", 12000), ("opus", 25000)]
+report = StoryCostReport.from_step_results("auth", steps)
+
+print(f"Custo total: ${report.total_cost_usd:.4f}")
+print(f"Se fosse tudo opus: ${report.all_opus_cost_usd:.4f}")
+print(f"Economia: ${report.savings_vs_all_opus_usd:.4f} ({report.savings_percentage:.0f}%)")
+```
+
+### TaskRouter.classify_by_step
+
+Roteamento de modelo por step com cadeia de prioridade.
+
+```python
+from aios.intelligence.router import TaskRouter
+
+router = TaskRouter()
+
+# Prioridade 1: model explicito do step-registry
+result = router.classify_by_step("run-tests", step_model="haiku")
+# -> model="haiku", confidence=1.0
+
+# Prioridade 2: fallback para agent
+result = router.classify_by_step("step-1", agent_id="qa")
+# -> model="opus" (qa = MAX effort)
+
+# Prioridade 3: default
+result = router.classify_by_step("unknown")
+# -> model="opus", confidence=0.5
 ```
 
 ---

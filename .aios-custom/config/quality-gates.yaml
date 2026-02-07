@@ -71,6 +71,7 @@ quality_gates:
     architecture_paths:
       - src/aios/agents/
       - src/aios/core/
+      - src/aios/pipeline/
       - .aios-core/
       - agents/
 
