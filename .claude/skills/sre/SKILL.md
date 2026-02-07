@@ -77,7 +77,7 @@ scope:
     - write_prds
 
 hierarchy:
-  reports_to: dir-infra
+  reports_to: architect
   delegates_to: []
   collaborates_with: [gage, dex, quinn]
 

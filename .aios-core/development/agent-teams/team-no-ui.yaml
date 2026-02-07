@@ -3,7 +3,7 @@ bundle:
   icon: 🔧
   description: Team with no UX or UI Planning.
 agents:
-  - aios-orchestrator
+  - orchestrator
   - analyst
   - pm
   - architect

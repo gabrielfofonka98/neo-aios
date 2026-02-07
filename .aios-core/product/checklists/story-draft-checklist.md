@@ -147,7 +147,7 @@ CodeRabbit integration ensures automated code review and quality gates. Verify:
 - [ ] @dev listed as primary agent (required for all stories)
 - [ ] Type-specific agents assigned appropriately:
   - Database stories → @data-engineer
-  - Frontend stories → @ux-expert
+  - Frontend stories → @ux
   - Deployment stories → @devops
   - Security stories → @architect
 

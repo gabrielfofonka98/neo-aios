@@ -153,23 +153,23 @@ npx @synkra/aios-core install
 - **Why it matters**: Dev agents are kept lean to maximize coding context
 - **The principle**: "Dev agents code, planning agents plan" - mixing breaks this optimization
 
-**About aios-master and aios-orchestrator**:
+**About master and orchestrator**:
 
-- **aios-master**: CAN do any task without switching agents, BUT...
-- **Still use specialized agents for planning**: PM, Architect, and UX Expert have tuned personas that produce better results
+- **master**: CAN do any task without switching agents, BUT...
+- **Still use specialized agents for planning**: PM, Architect, and UX have tuned personas that produce better results
 - **Why specialization matters**: Each agent's personality and focus creates higher quality outputs
-- **If using aios-master/orchestrator**: Fine for planning phases, but...
+- **If using master/orchestrator**: Fine for planning phases, but...
 
 **CRITICAL RULE for Development**:
 
-- **ALWAYS use SM agent for story creation** - Never use aios-master or aios-orchestrator
-- **ALWAYS use Dev agent for implementation** - Never use aios-master or aios-orchestrator
+- **ALWAYS use SM agent for story creation** - Never use master or orchestrator
+- **ALWAYS use Dev agent for implementation** - Never use master or orchestrator
 - **Why this matters**: SM and Dev agents are specifically optimized for the development workflow
-- **No exceptions**: Even if using aios-master for everything else, switch to SM → Dev for implementation
+- **No exceptions**: Even if using master for everything else, switch to SM → Dev for implementation
 
 **Best Practice for IDE-Only**:
 
-1. Use PM/Architect/UX agents for planning (better than aios-master)
+1. Use PM/Architect/UX agents for planning (better than master)
 2. Create documents directly in project
 3. Shard immediately after creation
 4. **MUST switch to SM agent** for story creation
@@ -279,7 +279,7 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 | `architect` | Solution Architect | System design, technical architecture   | Complex systems, scalability planning  |
 | `dev`       | Developer          | Code implementation, debugging          | All development tasks                  |
 | `qa`        | QA Specialist      | Test planning, quality assurance        | Testing strategies, bug validation     |
-| `ux-expert` | UX Designer        | UI/UX design, prototypes                | User experience, interface design      |
+| `ux` | UX Designer        | UI/UX design, prototypes                | User experience, interface design      |
 | `po`        | Product Owner      | Backlog management, story validation    | Story refinement, acceptance criteria  |
 | `sm`        | Scrum Master       | Sprint planning, story creation         | Project management, workflow           |
 
@@ -287,8 +287,8 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 
 | Agent               | Role             | Primary Functions                     | When to Use                       |
 | ------------------- | ---------------- | ------------------------------------- | --------------------------------- |
-| `aios-orchestrator` | Team Coordinator | Multi-agent workflows, role switching | Complex multi-role tasks          |
-| `aios-master`       | Universal Expert | All capabilities without switching    | Single-session comprehensive work |
+| `orchestrator` | Team Coordinator | Multi-agent workflows, role switching | Complex multi-role tasks          |
+| `master`       | Universal Expert | All capabilities without switching    | Single-session comprehensive work |
 
 ### Agent Interaction Commands
 
@@ -296,11 +296,11 @@ You are the "Vibe CEO" - thinking like a CEO with unlimited resources and a sing
 
 **Agent Loading by IDE**:
 
-- **Claude Code**: `/agent-name` (e.g., `/aios-master`)
-- **Cursor**: `@agent-name` (e.g., `@aios-master`)
-- **Windsurf**: `@agent-name` (e.g., `@aios-master`)
-- **Trae**: `@agent-name` (e.g., `@aios-master`)
-- **Roo Code**: Select mode from mode selector (e.g., `aios-master`)
+- **Claude Code**: `/agent-name` (e.g., `/master`)
+- **Cursor**: `@agent-name` (e.g., `@master`)
+- **Windsurf**: `@agent-name` (e.g., `@master`)
+- **Trae**: `@agent-name` (e.g., `@master`)
+- **Roo Code**: Select mode from mode selector (e.g., `master`)
 - **GitHub Copilot**: Open the Chat view (`⌃⌘I` on Mac, `Ctrl+Alt+I` on Windows/Linux) and select **Agent** from the chat mode selector.
 
 **Chat Management Guidelines**:
@@ -480,7 +480,7 @@ that can handle [specific requirements]."
    - Documents created by PM/Architect (in Web or IDE) MUST be sharded for development
    - Two methods to shard:
      a) **Manual**: Drag `shard-doc` task + document file into chat
-     b) **Agent**: Ask `@aios-master` or `@po` to shard documents
+     b) **Agent**: Ask `@master` or `@po` to shard documents
    - Shards `docs/prd.md` → `docs/prd/` folder
    - Shards `docs/architecture.md` → `docs/architecture/` folder
    - **WARNING**: Do NOT shard in Web UI - copying many small files is painful!
@@ -812,7 +812,7 @@ clickup:
 
 ### Performance Optimization
 
-- Use specific agents vs. `aios-master` for focused tasks
+- Use specific agents vs. `master` for focused tasks
 - Choose appropriate team size for project needs
 - Leverage technical preferences for consistency
 - Regular context management and cache clearing
@@ -820,7 +820,7 @@ clickup:
 ## Success Tips
 
 - **Use Gemini for big picture planning** - The team-fullstack bundle provides collaborative expertise
-- **Use aios-master for document organization** - Sharding creates manageable chunks
+- **Use master for document organization** - Sharding creates manageable chunks
 - **Follow the SM → Dev cycle religiously** - This ensures systematic progress
 - **Keep conversations focused** - One agent, one task per conversation
 - **Review everything** - Always review and approve before marking complete

@@ -461,7 +461,7 @@ Analyze the story's integration risks based on:
 - **Quality Gates**: Pre-Commit (config validation), Pre-Deployment (deep scan with rollback plan)
 
 **If affecting existing UI/UX:**
-- **Assign**: @ux-expert, @dev
+- **Assign**: @ux, @dev
 - **Rationale**: UI changes must maintain user experience consistency:
   - Design system compliance
   - Accessibility standards maintained

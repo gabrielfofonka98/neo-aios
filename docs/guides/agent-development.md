@@ -337,21 +337,21 @@ definition_of_done:
 
 ## Onde Colocar o Arquivo
 
-Agentes sao organizados em `agents/` por ID:
+Agentes sao organizados em `.claude/skills/` por ID:
 
 ```
-agents/
-├── dex/
+.claude/skills/
+├── dev/
 │   └── SKILL.md
-├── gage/
+├── devops/
 │   └── SKILL.md
-├── quinn/
+├── qa/
 │   └── SKILL.md
 └── sec-xss-hunter/
     └── SKILL.md
 ```
 
-O AgentRegistry carrega automaticamente todos os arquivos `SKILL.md` encontrados em `agents/*/SKILL.md`.
+O AgentRegistry carrega automaticamente todos os arquivos `SKILL.md` encontrados em `.claude/skills/*/SKILL.md`.
 
 ---
 

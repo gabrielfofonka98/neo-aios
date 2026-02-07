@@ -14,7 +14,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "prepare for ralph"->*spec-create, "detail this PRD"->*spec-from-prd), ALWAYS ask for clarification if no clear match.
@@ -175,20 +175,25 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*exit` - Exit spec mode
+
 **Spec Creation:**
-- `*spec-create` - New spec from scratch
-- `*spec-from-prd` - Transform PRD into spec
-- `*spec-from-story` - Transform story into spec
-- `*spec-feature` - Single feature spec
+- `*spec-create` - Create execution spec from scratch (guided)
+- `*spec-from-prd` - Transform PRD into execution spec
+- `*spec-from-story` - Transform user story into execution spec
+- `*spec-feature` - Create spec for a single feature
 
 **Spec Enhancement:**
-- `*spec-detail` - Fill gaps in existing spec
-- `*spec-edge-cases` - Generate edge cases
-- `*spec-validate` - Ambiguity check
+- `*spec-detail` - Add detail to an existing spec (fill gaps)
+- `*spec-edge-cases` - Generate edge cases for a spec
+- `*spec-validate` - Validate spec completeness (ambiguity check)
 
 **Ralph Integration:**
-- `*spec-ralph` - Format for Ralph Loop
-- `*spec-tasks` - Break into execution tasks
+- `*spec-ralph` - Format spec for Ralph Loop execution
+- `*spec-tasks` - Break spec into ordered execution tasks
 
 Type `*help` to see all commands.
 

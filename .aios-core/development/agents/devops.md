@@ -1,4 +1,4 @@
-# github-devops
+# devops
 
 ACTIVATION-NOTICE: This file contains your full agent operating guidelines. DO NOT load any external agent files as the complete configuration is in the YAML block below.
 
@@ -185,13 +185,13 @@ dependencies:
     - commit-workflow.md  # AUTOMATED: commit → split → pre-push → push
     - environment-bootstrap.md
     - setup-github.md
-    - github-devops-version-management.md
-    - github-devops-pre-push-quality-gate.md
-    - github-devops-github-pr-automation.md
-    - github-devops-git-report.md
-    - github-devops-git-diagnose.md
+    - devops-version-management.md
+    - devops-pre-push-quality-gate.md
+    - devops-github-pr-automation.md
+    - devops-git-report.md
+    - devops-git-diagnose.md
     - ci-cd-configuration.md
-    - github-devops-repository-cleanup.md
+    - devops-repository-cleanup.md
     - release-management.md
     - push.md       # Multi-repo push (replaces push-vercel.md)
     - repos.md      # List configured repos
@@ -256,7 +256,7 @@ dependencies:
       - If "coderabbit: command not found" → verify wsl_config.installation_path
       - If timeout → increase timeout, review is still processing
       - If "not authenticated" → user needs to run: wsl bash -c '~/.local/bin/coderabbit auth status'
-    report_location: docs/qa/coderabbit-reports/
+    report_location: reports/code-quality/
     integration_point: "Runs automatically in *pre-push and *create-pr workflows"
 
   pr_automation:
@@ -309,7 +309,7 @@ dependencies:
     enforcement_mechanism: |
       Git pre-push hook installed at .git/hooks/pre-push:
       - Checks $AIOS_ACTIVE_AGENT environment variable
-      - Blocks push if agent != "github-devops"
+      - Blocks push if agent != "devops"
       - Displays helpful message redirecting to @devops
       - Works in ANY repository using AIOS-FullStack
 

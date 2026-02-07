@@ -1,5 +1,5 @@
 # Workflow Template for Synkra AIOS
-# This template is used by aios-developer to create new workflows
+# This template is used by dev to create new workflows
 # Variables are replaced during generation: {{VARIABLE_NAME}}
 
 workflow:

@@ -98,12 +98,10 @@ NEO-AIOS uses a 5-tier hierarchy inspired by Big Tech organizations:
 │ C-LEVEL (1)                                                 │
 │   CTO (Fofonka) - Strategy, vision, NEVER codes             │
 ├─────────────────────────────────────────────────────────────┤
-│ VP LEVEL (5)                                                │
+│ VP LEVEL (3)                                                │
 │   VP Engineering (Aria)    - Architecture decisions          │
 │   VP Product (Morgan)      - Product strategy                │
 │   VP Design (Pixel)        - Design direction                │
-│   VP Data (Oracle)         - Data strategy                   │
-│   VP Platform (Atlas)      - Infrastructure strategy         │
 ├─────────────────────────────────────────────────────────────┤
 │ DIRECTOR LEVEL (8)                                          │
 │   Directors per area (Frontend, Backend, Mobile, etc.)       │
@@ -141,17 +139,52 @@ Delegation only goes DOWN. Never up, never sideways.
 
 **Activation commands:**
 ```
+# C-Level
 /cto, /fofonka                    # CTO
+
+# VP Level
 /architect, /aria, @architect     # VP Engineering
 /pm, /morgan, @pm                 # VP Product
+/ux, /pixel                       # VP Design
+
+# IC Level - Core
 /dev, /dex, @dev                  # Developer
 /devops, /gage, @devops           # DevOps (ONLY push)
 /data-engineer, /dara             # Data Engineer
 /qa, /quinn                       # Security QA
 /qa-code, /codex                  # Code QA
+/qa-functional, /tess             # QA Functional
 /doc, /sage                       # Documentation
 /spec, /rune                      # Spec Architect
 /ralph                            # Autonomous Agent
+/master, /orion                   # Master Agent
+/analyst, /oracle                 # Business Analyst
+/sre, /ops                        # Site Reliability Engineer
+
+# IC Level - Utilities
+/fixer                            # Auto-fixer
+/clear-agent                      # Deactivate agent
+/test                             # Test runner
+/handoff                          # Session handoff
+/staging                          # Staging setup
+/sync                             # Sync agent files
+/sync-icloud                      # Sync iCloud
+/sop-extractor                    # Extract SOPs
+
+# IC Level - Squad Agents
+/squad-architect                  # Squad Architect
+/squad-diagnostician              # Squad Diagnostician
+
+# IC Level - Git/Deploy Utilities
+/commit                           # Commit helper
+/deploy                           # Deploy helper
+/pr                               # PR helper
+/push                             # Push helper
+/review                           # Review helper
+
+# Custom Agents (project-specific)
+/oalanicolas                      # Custom agent
+/pedro-valerio                    # Custom agent
 ```
 
 **Agent commands (after activation):**

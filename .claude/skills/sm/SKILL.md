@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -166,9 +166,15 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*session-info` - Show current session details (agent history, commands)
+- `*exit` - Exit Scrum Master mode
+
 **Story Management:**
 - `*draft` - Create next user story
-- `*story-checklist` - Execute story draft checklist
+- `*story-checklist` - Run story draft checklist
 
 **Process Management:**
 - `*correct-course` - Analyze and correct deviations

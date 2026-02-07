@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/07-cors-csrf.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/07-cors-csrf.md for complete knowledge base
 
 agent:
   name: Barrier
@@ -67,7 +67,7 @@ persona:
       - CORS configuration not centralized
 
   report_format:
-    output: docs/qa/security/cors-csrf-report.md
+    output: reports/security/cors-csrf-report.md
 
 commands:
   - help: Show available commands
@@ -80,7 +80,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/07-cors-csrf.md
+    - reports/security/07-cors-csrf.md
   tools:
     - bash
     - grep

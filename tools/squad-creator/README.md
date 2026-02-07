@@ -58,7 +58,7 @@ O Squad Creator agora suporta criação de agentes no formato **NEO-AIOS**, o fr
 
 ### Formato de Saída
 
-Agentes criados são salvos em `agents/{agent_id}/SKILL.md` seguindo a estrutura:
+Agentes criados são salvos em `.claude/skills/{agent_id}/SKILL.md` seguindo a estrutura:
 - `agent:` - Identidade core
 - `scope:` - Permissões can/cannot
 - `hierarchy:` - Posição na hierarquia
@@ -422,7 +422,7 @@ Máxima fidelidade com materiais do usuário:
 |---------|-----------|--------|
 | `*create-squad` | Criar squad completo (6 fases) | `squads/{name}/` |
 | `*clone-mind {name}` | Extrair Voice + Thinking DNA | `outputs/minds/{slug}/` |
-| `*create-agent` | Agent individual para squad | `agents/{name}.md` |
+| `*create-agent` | Agent individual para squad | `.claude/skills/{name}/SKILL.md` |
 | `*create-workflow` | Workflow multi-fase | `workflows/{name}.yaml` |
 | `*create-task` | Task atômica | `tasks/{name}.md` |
 | `*create-template` | Template de output | `templates/{name}.yaml` |
@@ -725,8 +725,8 @@ O Squad Architect gera a seguinte estrutura:
 
 ```
 squads/nome-do-seu-squad/
-├── agents/                          # Agents específicos do domínio
-│   └── seu-agent.md
+├── .claude/skills/                  # Agents específicos do domínio
+│   └── seu-agent/SKILL.md
 ├── checklists/                      # Checklists de validação
 │   └── seu-checklist.md
 ├── config.yaml                      # Configuração do pack
@@ -769,7 +769,7 @@ squads/nome-do-seu-squad/
 
 O Squad Architect integra perfeitamente com:
 
-1. **AIOS Developer Agent** - Pode usar aios-developer para modificações avançadas de componentes
+1. **Dev Agent** - Pode usar dev para modificações avançadas de componentes
 2. **Core Workflows** - Squads gerados integram com workflows greenfield e brownfield
 3. **Memory Layer** - Rastreia todos os squads e componentes criados
 4. **Installer** - Squads gerados podem ser instalados via installer padrão
@@ -969,7 +969,7 @@ Este squad requer:
 **Sintoma:** `@squad-architect` não responde ou mostra erro
 
 **Soluções:**
-1. Verifique se o arquivo do agent existe: `ls squads/squad-creator/agents/squad-architect.md`
+1. Verifique se o arquivo do agent existe: `ls .claude/skills/squad-architect/SKILL.md`
 2. Cheque sintaxe YAML: Garanta que o bloco YAML está formatado corretamente
 3. Verifique se o squad está sincronizado: Cheque se `.claude/commands/squad-creator/` existe
 

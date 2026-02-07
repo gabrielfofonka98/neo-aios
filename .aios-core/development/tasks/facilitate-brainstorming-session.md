@@ -1,14 +1,14 @@
 ---
 id: facilitate-brainstorming-session
 name: Facilitate Brainstorming Session
-agent: aios-master
+agent: master
 category: collaboration
 complexity: medium
 tools:
   - clickup        # Capture ideas and organize them
   - mcp            # Call specialized agents for domain expertise
 checklists:
-  - aios-master-checklist.md
+  - master-checklist.md
 ---
 
 # Facilitate Brainstorming Session
@@ -36,7 +36,7 @@ To conduct a structured brainstorming session with multiple AI agents (and optio
 - **participating_agents**: `array<string>`
   - **Description**: Agent IDs to invite to the session
   - **Default**: Auto-select based on topic (using brief analysis)
-  - **Example**: `["po", "architect", "ux-expert", "github-devops"]`
+  - **Example**: `["po", "architect", "ux", "devops"]`
 
 - **time_limit**: `number`
   - **Description**: Session duration in minutes
@@ -84,7 +84,7 @@ To conduct a structured brainstorming session with multiple AI agents (and optio
 2. **Select Participating Agents**
    - If `participating_agents` not provided:
      - Analyze topic using brief analysis
-     - Identify relevant domains (e.g., "user onboarding" → ux-expert, po, copywriter)
+     - Identify relevant domains (e.g., "user onboarding" → ux, po, copywriter)
      - Auto-select 3-5 appropriate agents
    - Log: "✅ Session participants: [agent list]"
 
@@ -492,7 +492,7 @@ aios brainstorm "How can we improve AIOS user onboarding for non-technical users
 
 ```bash
 aios brainstorm "How to reduce API latency in database queries?" \
-  --agents="db-sage,architect,github-devops" \
+  --agents="db-sage,architect,devops" \
   --goal="solution" \
   --format="actionable"
 ```
@@ -503,7 +503,7 @@ aios brainstorm "How to reduce API latency in database queries?" \
 
 ```bash
 aios brainstorm "What should be our open-source expansion strategy for Q1 2026?" \
-  --agents="po,architect,github-devops" \
+  --agents="po,architect,devops" \
   --goal="strategy" \
   --context="docs/prd.md,docs/open-source-roadmap.md"
 ```

@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/17-vercel-deployment-security.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/17-vercel-deployment-security.md for complete knowledge base
 
 agent:
   name: Harbor
@@ -75,7 +75,7 @@ persona:
       - No build output scanning in CI
 
   report_format:
-    output: docs/qa/security/deploy-auditor-report.md
+    output: reports/security/deploy-auditor-report.md
 
 commands:
   - help: Show available commands
@@ -89,7 +89,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/17-vercel-deployment-security.md
+    - reports/security/17-vercel-deployment-security.md
   tools:
     - bash
     - grep

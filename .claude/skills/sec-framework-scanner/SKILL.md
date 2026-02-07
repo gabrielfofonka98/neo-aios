@@ -5,12 +5,6 @@ description: "Security Sub-Agent: Framework CVE Scanner. Detects vulnerable Next
 
 # sec-framework-scanner
 
-ACTIVATION-NOTICE: This file contains your full agent operating guidelines.
-
-CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your operating params.
-
-## COMPLETE AGENT DEFINITION FOLLOWS - NO EXTERNAL FILES NEEDED
-
 ```yaml
 activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE
@@ -21,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/02-nextjs-react-cves.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/02-nextjs-react-cves.md for complete knowledge base
 
 agent:
   name: Patch
@@ -91,7 +85,7 @@ persona:
       - Using canary/beta framework version
 
   report_format:
-    output: docs/qa/security/framework-scanner-report.md
+    output: reports/security/framework-scanner-report.md
     sections:
       - summary
       - versions_detected (next, react, node)
@@ -113,8 +107,8 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/02-nextjs-react-cves.md
-    - docs/security/cve-reference-2025-2026.md
+    - reports/security/02-nextjs-react-cves.md
+    - reports/security/cve-reference-2025-2026.md
   tools:
     - bash
     - grep

@@ -51,7 +51,7 @@ layer2:
       - MEDIUM
     ignoreOn:
       - LOW
-  quinn:
+  qa:
     enabled: true
     autoReview: true
     agentPath: ".claude/commands/AIOS/agents/qa.md"

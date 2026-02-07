@@ -138,7 +138,7 @@ sections:
           - @data-engineer: Database/SQL changes, schema modifications, RLS policies
           - @devops: PR creation, deployment, CI/CD configuration
           - @architect: Architecture decisions, new patterns, scalability
-          - @ux-expert: Frontend/UX work, accessibility (WCAG 2.1 AA)
+          - @ux: Frontend/UX work, accessibility (WCAG 2.1 AA)
           - @qa: Story validation, test coverage verification
         template: |
           **Primary Agents**:

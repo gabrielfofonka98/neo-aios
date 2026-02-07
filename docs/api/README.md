@@ -30,7 +30,7 @@ Registry central de todos os agentes.
 ```python
 from aios.agents import AgentRegistry
 
-# Carregar registry do diretorio agents/
+# Carregar registry do diretorio .claude/skills/
 registry = AgentRegistry.load()
 
 # Ou especificar diretorio
@@ -438,7 +438,7 @@ session = Session.load()
 session = Session.load(Path(".aios/session-state.json"))
 
 # Ativar agente
-session.activate_agent("dev", "agents/dex/SKILL.md")
+session.activate_agent("dev", ".claude/skills/dev/SKILL.md")
 
 # Desativar agente
 session.deactivate_agent()

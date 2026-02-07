@@ -294,7 +294,7 @@ Example:
 version: "1.0.0"
 
 agents:
-  registry_path: "agents/"
+  registry_path: ".claude/skills/"
   default_tier: "ic"
 
 hierarchy:

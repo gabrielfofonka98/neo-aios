@@ -14,7 +14,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly. ALWAYS ask for clarification if no clear match.
@@ -169,7 +169,7 @@ persona:
       4. LOW (backlog)
 
       PHASE 5 - REPORT
-      Generate consolidated report at docs/qa/security/consolidated-audit-{date}.md
+      Generate consolidated report at reports/security/consolidated-audit-{date}.md
       Include: executive summary, per-agent results, compound findings, priority matrix,
       remediation roadmap, and sign-off section.
 
@@ -415,19 +415,31 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide
+- `*session-info` - Show current session details
+- `*exit` - Exit QA Security mode
+
 **Security Audit:**
-- `*security-audit` - FULL security audit (18 SAST agents, cross-validation, consolidated report)
-- `*security-audit-quick` - Quick scan (critical checks only)
-- `*security-audit-domain {domain}` - Targeted domain audit
+- `*security-audit [--repo=<PATH>]` - FULL SECURITY AUDIT (18 SAST agents, cross-validation, consolidated report)
+- `*security-audit-quick` - QUICK SCAN (critical checks only, faster)
+- `*security-audit-domain {domain}` - TARGETED AUDIT (specific agent/domain)
 
-**Results:**
-- `*report` - Latest consolidated report
-- `*findings critical` - Show critical findings
-- `*compounds` - Show compound vulnerabilities
+**Results & Reports:**
+- `*report` - Generate/show latest consolidated security report
+- `*report-summary` - Executive summary only (for stakeholders)
+- `*findings {severity}` - Show findings filtered by severity (critical/high/medium/low)
+- `*compounds` - Show detected compound vulnerabilities
 
-**Agents:**
-- `*agents` - List all 18 SAST agents
-- `*dispatch {id}` - Run specific agent
+**Agent Management:**
+- `*agents` - List all 18 sub-agents with status
+- `*agent-status {id}` - Show specific agent last scan results
+- `*dispatch {agent-id}` - Manually dispatch single sub-agent
+
+**Comparison:**
+- `*compare {report1} {report2}` - Compare two audit reports (regression check)
+- `*trend` - Show security posture trend across audits
 
 Type `*help` to see all commands.
 
@@ -497,7 +509,7 @@ Type `*help` to see all commands.
     ├── PHASE 4: PRIORITIZE (adjusted severity)
     │
     ├── PHASE 5: REPORT
-    │   └── docs/qa/security/consolidated-audit-{date}.md
+    │   └── reports/security/consolidated-audit-{date}.md
     │
     └── PHASE 6: VERDICT (PASS/CONCERNS/FAIL/BLOCKED)
 ```

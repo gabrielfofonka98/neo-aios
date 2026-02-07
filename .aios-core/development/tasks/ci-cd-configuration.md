@@ -1,14 +1,14 @@
 ---
 id: ci-cd-configuration
 name: Configure CI/CD Pipeline
-agent: github-devops
+agent: devops
 category: devops
 complexity: high
 tools:
   - github-cli       # Manage workflows and repository settings
   - coderabbit-free  # Automated code review (FREE tier)
 checklists:
-  - github-devops-checklist.md
+  - devops-checklist.md
 ---
 
 # Configure CI/CD Pipeline

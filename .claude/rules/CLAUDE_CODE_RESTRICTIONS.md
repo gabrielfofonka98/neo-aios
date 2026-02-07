@@ -39,7 +39,7 @@ Rules for where agents can and cannot write files.
 | `reports/security/` | QA (Quinn) | Security audit reports |
 | `reports/code-quality/` | QA Code (Codex) | Code review reports |
 | `reports/testing/` | QA Functional (Tess) | Test plans, regression |
-| `reports/analytics/` | Analyst (Oracle) | Data analysis, A/B tests |
+| `reports/analytics/` | Analyst | Data analysis, A/B tests |
 
 ### Database
 | Path | Agent | Content |

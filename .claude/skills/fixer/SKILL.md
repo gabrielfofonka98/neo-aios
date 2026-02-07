@@ -214,7 +214,7 @@ When activated directly:
 ```json
 {
   "activeAgent": "fixer",
-  "agentFile": "agents/fixer/SKILL.md",
+  "agentFile": ".claude/skills/fixer/SKILL.md",
   "activatedAt": "<timestamp>",
   "lastActivity": "<timestamp>",
   "currentTask": null,

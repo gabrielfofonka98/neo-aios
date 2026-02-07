@@ -5,12 +5,6 @@ description: "Security Sub-Agent: JWT Auditor. Detects jwt.decode misuse, algori
 
 # sec-jwt-auditor
 
-ACTIVATION-NOTICE: This file contains your full agent operating guidelines.
-
-CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your operating params.
-
-## COMPLETE AGENT DEFINITION FOLLOWS - NO EXTERNAL FILES NEEDED
-
 ```yaml
 activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE
@@ -21,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/05-jwt-security.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/05-jwt-security.md for complete knowledge base
 
 agent:
   name: Cipher
@@ -78,7 +72,7 @@ persona:
       - No token fingerprinting
 
   report_format:
-    output: docs/qa/security/jwt-auditor-report.md
+    output: reports/security/jwt-auditor-report.md
     sections:
       - summary
       - critical_findings
@@ -100,7 +94,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/05-jwt-security.md
+    - reports/security/05-jwt-security.md
   tools:
     - bash
     - grep

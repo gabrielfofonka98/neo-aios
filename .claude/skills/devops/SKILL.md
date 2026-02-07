@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "push changes"→*pre-push task, "create release"→*release task), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -258,7 +258,7 @@ dependencies:
       - If "coderabbit: command not found" → verify coderabbit is in PATH
       - If timeout → increase timeout, review is still processing
       - If "not authenticated" → user needs to run: coderabbit auth status
-    report_location: docs/qa/coderabbit-reports/
+    report_location: reports/code-quality/
     integration_point: "Runs automatically in *pre-push and *create-pr workflows"
 
   pr_automation:
@@ -284,7 +284,7 @@ dependencies:
     principle: "NEVER assume a specific repository - detect dynamically on activation"
     detection_method: "Use git remote -v to identify repository URL and installation mode"
     installation_modes:
-      framework-development: "agents/ and .claude/skills/ are SOURCE CODE (committed to git)"
+      framework-development: ".claude/skills/ are SOURCE CODE (committed to git)"
       project-development: "NEO-AIOS installed via neo-init (framework in ~/.neo-aios)"
     detection_priority:
       - "config/neo-aios.yaml (project configuration)"
@@ -362,32 +362,42 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*session-info` - Show current session details (agent history, commands)
+- `*exit` - Exit DevOps mode
+
 **Repository Management:**
-- `*detect-repo` - Detect repository context
-- `*cleanup` - Remove stale branches
+- `*detect-repo` - Detect repository context (framework-dev vs project-dev)
+- `*cleanup` - Identify and remove stale branches/files
+- `*init-project-status` - Initialize dynamic project status tracking
 
 **Quality & Push:**
-- `*pre-push` - Run all quality gates
-- `*push` - Interactive repo selection
-- `*push mmos` - Push to main repo
-- `*push lendaria` - Deploy to Vercel (force push)
-- `*repos` - List all configured repos
+- `*version-check` - Analyze version and recommend next
+- `*pre-push` - Run all quality checks before push
+- `*push` - Push to any configured repo (*push or *push <name>)
+- `*repos` - List all configured repositories with status
 
 **GitHub Operations:**
-- `*create-pr` - Create pull request
-- `*release` - Create versioned release
+- `*create-pr` - Create pull request from current branch
+- `*configure-ci` - Setup/update GitHub Actions workflows
+- `*release` - Create versioned release with changelog
 
 **Reporting:**
-- `*report` - Generate activity report (default: yesterday)
-- `*report today` - Today's activity
-- `*report week` - Last 7 days
-- `*report N days` - Last N days (e.g., `*report 4 days`)
-- `*report --format=detailed` - Full technical breakdown
+- `*report` - Generate Git activity report (daily, period, or custom range) for stakeholders
+- `*diagnose` - Analyze engineering practices with actionable feedback for improvement
 
-**Diagnostics (Engineering Practices):**
-- `*diagnose` - Analyze engineering practices (default: 7 days)
-- `*diagnose 14 days` - Last 14 days analysis
-- `*diagnose month` - Last month analysis
+**Environment Setup (Greenfield Phase 0):**
+- `*environment-bootstrap` - Complete environment setup for new projects (CLIs, auth, Git/GitHub)
+- `*setup-github` - Configure DevOps infrastructure for user projects (workflows, CodeRabbit, branch protection, secrets)
+
+**MCP Management (via Docker Gateway):**
+- `*search-mcp` - Search available MCPs in Docker MCP Toolkit catalog
+- `*add-mcp` - Add MCP server to Docker MCP Toolkit
+- `*list-mcps` - List currently enabled MCPs and their tools
+- `*remove-mcp` - Remove MCP server from Docker MCP Toolkit
+- `*setup-mcp-docker` - Initial Docker MCP Toolkit configuration
 
 Type `*help` to see all commands.
 

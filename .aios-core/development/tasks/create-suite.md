@@ -8,7 +8,7 @@ tools:
 
 # Task: Create Component Suite
 
-**Agent:** aios-developer  
+**Agent:** dev  
 **Version:** 1.0  
 **Command:** *create-suite
 
@@ -223,7 +223,7 @@ Creates multiple related components in a single batch operation with dependency 
 - Existing components for dependency resolution
 
 ## Prerequisites
-- aios-developer agent is active
+- dev agent is active
 - Template system is configured
 - team-manifest.yaml exists
 

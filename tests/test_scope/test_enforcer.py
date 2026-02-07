@@ -47,7 +47,7 @@ def security_agent() -> AgentDefinition:
     """Security QA agent (Quinn)."""
     return AgentDefinition(
         name="Quinn",
-        id="qa-sec",
+        id="qa",
         tier=AgentTier.IC,
         title="Security QA Lead",
         scope=AgentScope(
@@ -62,7 +62,7 @@ def data_engineer_agent() -> AgentDefinition:
     """Data Engineer agent (Dara)."""
     return AgentDefinition(
         name="Dara",
-        id="data-eng",
+        id="data-engineer",
         tier=AgentTier.IC,
         title="Data Engineer",
         scope=AgentScope(
@@ -224,7 +224,7 @@ class TestScopeEnforcer:
         dev_agent: AgentDefinition,
         security_agent: AgentDefinition,
     ) -> None:
-        """Security audit should be exclusive to qa-sec."""
+        """Security audit should be exclusive to qa."""
         dev_result = enforcer.check(dev_agent, "security_audit")
         assert dev_result.result == ActionResult.BLOCKED
         assert dev_result.reason is not None
@@ -239,7 +239,7 @@ class TestScopeEnforcer:
         dev_agent: AgentDefinition,
         data_engineer_agent: AgentDefinition,
     ) -> None:
-        """Execute DDL should be exclusive to data-eng."""
+        """Execute DDL should be exclusive to data-engineer."""
         dev_result = enforcer.check(dev_agent, "execute_ddl")
         assert dev_result.result == ActionResult.BLOCKED
         assert "exclusive" in dev_result.reason.lower()

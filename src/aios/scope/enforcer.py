@@ -73,8 +73,8 @@ class ScopeEnforcer:
         "git_push": ["devops"],
         "create_pr": ["devops"],
         "deploy_production": ["devops"],
-        "execute_ddl": ["data-eng"],
-        "security_audit": ["qa-sec"],
+        "execute_ddl": ["data-engineer"],
+        "security_audit": ["qa"],
     }
 
     GLOBALLY_BLOCKED: Final[list[str]] = [

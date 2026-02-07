@@ -541,7 +541,7 @@ Analyze the story's technical characteristics based on:
 - File locations include `src/components/` or frontend paths
 
 **Assignment:**
-- **Primary Agents**: @ux-expert, @dev
+- **Primary Agents**: @ux, @dev
 - **Quality Gates**: Pre-Commit (a11y validation), Pre-PR (UX consistency check)
 - **Focus Areas**:
   - Accessibility: WCAG 2.1 AA compliance (semantic HTML, ARIA labels, keyboard navigation)

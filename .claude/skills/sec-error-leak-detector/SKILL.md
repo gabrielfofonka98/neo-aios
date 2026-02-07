@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/16-error-handling-info-leak.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/16-error-handling-info-leak.md for complete knowledge base
 
 agent:
   name: Muffle
@@ -71,7 +71,7 @@ persona:
       - No error monitoring integration
 
   report_format:
-    output: docs/qa/security/error-leak-report.md
+    output: reports/security/error-leak-report.md
 
 commands:
   - help: Show available commands
@@ -84,7 +84,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/16-error-handling-info-leak.md
+    - reports/security/16-error-handling-info-leak.md
   tools:
     - bash
     - grep

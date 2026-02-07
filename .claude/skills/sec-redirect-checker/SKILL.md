@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/15-open-redirect.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/15-open-redirect.md for complete knowledge base
 
 agent:
   name: Compass
@@ -62,7 +62,7 @@ persona:
       - Redirect to hardcoded external URL
 
   report_format:
-    output: docs/qa/security/redirect-checker-report.md
+    output: reports/security/redirect-checker-report.md
 
 commands:
   - help: Show available commands
@@ -75,7 +75,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/15-open-redirect.md
+    - reports/security/15-open-redirect.md
   tools:
     - bash
     - grep

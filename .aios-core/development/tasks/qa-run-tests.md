@@ -273,5 +273,5 @@ codeRabbit:
   enabled: true
   severity_threshold: high
   auto_fix: false  # QA reviews but doesn't auto-fix
-  report_location: docs/qa/coderabbit-reports/
+  report_location: reports/code-quality/
 ```

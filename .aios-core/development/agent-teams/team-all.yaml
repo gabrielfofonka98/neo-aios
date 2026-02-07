@@ -3,8 +3,8 @@ bundle:
   icon: 👥
   description: Includes every core system agent.
 agents:
-  - aios-orchestrator
-  - aios-developer
+  - orchestrator
+  - dev
   - '*'
 workflows:
   - brownfield-fullstack.yaml

@@ -24,7 +24,7 @@ workflow:
       requires: existing_ui_analysis
       notes: "Creates comprehensive PRD focused on UI enhancement with existing system analysis. SAVE OUTPUT: Copy final prd.md to your project's docs/ folder."
 
-    - agent: ux-expert
+    - agent: ux
       creates: front-end-spec.md
       uses: front-end-spec-tmpl
       requires: prd.md
@@ -142,7 +142,7 @@ workflow:
     graph TD
         A[Start: UI Enhancement] --> B[analyst: analyze existing UI]
         B --> C[pm: prd.md]
-        C --> D[ux-expert: front-end-spec.md]
+        C --> D[ux: front-end-spec.md]
         D --> E[architect: architecture.md]
         E --> F[po: validate with po-master-checklist]
         F --> G{PO finds issues?}

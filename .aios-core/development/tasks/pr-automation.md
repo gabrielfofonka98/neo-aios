@@ -1,14 +1,14 @@
 ---
 id: pr-automation
 name: Automate Pull Request Creation for Open-Source Contributions
-agent: github-devops
+agent: devops
 category: devops
 complexity: medium
 tools:
   - github-cli       # Create PRs, manage repository
   - coderabbit-free  # Pre-submission code review
 checklists:
-  - github-devops-checklist.md
+  - devops-checklist.md
   - pr-quality-checklist.md
 ---
 

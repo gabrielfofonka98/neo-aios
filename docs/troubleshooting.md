@@ -82,10 +82,10 @@ Agent 'xxx' not found in registry
 **Solucao:**
 ```bash
 # Verifique se arquivo existe
-ls agents/xxx/SKILL.md
+ls .claude/skills/xxx/SKILL.md
 
 # Valide o YAML (deve ter bloco agent:)
-cat agents/xxx/SKILL.md | grep -A5 "^agent:"
+cat .claude/skills/xxx/SKILL.md | grep -A5 "^agent:"
 ```
 
 ---
@@ -233,18 +233,18 @@ echo $TERM
 UNHEALTHY: agents - Registry failed to load
 ```
 
-**Causa:** Diretorio agents/ com problema.
+**Causa:** Diretorio .claude/skills/ com problema.
 
 **Solucao:**
 ```bash
 # Verifique estrutura
-ls -la agents/
+ls -la .claude/skills/
 
 # Cada agente deve ter:
-# agents/{id}/SKILL.md
+# .claude/skills/{id}/SKILL.md
 
 # Valide YAML de cada SKILL.md
-for f in agents/*/SKILL.md; do
+for f in .claude/skills/*/SKILL.md; do
   echo "Checking $f"
   python -c "import yaml; yaml.safe_load(open('$f').read())"
 done

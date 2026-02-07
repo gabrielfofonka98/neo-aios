@@ -1211,7 +1211,7 @@ Write-Host "✅ Environment report saved to .aios/environment-report.json"
 ╠═══════════════════════════════════════════════════════════════════════════╣
 ║  • View environment report: cat .aios/environment-report.json              ║
 ║  • Check GitHub repo: gh repo view --web                                   ║
-║  • AIOS help: @aios-master *help                                           ║
+║  • AIOS help: @master *help                                           ║
 ║  • Re-run bootstrap: @devops *environment-bootstrap                        ║
 ║                                                                            ║
 ╚═══════════════════════════════════════════════════════════════════════════╝

@@ -1,3 +1,5 @@
+# DEPRECATED: Use master/SKILL.md instead
+
 # AIOS Master
 
 <!--

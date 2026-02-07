@@ -26,14 +26,14 @@ workflow:
       requires: project-brief.md
       notes: "Creates PRD from project brief using prd-tmpl, focused on UI/frontend requirements. SAVE OUTPUT: Copy final prd.md to your project's docs/ folder."
 
-    - agent: ux-expert
+    - agent: ux
       creates: front-end-spec.md
       requires: prd.md
       optional_steps:
         - user_research_prompt
       notes: "Creates UI/UX specification using front-end-spec-tmpl. SAVE OUTPUT: Copy final front-end-spec.md to your project's docs/ folder."
 
-    - agent: ux-expert
+    - agent: ux
       creates: v0_prompt (optional)
       requires: front-end-spec.md
       condition: user_wants_ai_generation
@@ -162,9 +162,9 @@ workflow:
     graph TD
         A[Start: UI Development] --> B[analyst: project-brief.md]
         B --> C[pm: prd.md]
-        C --> D[ux-expert: front-end-spec.md]
+        C --> D[ux: front-end-spec.md]
         D --> D2{Generate v0 prompt?}
-        D2 -->|Yes| D3[ux-expert: create v0 prompt]
+        D2 -->|Yes| D3[ux: create v0 prompt]
         D2 -->|No| E[architect: front-end-architecture.md]
         D3 --> D4[User: generate UI in v0/Lovable]
         D4 --> E

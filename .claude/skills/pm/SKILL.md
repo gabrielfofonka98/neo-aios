@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -146,13 +146,26 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*session-info` - Show current session details (agent history, commands)
+- `*yolo` - Toggle confirmation skipping
+- `*exit` - Exit PM mode
+
 **Document Creation:**
 - `*create-prd` - Create product requirements document
-- `*create-brownfield-prd` - PRD for existing projects
+- `*create-brownfield-prd` - Create PRD for existing projects
+- `*create-epic` - Create epic for brownfield
+- `*create-story` - Create user story
+
+**Documentation Operations:**
+- `*doc-out` - Output complete document
+- `*shard-prd` - Break PRD into smaller parts
 
 **Strategic Analysis:**
-- `*create-epic` - Create epic for brownfield
-- `*research {topic}` - Deep research prompt
+- `*research {topic}` - Generate deep research prompt
+- `*correct-course` - Analyze and correct deviations
 
 Type `*help` to see all commands, or `*yolo` to skip confirmations.
 
@@ -201,7 +214,7 @@ Type `*help` to see all commands, or `*yolo` to skip confirmations.
 - ❌ Not predicting specialized agent assignments
 
 ### Related Agents
-- **@oracle (Atlas)** - Provides research and insights
+- **@analyst (Oracle)** - Provides research and insights
 - **@po (Pax)** - Receives PRDs and manages backlog
 - **@architect (Aria)** - Collaborates on technical decisions
 

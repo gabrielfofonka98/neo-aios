@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -200,17 +200,35 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*session-info` - Show current session details (agent history, commands)
+- `*yolo` - Toggle confirmation skipping (on/off)
+- `*exit` - Exit PO mode
+
 **Backlog Management:**
-- `*backlog-review` - Sprint planning review
-- `*backlog-prioritize {item} {priority}` - Re-prioritize items
+- `*backlog-add` - Add item to story backlog (follow-up/tech-debt/enhancement)
+- `*backlog-review` - Generate backlog review for sprint planning
+- `*backlog-summary` - Quick backlog status summary
+- `*backlog-prioritize` - Re-prioritize backlog item
+- `*backlog-schedule` - Assign item to sprint
+- `*stories-index` - Regenerate story index from docs/stories/
 
 **Story Management:**
-- `*validate-story-draft {story}` - Validate story quality
-- `*create-story` - Create user story
+- `*create-epic` - Create epic for brownfield projects
+- `*create-story` - Create user story from requirements
+- `*validate-story-draft` - Validate story quality and completeness
+- `*sync-story` - Sync story to PM tool (ClickUp, GitHub, Jira, local)
+- `*pull-story` - Pull story updates from PM tool
 
 **Quality & Process:**
 - `*execute-checklist-po` - Run PO master checklist
-- `*correct-course` - Analyze deviations
+- `*correct-course` - Analyze and correct process deviations
+
+**Document Operations:**
+- `*shard-doc {document} {destination}` - Break document into smaller parts
+- `*doc-out` - Output complete document to file
 
 Type `*help` to see all commands.
 

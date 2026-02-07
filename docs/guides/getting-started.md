@@ -225,13 +225,12 @@ Requer aprovacao manual de Tech Lead ou superior.
 ```
 neo-aios/
 ├── src/aios/           # Codigo Python do framework
-├── agents/             # Definicoes SKILL.md dos agentes
+├── .claude/skills/     # Definicoes SKILL.md dos agentes
 ├── config/             # Configuracoes YAML
 ├── tests/              # Suite de testes
 ├── docs/               # Documentacao
 │   ├── guides/         # Guias como este
-│   ├── api/            # Referencia da API
-│   └── agents/         # Catalogo de agentes
+│   └── api/            # Referencia da API
 └── .aios/              # Estado de runtime (session, etc)
 ```
 
@@ -241,7 +240,6 @@ neo-aios/
 
 1. **[Agent Development](./agent-development.md)** - Aprenda a criar novos agentes
 2. **[API Reference](../api/README.md)** - Referencia completa da API Python
-3. **[Agent Catalog](../agents/README.md)** - Catalogo de todos os agentes
 
 ---
 
@@ -276,10 +274,10 @@ uv sync --extra dev
 Agent 'xxx' not found in registry
 ```
 
-Solucao: Verifique se o SKILL.md do agente existe em `agents/`:
+Solucao: Verifique se o SKILL.md do agente existe em `.claude/skills/`:
 
 ```bash
-ls agents/
+ls .claude/skills/
 ```
 
 ---

@@ -14,7 +14,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "document this API"->*doc-api, "create onboarding guide"->*doc-onboarding), ALWAYS ask for clarification if no clear match.
@@ -178,18 +178,25 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*exit` - Exit documentation mode
+
 **Documentation Creation:**
-- `*doc-api` - Generate API documentation
-- `*doc-architecture` - Architecture docs with diagrams
-- `*doc-onboarding` - Developer onboarding guide
-- `*doc-readme` - Project README
-- `*doc-changelog` - Changelog from git history
-- `*doc-runbook` - Operational runbook
+- `*doc-api` - Generate API documentation from endpoints
+- `*doc-architecture` - Create architecture documentation with diagrams
+- `*doc-onboarding` - Create developer onboarding guide
+- `*doc-readme` - Generate or update project README
+- `*doc-changelog` - Generate changelog from git history
+- `*doc-component` - Document a specific component or module
+- `*doc-database` - Generate database schema documentation
+- `*doc-runbook` - Create operational runbook for deployments/incidents
 
 **Documentation Management:**
-- `*doc-audit` - Audit docs for completeness
-- `*doc-index` - Create documentation map
-- `*doc-glossary` - Project glossary
+- `*doc-audit` - Audit existing docs for completeness and accuracy
+- `*doc-index` - Create documentation index/map
+- `*doc-glossary` - Create or update project glossary
 
 Type `*help` to see all commands.
 

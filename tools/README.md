@@ -735,7 +735,7 @@ squads/nome-do-seu-squad/
 
 O Squad Architect integra perfeitamente com:
 
-1. **AIOS Developer Agent** - Pode usar aios-developer para modificações avançadas de componentes
+1. **Dev Agent** - Pode usar dev para modificações avançadas de componentes
 2. **Core Workflows** - Squads gerados integram com workflows greenfield e brownfield
 3. **Memory Layer** - Rastreia todos os squads e componentes criados
 4. **Installer** - Squads gerados podem ser instalados via installer padrão

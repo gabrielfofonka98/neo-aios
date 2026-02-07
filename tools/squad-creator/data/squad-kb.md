@@ -669,7 +669,7 @@ const contracts = memory.query('legal-contracts', {
 In `config.yaml`:
 ```yaml
 dependencies:
-  - aios-developer  # For code generation
+  - dev  # For code generation
   - document-library  # For templates
 ```
 

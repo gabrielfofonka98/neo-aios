@@ -1,14 +1,14 @@
 ---
 id: release-management
 name: Manage Software Releases
-agent: github-devops
+agent: devops
 category: devops
 complexity: high
 tools:
   - github-cli       # Create releases, tags, manage artifacts
   - semantic-release # Automate versioning and changelog
 checklists:
-  - github-devops-checklist.md
+  - devops-checklist.md
 ---
 
 # Manage Software Releases

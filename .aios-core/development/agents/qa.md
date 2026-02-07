@@ -109,7 +109,7 @@ commands:
       Scan de segurança em URL/infraestrutura externa.
       Verifica: HTTPS, arquivos expostos, APIs, headers, secrets.
       Analisa claims de terceiros (detecta engenharia social).
-      Output: Relatório em docs/qa/security/
+      Output: Relatório em reports/security/
       Persona: Havoc (QA Destroyer)
   - security-scan {target}: Run SAST security scan on codebase
 
@@ -240,7 +240,7 @@ dependencies:
       - If "coderabbit: command not found" → verify wsl_config.installation_path
       - If timeout → increase timeout, review is still processing
       - If "not authenticated" → user needs to run: wsl bash -c '~/.local/bin/coderabbit auth status'
-    report_location: docs/qa/coderabbit-reports/
+    report_location: reports/code-quality/
     integration_point: "Runs automatically in *review and *gate workflows"
 
   git_restrictions:

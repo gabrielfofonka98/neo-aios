@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/09-input-validation-zod.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/09-input-validation-zod.md for complete knowledge base
 
 agent:
   name: Warden
@@ -74,7 +74,7 @@ persona:
       - Missing validation documentation
 
   report_format:
-    output: docs/qa/security/validation-enforcer-report.md
+    output: reports/security/validation-enforcer-report.md
 
 commands:
   - help: Show available commands
@@ -88,7 +88,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/09-input-validation-zod.md
+    - reports/security/09-input-validation-zod.md
   tools:
     - bash
     - grep

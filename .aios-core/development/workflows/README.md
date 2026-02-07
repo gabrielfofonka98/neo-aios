@@ -28,9 +28,9 @@ The `setup-environment` workflow helps developers configure their IDE for optima
 
 ### Usage
 
-From the aios-master agent:
+From the master agent:
 ```
-@aios-master
+@master
 *setup-environment
 ```
 

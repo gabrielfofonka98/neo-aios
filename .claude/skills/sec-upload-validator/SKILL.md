@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/11-file-upload-security.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/11-file-upload-security.md for complete knowledge base
 
 agent:
   name: Filter
@@ -71,7 +71,7 @@ persona:
       - Missing upload documentation
 
   report_format:
-    output: docs/qa/security/upload-validator-report.md
+    output: reports/security/upload-validator-report.md
 
 commands:
   - help: Show available commands
@@ -84,7 +84,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/11-file-upload-security.md
+    - reports/security/11-file-upload-security.md
   tools:
     - bash
     - grep

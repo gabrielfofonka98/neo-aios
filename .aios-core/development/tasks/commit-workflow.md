@@ -86,7 +86,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ### Step 4: Run Pre-Push Quality Gates
 
-Execute `.aios-core/development/tasks/github-devops-pre-push-quality-gate.md`:
+Execute `.aios-core/development/tasks/devops-pre-push-quality-gate.md`:
 
 **Quality checks (in order):**
 1. `npm run lint` - Linting (if package.json exists)
@@ -178,5 +178,5 @@ auto_commit:
 ## Related Tasks
 
 - `push.md` - Manual push task
-- `github-devops-pre-push-quality-gate.md` - Quality gates
+- `devops-pre-push-quality-gate.md` - Quality gates
 - `repos.md` - Repository configuration

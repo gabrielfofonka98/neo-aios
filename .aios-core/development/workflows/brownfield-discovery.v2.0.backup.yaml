@@ -97,13 +97,13 @@ workflow:
     - step: frontend_documentation
       phase: 3
       phase_name: "Coleta: Frontend/UX"
-      agent: ux-expert
+      agent: ux
       action: create-front-end-spec
       creates: docs/frontend/frontend-spec.md
       elicit: true
       duration_estimate: "30-45 min"
       notes: |
-        @ux-expert analisa o frontend:
+        @ux analisa o frontend:
 
         ANÁLISE:
         - Componentes UI existentes
@@ -124,7 +124,7 @@ workflow:
         - Estados de loading/error faltando
         - Feedback de usuário ausente
 
-        COMANDO: @ux-expert → *create-front-end-spec
+        COMANDO: @ux → *create-front-end-spec
 
         OUTPUT: docs/frontend/frontend-spec.md
 
@@ -162,7 +162,7 @@ workflow:
 
         ### 3. Débitos de Frontend/UX
         [Lista do frontend-spec.md]
-        ⚠️ PENDENTE: Revisão do @ux-expert
+        ⚠️ PENDENTE: Revisão do @ux
 
         ### 4. Matriz Preliminar
         | ID | Débito | Área | Impacto | Esforço | Prioridade |
@@ -170,7 +170,7 @@ workflow:
 
         ### 5. Perguntas para Especialistas
         - @data-engineer: [perguntas sobre DB]
-        - @ux-expert: [perguntas sobre UX]
+        - @ux: [perguntas sobre UX]
         ```
 
         COMANDO: @architect (prompt manual)
@@ -185,7 +185,7 @@ workflow:
 
         Crie um DRAFT consolidando todos os débitos técnicos.
         Marque claramente as seções que precisam de revisão dos especialistas.
-        Adicione perguntas específicas para @data-engineer e @ux-expert.
+        Adicione perguntas específicas para @data-engineer e @ux.
 
         Salve em: docs/prd/technical-debt-DRAFT.md
         ```
@@ -265,14 +265,14 @@ workflow:
     - step: ux_specialist_review
       phase: 6
       phase_name: "Validação: UX/Frontend"
-      agent: ux-expert
+      agent: ux
       action: review_and_validate
       creates: docs/reviews/ux-specialist-review.md
       requires: docs/prd/technical-debt-DRAFT.md
       elicit: true
       duration_estimate: "20-30 min"
       notes: |
-        @ux-expert revisa a seção de Frontend/UX do DRAFT:
+        @ux revisa a seção de Frontend/UX do DRAFT:
 
         RESPONSABILIDADES:
         1. VALIDAR débitos identificados
@@ -294,7 +294,7 @@ workflow:
            - Responde perguntas do @architect
            - Sugere soluções de design
 
-        COMANDO: @ux-expert (prompt manual)
+        COMANDO: @ux (prompt manual)
 
         PROMPT:
         ```
@@ -433,7 +433,7 @@ workflow:
 
         CONSOLIDAÇÃO FINAL:
         1. Incorpora ajustes do @data-engineer
-        2. Incorpora ajustes do @ux-expert
+        2. Incorpora ajustes do @ux
         3. Endereça gaps do @qa
         4. Recalcula prioridades com inputs dos especialistas
         5. Define ordem final de resolução
@@ -455,7 +455,7 @@ workflow:
         ### Database (validado por @data-engineer)
         | ID | Débito | Severidade | Horas | Prioridade |
 
-        ### Frontend/UX (validado por @ux-expert)
+        ### Frontend/UX (validado por @ux)
         | ID | Débito | Severidade | Horas | Prioridade |
 
         ## Matriz de Priorização Final
@@ -757,7 +757,7 @@ workflow:
       duration: "20-40 min"
     fase_3:
       name: "Coleta: Frontend"
-      agent: "@ux-expert"
+      agent: "@ux"
       command: "*create-front-end-spec"
       output: "docs/frontend/frontend-spec.md"
       duration: "30-45 min"
@@ -775,7 +775,7 @@ workflow:
       duration: "20-30 min"
     fase_6:
       name: "Validação UX"
-      agent: "@ux-expert"
+      agent: "@ux"
       command: "(manual review)"
       output: "docs/reviews/ux-specialist-review.md"
       duration: "20-30 min"
@@ -832,7 +832,7 @@ workflow:
 
       Próximo: Validação dos especialistas (FASES 5-7)
       - @data-engineer: revisar seção de Database
-      - @ux-expert: revisar seção de Frontend
+      - @ux: revisar seção de Frontend
       - @qa: review geral
 
     validation_complete: |

@@ -5,12 +5,6 @@ description: "Security Sub-Agent: API Access Tester. Detects BOLA, BFLA, missing
 
 # sec-api-access-tester
 
-ACTIVATION-NOTICE: This file contains your full agent operating guidelines.
-
-CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your operating params.
-
-## COMPLETE AGENT DEFINITION FOLLOWS - NO EXTERNAL FILES NEEDED
-
 ```yaml
 activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE
@@ -21,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/04-api-authentication-authorization.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/04-api-authentication-authorization.md for complete knowledge base
 
 agent:
   name: Gatekeeper
@@ -87,7 +81,7 @@ persona:
       - Missing API documentation
 
   report_format:
-    output: docs/qa/security/api-access-report.md
+    output: reports/security/api-access-report.md
     sections:
       - summary
       - routes_inventory (total routes, authed vs unauthed)
@@ -111,7 +105,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/04-api-authentication-authorization.md
+    - reports/security/04-api-authentication-authorization.md
   tools:
     - bash
     - grep

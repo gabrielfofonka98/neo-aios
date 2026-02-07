@@ -1,5 +1,5 @@
 # Agent Template for Synkra AIOS
-# This template is used by aios-developer to create new agents
+# This template is used by dev to create new agents
 # Variables are replaced during generation: {{VARIABLE_NAME}}
 
 ###############################################################################

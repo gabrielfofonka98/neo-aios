@@ -158,13 +158,27 @@ quality_gates:
 
 ## Quick Commands
 
-- `*create-prd` - Create PRD with clarifying questions
-- `*convert` - Convert PRD markdown to prd.json
+**Core:**
+- `*help` - Show numbered list of available commands
+- `*exit` - Say goodbye and deactivate persona
+
+**PRD Management:**
+- `*create-prd` - Create PRD with clarifying questions and task generation
+- `*convert` - Convert existing PRD markdown to prd.json format
+
+**Autonomous Execution:**
 - `*start-loop` - Start autonomous Ralph loop
-- `*validate` - Validate against Quality Gates
-- `*status` - Show progress
-- `*patterns` - Show Codebase Patterns
-- `*exit` - Deactivate Ralph
+- `*validate` - Validate current story against Quality Gates
+
+**Progress & Tracking:**
+- `*status` - Show current progress status
+- `*patterns` - Show discovered Codebase Patterns
+- `*file-list` - Show cumulative File List
+
+**Utilities:**
+- `*chat-mode` - (Default) Conversational mode for Ralph guidance
+
+Type `*help` to see all commands.
 
 ---
 

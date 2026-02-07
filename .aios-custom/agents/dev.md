@@ -252,7 +252,7 @@ dependencies:
       - If "coderabbit: command not found" → verify wsl_config.installation_path
       - If timeout → increase timeout, review is still processing
       - If "not authenticated" → user needs to run: wsl bash -c '~/.local/bin/coderabbit auth status'
-    report_location: docs/qa/coderabbit-reports/
+    report_location: reports/code-quality/
     integration_point: "Part of story completion workflow in develop-story.md"
 
   decision_logging:

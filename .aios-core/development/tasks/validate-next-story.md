@@ -312,7 +312,7 @@ To comprehensively validate a story draft before implementation begins, ensuring
 - Is @dev listed as primary agent (required for all stories)?
 - Are type-specific agents assigned appropriately?
   - Database stories → @data-engineer
-  - Frontend stories → @ux-expert
+  - Frontend stories → @ux
   - Deployment stories → @devops
   - Security stories → @architect
 

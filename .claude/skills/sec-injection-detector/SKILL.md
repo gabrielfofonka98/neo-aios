@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/08-orm-sql-injection.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/08-orm-sql-injection.md for complete knowledge base
 
 agent:
   name: Forge
@@ -66,7 +66,7 @@ persona:
       - Raw query with hardcoded values only
 
   report_format:
-    output: docs/qa/security/injection-detector-report.md
+    output: reports/security/injection-detector-report.md
 
 commands:
   - help: Show available commands
@@ -79,7 +79,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/08-orm-sql-injection.md
+    - reports/security/08-orm-sql-injection.md
   tools:
     - bash
     - grep
@@ -90,9 +90,12 @@ dependencies:
 
 ## Quick Commands
 
+- `*help` - Show available commands
 - `*scan` - Full injection scan
 - `*scan-raw` - Check raw queries
 - `*scan-operators` - Check operator injection
+- `*scan-supabase` - Check Supabase client trust
 - `*report` - Generate report
+- `*exit` - Exit agent
 
 ---

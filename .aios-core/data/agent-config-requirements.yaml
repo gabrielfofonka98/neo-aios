@@ -4,17 +4,17 @@
 # Part of Story 6.1.2.6: Framework Configuration System
 #
 # Performance Targets:
-# - critical: <30ms (aios-master)
-# - high: <50ms (dev, qa, devops, security, github-devops)
-# - medium: <75ms (po, sm, architect, data-engineer, db-sage)
-# - low: <100ms (pm, analyst, ux-design-expert, aios-developer, aios-orchestrator)
+# - critical: <30ms (master)
+# - high: <50ms (dev, qa, devops, security)
+# - medium: <75ms (po, sm, architect, data-engineer)
+# - low: <100ms (pm, analyst, ux, orchestrator)
 
 agents:
   # ======================================================================
   # CRITICAL PRIORITY AGENTS (<30ms target)
   # ======================================================================
 
-  aios-master:
+  master:
     config_sections:
       - dataLocation
       - registry
@@ -85,7 +85,7 @@ agents:
     lazy_loading: {}
     performance_target: <50ms
 
-  github-devops:
+  devops:
     config_sections:
       - dataLocation
       - githubLocation
@@ -154,16 +154,9 @@ agents:
     lazy_loading: {}
     performance_target: <75ms
 
-  db-sage:
-    config_sections:
-      - dataLocation
-      - databaseLocation
-    files_loaded:
-      - path: .aios-core/data/technical-preferences.md
-        lazy: false
-        size: 15KB
-    lazy_loading: {}
-    performance_target: <75ms
+  # Note: db-sage was renamed to data-engineer
+  # This section kept for backwards compatibility
+  # All db-sage references should use data-engineer instead
 
   # ======================================================================
   # LOW PRIORITY AGENTS (<100ms target)
@@ -188,7 +181,7 @@ agents:
     lazy_loading: {}
     performance_target: <100ms
 
-  ux-design-expert:
+  ux:
     config_sections:
       - dataLocation
       - uxLocation
@@ -196,22 +189,9 @@ agents:
     lazy_loading: {}
     performance_target: <100ms
 
-  aios-developer:
-    config_sections:
-      - dataLocation
-      - registry
-      - templatesLocation
-    files_loaded:
-      - path: .aios-core/data/aios-kb.md
-        lazy: true
-        condition: meta_operations
-        size: 35KB
-    lazy_loading:
-      aios_kb: true              # Load only for meta operations
-      agent_templates: true      # Load when creating agents
-    performance_target: <100ms
-
-  aios-orchestrator:
+  # Note: dev was merged into dev agent (line 35)
+  # orchestrator is a meta-agent, not a direct skill
+  orchestrator:
     config_sections:
       - dataLocation
       - registry
@@ -255,9 +235,9 @@ lazy_loading_strategy:
     registry:
       size: 15KB
       load_only_for:
-        - aios-master
-        - aios-developer
-        - aios-orchestrator
+        - master
+        - dev
+        - orchestrator
       description: Full registry of framework components
       fallback: minimal registry (agent count only)
 
@@ -269,10 +249,8 @@ lazy_loading_strategy:
         - dev
         - qa
         - devops
-        - github-devops
         - architect
         - data-engineer
-        - db-sage
       cache_priority: high
 
     - path: docs/framework/coding-standards.md

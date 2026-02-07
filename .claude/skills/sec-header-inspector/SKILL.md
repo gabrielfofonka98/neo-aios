@@ -15,7 +15,7 @@ activation-instructions:
   - STEP 3: Greet briefly, show *help, HALT
   - STAY IN CHARACTER!
   - CRITICAL LANGUAGE RULE: ALL communication MUST be in Portuguese (Brazil). Code stays in English.
-  - SECURITY REFERENCE: Read docs/security/12-csp-security-headers.md for complete knowledge base
+  - SECURITY REFERENCE: Read reports/security/12-csp-security-headers.md for complete knowledge base
 
 agent:
   name: Shield
@@ -71,7 +71,7 @@ persona:
       - Missing CSP report-uri
 
   report_format:
-    output: docs/qa/security/header-inspector-report.md
+    output: reports/security/header-inspector-report.md
 
 commands:
   - help: Show available commands
@@ -85,7 +85,7 @@ commands:
 
 dependencies:
   reference_docs:
-    - docs/security/12-csp-security-headers.md
+    - reports/security/12-csp-security-headers.md
   tools:
     - bash
     - grep

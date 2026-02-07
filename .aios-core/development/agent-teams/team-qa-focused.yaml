@@ -6,7 +6,7 @@ bundle:
 agents:
   - dev                # Pre-commit CodeRabbit reviews, development quality
   - qa                 # Automated and manual QA, story validation
-  - github-devops      # PR quality gates, deployment safety checks
+  - devops             # PR quality gates, deployment safety checks
 
 workflows:
   - code-quality-gate.yaml          # Unified quality validation (lint, tests, CodeRabbit)
@@ -64,7 +64,7 @@ quality_gates:
 
   pre_pr:
     trigger: Before creating PR
-    agent: github-devops
+    agent: devops
     checks:
       - coderabbit --prompt-only --base main
       - npm run lint
@@ -73,7 +73,7 @@ quality_gates:
 
   pre_merge:
     trigger: PR opened/updated
-    agent: github-devops
+    agent: devops
     checks:
       - GitHub Actions CI (coderabbit-ci.yml)
       - PR validation workflow
@@ -82,7 +82,7 @@ quality_gates:
 
   pre_deployment:
     trigger: Before production/staging deploy
-    agent: github-devops
+    agent: devops
     checks:
       - Deep CodeRabbit scan (last 10 commits)
       - Environment configuration validation
@@ -112,7 +112,7 @@ coderabbit_integration:
     - scripts/generate-quality-dashboard.js
 
   report_directories:
-    - docs/qa/coderabbit-reports/
+    - reports/code-quality/
     - docs/qa/pr-validations/
     - docs/deployments/
 

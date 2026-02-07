@@ -494,7 +494,7 @@ workflows:
   ux_workflow:
     description: "User experience design and validation"
     agent_sequence:
-      - ux-design-expert  # Design
+      - ux  # Design
       - dev               # Implementation
       - qa                # Validation
     key_commands:

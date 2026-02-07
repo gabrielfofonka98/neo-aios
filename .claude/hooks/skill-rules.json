@@ -435,6 +435,387 @@
         "deploy preview"
       ],
       "description": "Staging Environment Setup"
+    },
+    {
+      "skill": "clear-agent",
+      "activation": "/clear-agent",
+      "keywords": [
+        "desativar agente",
+        "disable agent",
+        "volta ao claude",
+        "reset agente",
+        "clear agent",
+        "exit agent"
+      ],
+      "description": "Deactivate Active Agent - Return to Default Claude"
+    },
+    {
+      "skill": "commit",
+      "activation": "/commit",
+      "keywords": [
+        "commit local",
+        "local commit",
+        "git commit",
+        "conventional commits",
+        "commits convencionais"
+      ],
+      "description": "DevOps (Gage) - Local Git Commit"
+    },
+    {
+      "skill": "sync",
+      "activation": "/sync",
+      "keywords": [
+        "sincronizacao",
+        "synchronization",
+        "sincronizar",
+        "git sync",
+        "sync remote",
+        "pull rebase"
+      ],
+      "description": "DevOps (Gage) - Secure Synchronization with Remote"
+    },
+    {
+      "skill": "push",
+      "activation": "/push",
+      "keywords": [
+        "git push",
+        "enviar commits",
+        "send commits",
+        "publicar",
+        "publish"
+      ],
+      "description": "DevOps (Gage) - Git Push to Remote"
+    },
+    {
+      "skill": "pr",
+      "activation": "/pr",
+      "keywords": [
+        "pull request",
+        "criar pr",
+        "create pull request",
+        "abrir pull request",
+        "open pr"
+      ],
+      "description": "DevOps (Gage) - Create Pull Request"
+    },
+    {
+      "skill": "deploy",
+      "activation": "/deploy",
+      "keywords": [
+        "deploy producao",
+        "production deployment",
+        "deploy prod",
+        "release",
+        "versao"
+      ],
+      "description": "DevOps (Gage) - Production Deployment"
+    },
+    {
+      "skill": "fixer",
+      "activation": "/fixer",
+      "keywords": [
+        "auto fix",
+        "auto-fix",
+        "corrigir automatico",
+        "automatic fixing",
+        "wrench",
+        "fix template"
+      ],
+      "description": "Auto-Fix Specialist (Wrench) - Automated Remediation"
+    },
+    {
+      "skill": "review",
+      "activation": "/review",
+      "keywords": [
+        "revisao de codigo",
+        "code review",
+        "pr review",
+        "revisar pr"
+      ],
+      "description": "Code Review Tool"
+    },
+    {
+      "skill": "sec-xss-hunter",
+      "activation": "/sec-xss-hunter",
+      "keywords": [
+        "xss",
+        "cross-site scripting",
+        "dangerouslysetinnerhtml",
+        "xss detection",
+        "deteccao xss"
+      ],
+      "description": "Security Sub-Agent: XSS Hunter (Viper)"
+    },
+    {
+      "skill": "sec-injection-detector",
+      "activation": "/sec-injection-detector",
+      "keywords": [
+        "injection",
+        "sql injection",
+        "injecao",
+        "comando injection",
+        "command injection"
+      ],
+      "description": "Security Sub-Agent: Injection Detector"
+    },
+    {
+      "skill": "sec-rls-guardian",
+      "activation": "/sec-rls-guardian",
+      "keywords": [
+        "rls",
+        "row level security",
+        "politica de linha",
+        "supabase rls",
+        "access control"
+      ],
+      "description": "Security Sub-Agent: RLS Guardian (Row-Level Security)"
+    },
+    {
+      "skill": "sec-secret-scanner",
+      "activation": "/sec-secret-scanner",
+      "keywords": [
+        "secret",
+        "apikey",
+        "api key",
+        "chave secreta",
+        "token detection",
+        "credential leak"
+      ],
+      "description": "Security Sub-Agent: Secret Scanner"
+    },
+    {
+      "skill": "sec-jwt-auditor",
+      "activation": "/sec-jwt-auditor",
+      "keywords": [
+        "jwt",
+        "token",
+        "authentication",
+        "autenticacao",
+        "bearer token"
+      ],
+      "description": "Security Sub-Agent: JWT Auditor"
+    },
+    {
+      "skill": "sec-cors-csrf-checker",
+      "activation": "/sec-cors-csrf-checker",
+      "keywords": [
+        "cors",
+        "csrf",
+        "cross-origin",
+        "cross site request forgery",
+        "origin check"
+      ],
+      "description": "Security Sub-Agent: CORS/CSRF Checker"
+    },
+    {
+      "skill": "sec-header-inspector",
+      "activation": "/sec-header-inspector",
+      "keywords": [
+        "http headers",
+        "security headers",
+        "csp",
+        "x-frame-options",
+        "headers inspector"
+      ],
+      "description": "Security Sub-Agent: HTTP Header Inspector"
+    },
+    {
+      "skill": "sec-validation-enforcer",
+      "activation": "/sec-validation-enforcer",
+      "keywords": [
+        "validacao",
+        "validation",
+        "input validation",
+        "schema validation",
+        "zod",
+        "pydantic"
+      ],
+      "description": "Security Sub-Agent: Input Validation Enforcer"
+    },
+    {
+      "skill": "sec-error-leak-detector",
+      "activation": "/sec-error-leak-detector",
+      "keywords": [
+        "error message",
+        "error leak",
+        "stack trace",
+        "information disclosure",
+        "error handling"
+      ],
+      "description": "Security Sub-Agent: Error Leak Detector"
+    },
+    {
+      "skill": "sec-upload-validator",
+      "activation": "/sec-upload-validator",
+      "keywords": [
+        "file upload",
+        "upload validation",
+        "file type",
+        "mime type",
+        "upload security"
+      ],
+      "description": "Security Sub-Agent: File Upload Validator"
+    },
+    {
+      "skill": "sec-api-access-tester",
+      "activation": "/sec-api-access-tester",
+      "keywords": [
+        "api security",
+        "access control",
+        "authorization",
+        "autorizacao",
+        "api testing"
+      ],
+      "description": "Security Sub-Agent: API Access Tester"
+    },
+    {
+      "skill": "sec-rate-limit-tester",
+      "activation": "/sec-rate-limit-tester",
+      "keywords": [
+        "rate limit",
+        "rate limiting",
+        "throttling",
+        "aceleracao",
+        "dos protection"
+      ],
+      "description": "Security Sub-Agent: Rate Limit Tester"
+    },
+    {
+      "skill": "sec-redirect-checker",
+      "activation": "/sec-redirect-checker",
+      "keywords": [
+        "redirect",
+        "open redirect",
+        "redirect vulnerability",
+        "redirecionamento",
+        "url validation"
+      ],
+      "description": "Security Sub-Agent: Redirect Checker"
+    },
+    {
+      "skill": "sec-framework-scanner",
+      "activation": "/sec-framework-scanner",
+      "keywords": [
+        "framework",
+        "library security",
+        "dependency scanning",
+        "scanner de framework",
+        "next.js security"
+      ],
+      "description": "Security Sub-Agent: Framework Scanner"
+    },
+    {
+      "skill": "sec-deploy-auditor",
+      "activation": "/sec-deploy-auditor",
+      "keywords": [
+        "deploy security",
+        "environment variables",
+        "variaveis de ambiente",
+        "deployment audit",
+        "prod security"
+      ],
+      "description": "Security Sub-Agent: Deploy Auditor"
+    },
+    {
+      "skill": "sec-client-exposure-scanner",
+      "activation": "/sec-client-exposure-scanner",
+      "keywords": [
+        "client exposure",
+        "exposed api",
+        "exposed credential",
+        "client secret",
+        "public key"
+      ],
+      "description": "Security Sub-Agent: Client Exposure Scanner"
+    },
+    {
+      "skill": "sec-supply-chain-monitor",
+      "activation": "/sec-supply-chain-monitor",
+      "keywords": [
+        "supply chain",
+        "dependency",
+        "npm package",
+        "vulnerability",
+        "cve scanning"
+      ],
+      "description": "Security Sub-Agent: Supply Chain Monitor"
+    },
+    {
+      "skill": "sec-ai-code-reviewer",
+      "activation": "/sec-ai-code-reviewer",
+      "keywords": [
+        "code security",
+        "revisao com ia",
+        "ai review",
+        "security review",
+        "code audit"
+      ],
+      "description": "Security Sub-Agent: AI Code Reviewer"
+    },
+    {
+      "skill": "squad-architect",
+      "activation": "/squad-architect",
+      "keywords": [
+        "squad creation",
+        "criar squad",
+        "squad design",
+        "agent squad",
+        "squad de agentes"
+      ],
+      "description": "Squad Architect - Create and Manage Agent Squads"
+    },
+    {
+      "skill": "squad-diagnostician",
+      "activation": "/squad-diagnostician",
+      "keywords": [
+        "diagnostico",
+        "diagnostics",
+        "system diagnostics",
+        "diagnostico de squad",
+        "health check"
+      ],
+      "description": "Squad Diagnostician - System Health & Diagnostics"
+    },
+    {
+      "skill": "sop-extractor",
+      "activation": "/sop-extractor",
+      "keywords": [
+        "sop",
+        "standard operating procedure",
+        "procedimento operacional",
+        "process extraction",
+        "extrair procedimento"
+      ],
+      "description": "SOP Extractor - Extract Standard Operating Procedures"
+    },
+    {
+      "skill": "sync-icloud",
+      "activation": "/sync-icloud",
+      "keywords": [
+        "icloud sync",
+        "icloud",
+        "apple sync",
+        "sincronizar icloud",
+        "documents sync"
+      ],
+      "description": "iCloud Synchronization"
+    },
+    {
+      "skill": "oalanicolas",
+      "activation": "/oalanicolas",
+      "keywords": [
+        "oalanicolas"
+      ],
+      "description": "Custom Skill: oalanicolas"
+    },
+    {
+      "skill": "pedro-valerio",
+      "activation": "/pedro-valerio",
+      "keywords": [
+        "pedro valerio",
+        "pedro-valerio"
+      ],
+      "description": "Custom Skill: pedro-valerio"
     }
   ]
 }

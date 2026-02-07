@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -258,7 +258,7 @@ dependencies:
       - If "coderabbit: command not found" → verify coderabbit is in PATH
       - If timeout → increase timeout, review is still processing
       - If "not authenticated" → user needs to run: coderabbit auth status
-    report_location: docs/qa/coderabbit-reports/
+    report_location: reports/code-quality/
     integration_point: "Part of story completion workflow in develop-story.md"
 
   decision_logging:
@@ -337,19 +337,33 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*exit` - Exit developer mode
+
 **Story Development:**
-- `*develop {story-id}` - Implement story tasks
-- `*run-tests` - Execute linting and tests
-- `*create-service` - Scaffold new service from template
+- `*develop` - Implement story tasks (modes: yolo, interactive, preflight)
+- `*develop-yolo` - Autonomous development mode
+- `*develop-interactive` - Interactive development mode (default)
+- `*develop-preflight` - Planning mode before implementation
+- `*create-service` - Create new service from Handlebars template (api-integration, utility, agent-tool)
+
+**Workflow Intelligence:**
+- `*waves` - Analyze workflow for parallel execution opportunities (--visual for ASCII art)
 
 **Quality & Debt:**
-- `*apply-qa-fixes` - Apply QA fixes
-- `*backlog-debt {title}` - Register technical debt
+- `*apply-qa-fixes` - Apply QA feedback and fixes
+- `*run-tests` - Execute linting and all tests
+- `*backlog-debt` - Register technical debt item (prompts for details)
 
 **Context & Performance:**
-- `*load-full {file}` - Load complete file (bypass summary)
-- `*clear-cache` - Clear context cache
-- `*session-info` - Show session details
+- `*load-full` - Load complete file from devLoadAlwaysFiles (bypasses cache/summary)
+- `*clear-cache` - Clear dev context cache to force fresh file load
+- `*session-info` - Show current session details (agent history, commands)
+
+**Learning & Utilities:**
+- `*explain` - Explain what I just did in teaching detail
+- `*guide` - Show comprehensive usage guide for this agent
 
 Type `*help` to see all commands, or `*explain` to learn more.
 

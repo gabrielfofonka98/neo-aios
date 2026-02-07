@@ -305,7 +305,7 @@ Create comprehensive diff:
   name: {workflow-name}
   description: {description}
 + last_modified: {timestamp}
-+ modified_by: aios-developer
++ modified_by: dev
 
 @@ Phases @@
   planning:

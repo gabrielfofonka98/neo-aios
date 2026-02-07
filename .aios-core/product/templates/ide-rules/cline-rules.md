@@ -10,7 +10,7 @@ Synkra AIOS is a meta-framework that orchestrates AI agents to handle complex de
 
 ### Agent Activation
 - Agents are activated with @agent-name syntax: @dev, @qa, @architect, @pm, @po, @sm, @analyst
-- The master agent is activated with @aios-master
+- The master agent is activated with @master
 - Agent commands use the * prefix: *help, *create-story, *task, *exit
 
 ### Agent Context

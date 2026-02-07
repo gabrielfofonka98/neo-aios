@@ -81,7 +81,7 @@ atomic_layer: Strategy
 **Saída:**
 - campo: threat_report
   tipo: markdown
-  destino: File (docs/qa/security/)
+  destino: File (reports/security/)
   persistido: true
 
 - campo: verdict
@@ -395,7 +395,7 @@ Para cada alegação do terceiro:
 
 ```yaml
 post-conditions:
-  - [ ] Report generated and saved to docs/qa/security/
+  - [ ] Report generated and saved to reports/security/
     tipo: post-condition
     blocker: true
 
@@ -526,5 +526,5 @@ commands:
   - threat-assessment {context}: |
       Execute security-threat-assessment task.
       Analyzes third-party security claims + active infrastructure scan.
-      Produces: Professional report in docs/qa/security/
+      Produces: Professional report in reports/security/
 ```

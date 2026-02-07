@@ -9,7 +9,7 @@ template:
 
   output:
     format: markdown
-    filename: "agents/{{agent_id}}/SKILL.md"
+    filename: ".claude/skills/{{agent_id}}/SKILL.md"
 
   notes: |
     Template for creating agents compatible with NEO-AIOS framework.
@@ -330,11 +330,11 @@ completion_criteria:
 ## Example: Complete NEO-AIOS Agent
 
 See reference implementations:
-- `agents/dex/SKILL.md` - Developer (IC)
-- `agents/gage/SKILL.md` - DevOps (IC, can push)
-- `agents/quinn/SKILL.md` - Security QA (IC)
-- `agents/aria/SKILL.md` - Architect (VP)
-- `agents/master/SKILL.md` - Master Orchestrator
+- `.claude/skills/dev/SKILL.md` - Developer (IC)
+- `.claude/skills/devops/SKILL.md` - DevOps (IC, can push)
+- `.claude/skills/qa/SKILL.md` - Security QA (IC)
+- `.claude/skills/architect/SKILL.md` - Architect (VP)
+- `.claude/skills/master/SKILL.md` - Master Orchestrator
 
 ---
 
@@ -345,7 +345,7 @@ See reference implementations:
 # 1. Copy this template structure
 # 2. Fill all {{placeholders}}
 # 3. Ensure scope.cannot includes git_push
-# 4. Place in agents/{{agent_id}}/SKILL.md
+# 4. Place in .claude/skills/{{agent_id}}/SKILL.md
 # 5. Run quality gate validation
 # 6. Register in agent registry if needed
 ```

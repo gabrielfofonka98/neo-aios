@@ -14,9 +14,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "draft story"→*create→create-next-story task, "make a new prd" would be dependencies->tasks->create-doc combined with the dependencies->templates->prd-tmpl.md), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -193,17 +193,30 @@ dependencies:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide
+- `*session-info` - Show current session details
+- `*exit` - Exit QA Code mode
+
 **Code Review & Analysis:**
-- `*code-review {scope}` - Run automated review
-- `*review {story}` - Comprehensive story review
+- `*code-review {scope}` - Run automated review (scope: uncommitted or committed)
+- `*review {story}` - Comprehensive story review with gate decision
 
 **Quality Gates:**
-- `*gate {story}` - Execute quality gate decision
-- `*nfr-assess {story}` - Validate non-functional requirements
+- `*gate {story}` - Create quality gate decision (PASS/CONCERNS/FAIL/WAIVED)
+- `*nfr-assess {story}` - Validate non-functional requirements (performance, reliability, maintainability)
+- `*risk-profile {story}` - Generate risk assessment matrix
 
 **Test Strategy:**
-- `*test-design {story}` - Create test scenarios
-- `*trace {story}` - Requirements traceability
+- `*test-design {story}` - Create comprehensive test scenarios
+- `*trace {story}` - Map requirements to tests (Given-When-Then)
+- `*coverage-check` - Analyze test coverage gaps
+
+**Backlog Management:**
+- `*backlog-add {story} {type} {priority} {title}` - Add item to story backlog
+- `*backlog-update {item_id} {status}` - Update backlog item status
+- `*backlog-review` - Generate backlog review for sprint planning
 
 Type `*help` to see all commands.
 

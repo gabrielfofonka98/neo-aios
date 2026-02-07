@@ -323,7 +323,7 @@ aios
 ```
 neo-aios/
 ├── src/aios/                 # Python source
-│   ├── agents/               # Agent registry, models
+│   ├── agents/               # Agent registry, models (not SKILL.md definitions)
 │   ├── autofix/              # Auto-fix engine
 │   ├── cli/                  # Click CLI
 │   ├── context/              # Session persistence
@@ -336,16 +336,15 @@ neo-aios/
 │   ├── scope/                # Scope enforcement
 │   └── security/             # Security validators
 │
-├── agents/                   # Agent SKILL.md definitions (36)
-│   ├── aria/, dex/, gage/    # Core agents
-│   └── sec-*/                # Security sub-agents (18)
-│
 ├── .claude/                  # Claude Code integration
+│   ├── skills/               # Agent SKILL.md definitions (53)
+│   │   ├── aria/, dev/, devops/  # Core agents
+│   │   └── sec-*/            # Security sub-agents (18)
 │   ├── hooks/                # Hook scripts (5)
 │   ├── settings.json         # Hook configuration
 │   └── CLAUDE.md             # Agent instructions
 │
-├── tests/                    # Test suite (1050+ tests)
+├── tests/                    # Test suite (757+ tests)
 └── docs/                     # Documentation
 ```
 

@@ -22,7 +22,7 @@ NEVER create new top-level folders. NEVER mkdir — folders already exist.
 | `reports/security/` | QA Security (Quinn) | Security audit reports |
 | `reports/code-quality/` | QA Code (Codex) | Code review, lint reports |
 | `reports/testing/` | QA Functional (Tess) | Test plans, regression, bug reports |
-| `reports/analytics/` | Analyst (Oracle) | Data analysis, dashboards, A/B tests |
+| `reports/analytics/` | Analyst | Data analysis, dashboards, A/B tests |
 
 ## Database (database/)
 

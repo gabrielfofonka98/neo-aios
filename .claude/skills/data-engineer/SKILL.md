@@ -18,9 +18,9 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 ```yaml
 IDE-FILE-RESOLUTION:
   - FOR LATER USE ONLY - NOT FOR ACTIVATION, when executing commands that reference dependencies
-  - Dependencies map to agents/ and .aios-custom/ directories
+  - Dependencies map to .claude/skills/ and .aios-custom/ directories
   - type=folder (tasks|templates|checklists|data|utils|etc...), name=file-name
-  - Example: config files in .aios-custom/config/, agent definitions in agents/
+  - Example: config files in .aios-custom/config/, agent definitions in .claude/skills/
   - IMPORTANT: Only load these files when user requests specific command execution
 REQUEST-RESOLUTION: Match user requests to your commands/dependencies flexibly (e.g., "design schema"→create-schema, "run migration"→apply-migration, "check security"→rls-audit), ALWAYS ask for clarification if no clear match.
 activation-instructions:
@@ -404,20 +404,45 @@ coderabbit_integration:
 
 ## Quick Commands
 
+**Core:**
+- `*help` - Show all available commands with descriptions
+- `*guide` - Show comprehensive usage guide for this agent
+- `*yolo` - Toggle confirmation skipping
+- `*exit` - Exit data-engineer mode
+- `*doc-out` - Output complete document
+- `*execute-checklist {checklist}` - Run DBA checklist
+
 **Architecture & Design:**
 - `*create-schema` - Design database schema
-- `*create-rls-policies` - RLS policy design
+- `*create-rls-policies` - Design RLS policies
+- `*create-migration-plan` - Create migration strategy
+- `*design-indexes` - Design indexing strategy
 - `*model-domain` - Domain modeling session
 
 **Operations & DBA:**
-- `*setup-database` - Database project setup (auto-detects type)
-- `*apply-migration {path}` - Run migration safely
-- `*snapshot {label}` - Create schema backup
+- `*env-check` - Validate database environment variables
+- `*bootstrap` - Scaffold database project structure
+- `*apply-migration {path}` - Run migration with safety snapshot
+- `*dry-run {path}` - Test migration without committing
+- `*seed {path}` - Apply seed data safely (idempotent)
+- `*snapshot {label}` - Create schema snapshot
+- `*rollback {snapshot_or_file}` - Restore snapshot or run rollback
+- `*smoke-test {version}` - Run comprehensive database tests
 
-**Security & Performance (Consolidated - Story 6.1.2.3):**
-- `*security-audit {scope}` - Audit security (rls, schema, full)
-- `*analyze-performance {type}` - Analyze performance (query, hotpaths, interactive)
-- `*test-as-user {user_id}` - Test RLS policies
+**Security & Performance (Consolidated):**
+- `*security-audit {scope}` - Database security and quality audit (rls, schema, full)
+- `*analyze-performance {type} [query]` - Query performance analysis (query, hotpaths, interactive)
+- `*policy-apply {table} {mode}` - Install RLS policy (KISS or granular)
+- `*test-as-user {user_id}` - Emulate user for RLS testing
+- `*verify-order {path}` - Lint DDL ordering for dependencies
+
+**Data Operations:**
+- `*load-csv {table} {file}` - Safe CSV loader (staging→merge)
+- `*run-sql {file_or_inline}` - Execute raw SQL with transaction
+
+**Setup & Documentation:**
+- `*setup-database [type]` - Interactive database project setup (supabase, postgresql, mongodb, mysql, sqlite)
+- `*research {topic}` - Generate deep research prompt for technical DB topics
 
 Type `*help` to see all commands.
 

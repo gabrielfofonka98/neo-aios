@@ -143,7 +143,7 @@ When breaking down epic into stories, predict agents based on:
 
 - **Database Changes** → Include @data-engineer in story planning
 - **API/Backend Changes** → Include @architect for contract review
-- **Frontend/UI Changes** → Include @ux-expert for accessibility
+- **Frontend/UI Changes** → Include @ux for accessibility
 - **Deployment/Infrastructure** → Include @devops for coordination
 - **Security Features** → Ensure @dev focuses on OWASP validation
 

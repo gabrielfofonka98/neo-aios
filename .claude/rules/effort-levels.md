@@ -6,10 +6,10 @@ When spawning subagents via the Task tool, match effort to agent complexity.
 
 | Effort | Model Param | Agents | Rationale |
 |--------|-------------|--------|-----------|
-| **max** | `model: "opus"` | Quinn (QA), Architect (Aria), Spec (Rune) | Deep reasoning, cross-validation, zero-ambiguity |
-| **high** | `model: "opus"` | Dev (Dex), Data-Engineer (Dara), Ralph, Master (Orion) | Complex implementation, autonomous execution |
-| **medium** | `model: "sonnet"` | PM (Morgan), PO, SM, Doc (Sage) | Text-heavy, specs, documentation |
-| **low** | `model: "haiku"` | 18x sec-agents, fixer, clear-agent, test, handoff | Focused single-task — speed over depth |
+| **max** | `model: "opus"` | Quinn (QA), Architect (Aria), Spec (Rune), Squad-Architect | Deep reasoning, cross-validation, zero-ambiguity, strategic decisions |
+| **high** | `model: "opus"` | Dev (Dex), Data-Engineer (Dara), Ralph, Master (Orion), SRE (Ops), Analyst (Oracle), Squad-Diagnostician | Complex implementation, autonomous execution, infrastructure, data analysis |
+| **medium** | `model: "sonnet"` | PM (Morgan), PO, SM, Doc (Sage), UX (Pixel), QA-Functional (Tess), Custom agents (oalanicolas, pedro-valerio) | Text-heavy, specs, documentation, design, functional testing |
+| **low** | `model: "haiku"` | 18x sec-agents, fixer, clear-agent, test, handoff, staging, sync, sync-icloud, sop-extractor, commit, deploy, pr, push, review | Focused single-task — speed over depth, utilities, helpers |
 
 ## Rules
 
